@@ -1,0 +1,21 @@
+﻿  bg.cpp
+  bullet.cpp
+  bullet_ui.cpp
+  fade.cpp
+  game.cpp
+  gamepad.cpp
+  input.cpp
+  main.cpp
+  pause.cpp
+  player.cpp
+  ranking.cpp
+  result.cpp
+  title.cpp
+  tutorial.cpp
+  コード生成しています。
+  22 of 213 functions (10.3%) were compiled, the rest were copied from previous compilation.
+    3 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  コード生成が終了しました。
+  project_2DSTG000.vcxproj -> C:\Users\student\Documents\Visual Studio 2015\Projects\project_2DSTG000\project_2DSTG000.exe
+  project_2DSTG000.vcxproj -> C:\Users\student\Documents\Visual Studio 2015\Projects\project_2DSTG000\project_2DSTG000.pdb (Full PDB)
