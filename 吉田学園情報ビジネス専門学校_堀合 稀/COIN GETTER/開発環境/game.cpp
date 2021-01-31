@@ -106,19 +106,22 @@ HRESULT InitGame(void)
 	InitNodamage();
 
 	// BGMの再生
-	if (g_nGameCnt == 0)
+	bool bBgm = GAME_BGM;
+	if (bBgm == true)
 	{
-		PlaySound(SOUND_LABEL_BGM001);
+		if (g_nGameCnt == 0)
+		{
+			PlaySound(SOUND_LABEL_BGM001);
+		}
+		else if (g_nGameCnt == 1)
+		{
+			PlaySound(SOUND_LABEL_BGM005);
+		}
+		else if (g_nGameCnt == 2)
+		{
+			PlaySound(SOUND_LABEL_BGM006);
+		}
 	}
-	else if (g_nGameCnt == 1)
-	{
-		PlaySound(SOUND_LABEL_BGM005);	
-	}
-	else if (g_nGameCnt == 2)
-	{
-		PlaySound(SOUND_LABEL_BGM006);
-	}
-	
 
 	return S_OK;
 }
@@ -630,7 +633,7 @@ void PutBlock(int nStage)
 					moveA[nCnt] *= -1;
 
 					// 移動点の配置
-					for (int nSet = 0; nSet <= (aCounter[nCnt] + (aType[nCnt] * POINT_SET)); nSet++)
+					for (int nSet = 0; nSet < (aCounter[nCnt] + (aType[nCnt] * POINT_SET)); nSet++)
 					{
 						if (nSet % POINT_SET == 0)
 						{
@@ -676,15 +679,15 @@ void LoadBlock(int nStage)
 	// ファイルを開く
 	if (nStage == 0)
 	{
-		pFile = fopen("stage00.csv", "r");
+		pFile = fopen("data/STAGE/stage00.csv", "r");
 	}
 	else if (nStage == 1)
 	{
-		pFile = fopen("stage01.csv", "r");
+		pFile = fopen("data/STAGE/stage01.csv", "r");
 	}
 	else if (nStage == 2)
 	{
-		pFile = fopen("stage02.csv", "r");
+		pFile = fopen("data/STAGE/stage02.csv", "r");
 	}
 
 	while (fgets(aLine, 256, pFile) != NULL)

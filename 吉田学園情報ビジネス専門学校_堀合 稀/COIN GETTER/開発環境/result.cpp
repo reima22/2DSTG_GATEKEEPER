@@ -234,15 +234,20 @@ HRESULT InitResult(void)
 	// 頂点バッファをアンロックする
 	g_pVtxBuffResult->Unlock();
 
-	if (Player->state == PLAYERSTATE_GAMEOVER)
+
+	bool bBgm = RESULT_BGM;
+	if (bBgm == true)
 	{
-		// BGMの再生
-		PlaySound(SOUND_LABEL_BGM003);
-	}
-	else
-	{
-		// BGMの再生
-		PlaySound(SOUND_LABEL_BGM002);
+		if (Player->state == PLAYERSTATE_GAMEOVER)
+		{
+			// BGMの再生
+			PlaySound(SOUND_LABEL_BGM003);
+		}
+		else
+		{
+			// BGMの再生
+			PlaySound(SOUND_LABEL_BGM002);
+		}
 	}
 
 	return S_OK;

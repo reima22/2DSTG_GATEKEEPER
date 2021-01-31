@@ -128,7 +128,11 @@ HRESULT InitRanking(void)
 	SetInitRanking();
 
 	// BGM‚ÌÄ¶
-	PlaySound(SOUND_LABEL_BGM004);
+	bool bBgm = RANKING_BGM;
+	if (bBgm == true)
+	{
+		PlaySound(SOUND_LABEL_BGM004);
+	}
 
 	// ƒ‰ƒ“ƒLƒ“ƒO‚Ì“Ç‚İ‚İ
 	LoadData();

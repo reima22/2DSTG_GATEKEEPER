@@ -188,7 +188,11 @@ HRESULT InitTitle(void)
 	g_pVtxBuffTitle->Unlock();
 
 	// BGMÇÃçƒê∂
-	PlaySound(SOUND_LABEL_BGM000);
+	bool bBgm = TITLE_BGM;
+	if (bBgm == true)
+	{
+		PlaySound(SOUND_LABEL_BGM000);
+	}
 
 	return S_OK;
 }

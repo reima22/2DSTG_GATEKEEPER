@@ -48,6 +48,10 @@
 #define BONUS_STAGE1	(150000)	// ステージ1のノーダメージボーナス
 #define BONUS_STAGE2	(100000)	// ステージ2のノーダメージボーナス
 #define BONUS_STAGE3	(300000)	// ステージ3のノーダメージボーナス
+#define TITLE_BGM		(true)		// タイトルBGMのオン・オフ
+#define GAME_BGM		(true)		// ゲームBGMのオン・オフ
+#define RESULT_BGM		(true)		// リザルトBGMのオン・オフ
+#define RANKING_BGM		(true)		// ランキングBGMのオン・オフ
 
 //==============================================================================
 // 頂点フォーマットに合わせた構造体
