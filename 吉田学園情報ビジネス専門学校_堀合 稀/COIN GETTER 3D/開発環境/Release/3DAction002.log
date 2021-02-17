@@ -1,0 +1,39 @@
+﻿  billboard.cpp
+  bullet.cpp
+  camera.cpp
+camera.cpp(65): warning C4244: '=': 'float' から 'DWORD' への変換です。データが失われる可能性があります。
+camera.cpp(66): warning C4244: '=': 'float' から 'DWORD' への変換です。データが失われる可能性があります。
+camera.cpp(67): warning C4244: '=': 'float' から 'DWORD' への変換です。データが失われる可能性があります。
+camera.cpp(68): warning C4244: '=': 'float' から 'DWORD' への変換です。データが失われる可能性があります。
+  fade.cpp
+  game.cpp
+  gamepad.cpp
+  input.cpp
+  item.cpp
+  light.cpp
+  main.cpp
+  meshfield.cpp
+  meshwall.cpp
+meshwall.cpp(43): warning C4101: 'pIdx': ローカル変数は 1 度も使われていません。
+meshwall.cpp(312): warning C4101: 'pIdx': ローカル変数は 1 度も使われていません。
+meshwall.cpp(311): warning C4101: 'pVtx': ローカル変数は 1 度も使われていません。
+meshwall.cpp(383): warning C4101: 'pVtx': ローカル変数は 1 度も使われていません。
+  object.cpp
+  particle.cpp
+  pause.cpp
+  player.cpp
+  polygon.cpp
+  ranking.cpp
+  result.cpp
+  score.cpp
+  コンパイル中...
+  shadow.cpp
+  sound.cpp
+  title.cpp
+  tutorial.cpp
+  wall.cpp
+  コード生成しています。
+  All 215 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  コード生成が終了しました。
+  3DAction002.vcxproj -> C:\Users\student\Documents\Visual Studio 2015\Projects\3DAction002\3DAction002.exe
+  3DAction002.vcxproj -> C:\Users\student\Documents\Visual Studio 2015\Projects\3DAction002\3DAction002.pdb (Full PDB)
