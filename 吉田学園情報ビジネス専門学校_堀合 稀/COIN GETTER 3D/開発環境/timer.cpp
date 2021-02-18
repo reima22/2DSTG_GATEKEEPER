@@ -173,7 +173,7 @@ void UpdateTimer(void)
 		}
 	}
 
-	if (g_nTimer <= 0)
+	if (g_nTimer <= 0 && pPlayer->state != PLAYERSTATE_CLEAR)
 	{
 		pPlayer->state = PLAYERSTATE_GAMEOVER;
 	}

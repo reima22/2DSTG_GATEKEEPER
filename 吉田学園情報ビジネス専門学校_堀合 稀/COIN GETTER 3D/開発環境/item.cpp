@@ -10,6 +10,7 @@
 #include "score.h"
 #include "particle.h"
 #include "sound.h"
+#include "player.h"
 #include "time.h"
 #include "stdlib.h"
 
@@ -25,8 +26,7 @@ LPD3DXMESH g_pMeshItem = NULL;			// メッシュ(頂点情報)へのポインタ
 LPD3DXBUFFER g_pBuffMatItem = NULL;		// マテリアル(材質情報)へのポインタ
 DWORD g_nNumMatItem = 0;				// マテリアルの数
 ITEM g_aItem[MAX_ITEM];					// アイテムの情報
-//int g_nAnimCnt;						// アニメーションカウント
-//int g_nAnimCol;						// 色変化カウント
+int g_nCntItem;							// 配置数カウント
 
 //==============================================================================
 // アイテムの初期化処理
@@ -59,9 +59,8 @@ HRESULT InitItem(void)
 		&g_nNumMatItem,
 		&g_pMeshItem);
 
-	//// 変数の初期化
-	//g_nAnimCnt = 0;
-	//g_nAnimCol = 0;
+	// 変数の初期化
+	g_nCntItem = 0;
 
 	// ローカル変数宣言
 	int nNumVtx;	// 頂点数
@@ -273,6 +272,8 @@ void SetItem(D3DXVECTOR3 pos)
 
 			pItem->nIdx = SetShadow(D3DXVECTOR3(pItem->pos.x, 0.0f, pItem->pos.z), 10.0f, 10.0f);
 
+			g_nCntItem++;
+
 			pItem->bUse = true;
 
 			break;
@@ -324,6 +325,7 @@ void TouchItem(D3DXVECTOR3 *pPos, float fWidthMax, float fWidthMin, float fDepth
 {
 	// ローカル変数宣言
 	ITEM *pItem = &g_aItem[0];
+	Player *pPlayer = GetPlayer();
 	Shadow *pShadow = GetShadow();
 	D3DXVECTOR3 aVec[FOUR_POINT];
 	float fItemVec[FOUR_POINT];
@@ -365,6 +367,11 @@ void TouchItem(D3DXVECTOR3 *pPos, float fWidthMax, float fWidthMin, float fDepth
 				AddScore(100);
 				pShadow->bUse = false;
 				pItem->bUse = false;
+				g_nCntItem--;
+				if (g_nCntItem <= 0)
+				{
+					pPlayer->state = PLAYERSTATE_CLEAR;
+				}
 				break;
 			}
 		}
