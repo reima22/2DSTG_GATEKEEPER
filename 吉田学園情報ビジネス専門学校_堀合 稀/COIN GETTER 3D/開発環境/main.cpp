@@ -67,7 +67,7 @@ LPDIRECT3D9 g_pD3D = NULL;				// Direct3Dオブジェクトへのポインタ
 LPDIRECT3DDEVICE9 g_pD3DDevice = NULL;	// Direct3Dデバイスへのポインタ(描画処理に必要)
 LPD3DXFONT g_pFont = NULL;				// フォントへのポインタ
 int g_nCountFPS;						// FPSカウンタ
-MODE g_mode = MODE_GAME;				// ゲームモード
+MODE g_mode = MODE_TITLE;				// ゲームモード
 
 //==============================================================================
 // メイン関数

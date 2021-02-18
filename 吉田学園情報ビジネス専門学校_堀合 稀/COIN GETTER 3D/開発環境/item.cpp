@@ -9,6 +9,7 @@
 #include "shadow.h"
 #include "score.h"
 #include "particle.h"
+#include "sound.h"
 #include "time.h"
 #include "stdlib.h"
 
@@ -57,8 +58,6 @@ HRESULT InitItem(void)
 		NULL,
 		&g_nNumMatItem,
 		&g_pMeshItem);
-
-	//nRand = RandItem();		// ハイスコアアイテムの選定
 
 	//// 変数の初期化
 	//g_nAnimCnt = 0;
@@ -247,41 +246,6 @@ void DrawItem(void)
 			pDevice->SetMaterial(&matDef);
 		}
 	}
-
-	//// ワールドマトリックスの初期化
-	//D3DXMatrixIdentity(&object.mtxWorld);
-
-	//// 向きの反映
-	//D3DXMatrixRotationYawPitchRoll(&mtxRot, object.rot.y, object.rot.x, object.rot.z);
-	//D3DXMatrixMultiply(&object.mtxWorld, &object.mtxWorld, &mtxRot);
-
-	//// 位置を反映
-	//D3DXMatrixTranslation(&mtxTrans, object.pos.x, object.pos.y, object.pos.z);
-	//D3DXMatrixMultiply(&object.mtxWorld, &object.mtxWorld, &mtxTrans);
-
-	//// ワールドマトリックスの設定
-	//pDevice->SetTransform(D3DTS_WORLD, &object.mtxWorld);
-
-	//// 現在のマテリアルを取得
-	//pDevice->GetMaterial(&matDef);
-
-	//// マテリアルデータへのポインタを取得
-	//pMat = (D3DXMATERIAL*)g_pBuffMatObject->GetBufferPointer();
-
-	//for (int nCntMat = 0; nCntMat < (int)g_nNumMatObject; nCntMat++)
-	//{
-	//	// マテリアルの設定
-	//	pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-
-	//	// テクスチャの設定
-	//	pDevice->SetTexture(0, NULL);
-
-	//	// モデル(パーツ)の描画
-	//	g_pMeshObject->DrawSubset(nCntMat);
-	//}
-
-	//// 保存していたマテリアルを戻す
-	//pDevice->SetMaterial(&matDef);
 }
 
 //==============================================================================
@@ -368,7 +332,7 @@ void TouchItem(D3DXVECTOR3 *pPos, float fWidthMax, float fWidthMin, float fDepth
 	for (int nCntItem = 0; nCntItem < MAX_ITEM; nCntItem++, pItem++, pShadow++)
 	{
 		if (pItem->bUse == true)
-		{
+		{// アイテムの外積当たり判定
 			for (int nCnt = 0; nCnt < FOUR_POINT; nCnt++)
 			{
 				switch (nCnt)
@@ -395,8 +359,9 @@ void TouchItem(D3DXVECTOR3 *pPos, float fWidthMax, float fWidthMin, float fDepth
 
 
 			if (fItemVec[0] > 0.0f && fItemVec[1] > 0.0f && fItemVec[2] > 0.0f && fItemVec[3] > 0.0f)
-			{
+			{// アイテムの取得
 				SetEffect(D3DXVECTOR3(pItem->pos.x, pItem->pos.y + 5.0f, pItem->pos.z), 0.01f, D3DXCOLOR(1.0f, 1.0f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
+				PlaySound(SOUND_LABEL_SE_COIN);
 				AddScore(100);
 				pShadow->bUse = false;
 				pItem->bUse = false;

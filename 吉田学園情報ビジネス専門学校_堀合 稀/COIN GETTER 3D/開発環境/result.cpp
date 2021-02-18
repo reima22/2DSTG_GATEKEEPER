@@ -234,16 +234,16 @@ HRESULT InitResult(void)
 	// 頂点バッファをアンロックする
 	g_pVtxBuffResult->Unlock();
 
-	//if (Player->state == PLAYERSTATE_GAMEOVER)
+	if (Player->state == PLAYERSTATE_GAMEOVER)
 	{
 		// BGMの再生
 		PlaySound(SOUND_LABEL_BGM003);
 	}
-	//else
-	//{
-	//	// BGMの再生
-	//	PlaySound(SOUND_LABEL_BGM002);
-	//}
+	else
+	{
+		// BGMの再生
+		PlaySound(SOUND_LABEL_BGM002);
+	}
 
 	return S_OK;
 }
@@ -323,10 +323,10 @@ void UpdateResult(void)
 	// 頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffResult->Lock(0, 0, (void**)&pVtx, 0);
 
-	//if (Player->state == PLAYERSTATE_GAMEOVER)
-	//{
-	//	fResult += 0.5f;
-	//}
+	if (Player->state == PLAYERSTATE_GAMEOVER)
+	{
+		fResult += 0.5f;
+	}
 
 	// 頂点座標の更新
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.5f + fResult);

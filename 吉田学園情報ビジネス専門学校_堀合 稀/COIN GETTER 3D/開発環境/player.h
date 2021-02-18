@@ -117,6 +117,8 @@ typedef struct
 	int nNumKey;								// キー数
 	int nKey;									// キー№
 	int nCounterMotion;							// モーションのカウンター
+	bool bOnBlock;								// 何かに乗っているか
+	int nCntState;								// 状態変化のカウンター
 } Player;
 
 //==============================================================================
@@ -129,5 +131,6 @@ void DrawPlayer(void);		// プレイヤーの描画処理
 Player *GetPlayer(void);	// プレイヤーの取得
 void UpdateMotion(MOTIONTYPE motionType);	// モーションの更新
 void LoadMotion(void);						// .txtフォルダの読み込み
+void StateChange(void);
 
 #endif

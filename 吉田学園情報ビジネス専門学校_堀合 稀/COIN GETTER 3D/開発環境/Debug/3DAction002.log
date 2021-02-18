@@ -1,15 +1,3 @@
-﻿  player.cpp
-  particle.cpp
-  billboard.cpp
-  コードを生成中...
-  スキップ中... (関連する変更は検出されませんでした)
-  ui.cpp
-  timer.cpp
-  result.cpp
-  object.cpp
-  main.cpp
-  life.cpp
-  game.cpp
-  camera.cpp
+﻿  game.cpp
   3DAction002.vcxproj -> C:\Users\student\Documents\Visual Studio 2015\Projects\3DAction002\3DAction002.exe
   3DAction002.vcxproj -> C:\Users\student\Documents\Visual Studio 2015\Projects\3DAction002\3DAction002.pdb (Full PDB)

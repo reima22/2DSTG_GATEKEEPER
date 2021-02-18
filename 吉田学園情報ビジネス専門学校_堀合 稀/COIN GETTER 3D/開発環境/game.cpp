@@ -19,7 +19,7 @@
 #include "bullet.h"
 #include "object.h"
 //#include "bg.h"
-//#include "enemy.h"
+#include "enemy.h"
 #include "score.h"
 #include "sound.h"
 #include "input.h"
@@ -67,6 +67,7 @@ HRESULT InitGame(void)
 
 	// 背景ポリゴンの初期化設定
 	//InitBg();
+
 	// タイマーの初期化処理
 	InitTimer();
 
@@ -87,7 +88,8 @@ HRESULT InitGame(void)
 
 	InitObject();
 
-
+	InitEnemy();
+	
 	// ポリゴンの初期化処理
 	InitPolygon();
 
@@ -117,6 +119,7 @@ HRESULT InitGame(void)
 
 	// 体力表示の初期化処理
 	InitLife();
+
 	// UIの初期化設定
 	InitUI();
 
@@ -124,6 +127,8 @@ HRESULT InitGame(void)
 	//InitNodamage();
 
 	// BGMの再生
+	PlaySound(SOUND_LABEL_BGM001);
+
 	//if (g_nGameCnt == 0)
 	//{
 	//	PlaySound(SOUND_LABEL_BGM001);
@@ -186,9 +191,7 @@ void UninitGame(void)
 	UninitShadow();
 
 	// 敵の終了処理
-	//UninitEnemy();
-	// アイテムの終了処理
-	//UninitItem();
+	UninitEnemy();
 
 	// エフェクトの終了処理
 	UninitParticle();
@@ -197,7 +200,7 @@ void UninitGame(void)
 	UninitScore();
 
 	// タイマーの終了処理
-	//UninitTimer();
+	UninitTimer();
 
 	// ポーズメニューの終了処理
 	UninitPause();
@@ -216,24 +219,20 @@ void UninitGame(void)
 void UpdateGame(void)
 {
 	// ローカル変数宣言
-	Player *player;
+	Player *pPlayer;
 	PAUSE pause;
 	FADE fade;
-	//int nTime = GetTimer();
+	int nTime = GetTimer();
 	int nGameCnt = g_nGameCnt;
 
 	// プレイヤーの取得
-	player = GetPlayer();
+	pPlayer = GetPlayer();
 
 	// ポーズの取得
 	pause = GetPause();
 
 	// フェードの取得
 	fade = GetFade();
-
-	// カメラの設定
-	//SetCamera();
-	//SetEffect(D3DXVECTOR3(0.0f, 20.0f, 0.0f), 0.02f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 10.0f, 0.05f, 30);
 
 	// ポーズメニューへ移行
 	if (/*player->state != PLAYERSTATE_CLEAR && player->state != PLAYERSTATE_GAMEOVER &&*/ pause.colOption.a <= 0.0f && fade == FADE_NONE)
@@ -276,13 +275,14 @@ void UpdateGame(void)
 	}
 	else
 	{ // 非ポーズ時の処理
-		//if (player->state != PLAYERSTATE_CLEAR && player->state != PLAYERSTATE_GAMEOVER)
+		if (pPlayer->state != PLAYERSTATE_CLEAR && pPlayer->state != PLAYERSTATE_GAMEOVER)
 		{ // ゲーム中の処理
 		  // 背景ポリゴンの更新処理
 			//UpdateBg();
-
+			// 体力の更新処理
+			UpdateLife();
 			// 敵の更新処理
-			//UpdateEnemy();
+			UpdateEnemy();
 
 			// カメラの更新処理
 			UpdateCamera();
@@ -322,7 +322,7 @@ void UpdateGame(void)
 		// エフェクトの更新処理
 		UpdateParticle();
 
-		//if (player->state != PLAYERSTATE_GAMEOVER)
+		if (pPlayer->state != PLAYERSTATE_GAMEOVER)
 		{
 			// スコアの更新処理
 			UpdateScore();
@@ -334,19 +334,19 @@ void UpdateGame(void)
 			//UpdateNodamage();
 		}
 	
-		//// 画面の遷移（ゲームクリア時）
-		//if (nTime <= 0 && Player->state == PLAYERSTATE_CLEAR && g_nGameCnt < MAX_STAGE && g_nStartCnt == g_nGameCnt)
-		//{
-		//	g_nGameCnt++;					// ステージカウント加算
-		//	SetFade(FADE_OUT, MODE_GAME);	// ゲームモード続行
-		//}
+		// 画面の遷移（ゲームクリア時）
+		if (nTime <= 0 && pPlayer->state == PLAYERSTATE_CLEAR)
+		{
+			//g_nGameCnt++;					// ステージカウント加算
+			SetFade(FADE_OUT, MODE_RESULT);	// ゲームモード続行
+		}
 		//else if(nTime <= 0 && g_nGameCnt == MAX_STAGE)
 		//{
 		//	SetFade(FADE_OUT, MODE_RESULT);	// リザルトへ
 		//}
 		
 		// 画面の遷移（ゲームオーバー時）
-		if (player->state == PLAYERSTATE_GAMEOVER)
+		if (pPlayer->state == PLAYERSTATE_GAMEOVER)
 		{
 			SetFade(FADE_OUT, MODE_RESULT);	// リザルトへ
 		}
@@ -366,7 +366,7 @@ void DrawGame(void)
 	//// 背景ポリゴンの描画処理
 	//DrawBg();
 	//// 敵の描画処理
-	//DrawEnemy();
+	DrawEnemy();
 
 	// ポリゴンの描画処理
 	DrawPolygon();

@@ -173,6 +173,11 @@ void UpdateTimer(void)
 		}
 	}
 
+	if (g_nTimer <= 0)
+	{
+		pPlayer->state = PLAYERSTATE_GAMEOVER;
+	}
+
 	// 各桁の計算とテクスチャの切り替え
 	for (int nCnt = 0; nCnt < MAX_TIMER; nCnt++)
 	{

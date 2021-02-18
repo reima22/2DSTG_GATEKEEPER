@@ -90,10 +90,10 @@ HRESULT InitLife(void)
 		pVtx[3].rhw = 1.0f;
 
 		// 各頂点カラーの設定
-		pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
-		pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 255);
-		pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 255);
-		pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[0].col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+		pVtx[1].col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+		pVtx[2].col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+		pVtx[3].col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 
 		// テクスチャ頂点情報の設定
 		pVtx[0].tex = D3DXVECTOR2(0.0f, 1.0f);
@@ -145,13 +145,13 @@ void UpdateLife(void)
 	// テクスチャの透明度の変更
 	if (pPlayer->nLife != MAX_LIFE)
 	{
-		// 透明度最大
+		// 透明度最小
 		lifestate[pPlayer->nLife].fLifeAlpha = 0.0f;
 
 		if (pPlayer->nLife == 0)
 		{ // 体力0の時
 			for (int nCnt = 0; nCnt < MAX_LIFE; nCnt++)
-			{ // 透明度をすべて最大へ
+			{ // 透明度をすべて最小へ
 				lifestate[nCnt].fLifeAlpha = 0.0f;
 			}
 		}
@@ -160,7 +160,7 @@ void UpdateLife(void)
 	{ // 体力最大へ
 		for (int nCnt = 0; nCnt < MAX_LIFE; nCnt++)
 		{
-			// 透明度最小へ
+			// 透明度最大へ
 			lifestate[nCnt].fLifeAlpha = 1.0f;
 		}
 	}

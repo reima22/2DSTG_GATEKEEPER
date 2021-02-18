@@ -62,11 +62,11 @@ void InitCamera(void)
 	g_camera.fHeightR = player->pos.y;				// 注視点の高さ
 	g_camera.fFront = 15.0f;						// モデルの前方の距離
 	g_camera.bAutoTurn = false;						// カメラの回り込みON・OFF
-	g_camera.viewport.X = 900.0f;					// 描画する画面左上のＸ座標
-	g_camera.viewport.Y = 450.0f;					// 描画する画面左上のＹ座標
-	g_camera.viewport.Width = 320.0f;				// 描画する画面の幅
-	g_camera.viewport.Height = 180.0f;				// 描画する画面の高さ
-	g_camera.viewport.MinZ = -20.0f;	
+	g_camera.viewport.X = (DWORD)900.0f;			// 描画する画面左上のＸ座標
+	g_camera.viewport.Y = (DWORD)450.0f;			// 描画する画面左上のＹ座標
+	g_camera.viewport.Width = (DWORD)320.0f;		// 描画する画面の幅
+	g_camera.viewport.Height = (DWORD)180.0f;		// 描画する画面の高さ
+	g_camera.viewport.MinZ = -20.0f;
 	g_camera.viewport.MaxZ = 1.0f; 
 }	
 

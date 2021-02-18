@@ -13,10 +13,6 @@
 // マクロ定義
 //==============================================================================
 #define MAX_ITEM		(128)		// アイテムの最大数
-#define FOUR_POINT		(4)			// 当たり判定の4個点
-//#define MAX_TYPE_ITEM	(3)			// アイテムの種類
-//#define ITEM_SIZEX		(15)		// アイテムの幅
-//#define ITEM_SIZEY		(30)		// アイテムの高さ
 
 //==============================================================================
 // アイテムの構造体
@@ -40,10 +36,10 @@ typedef struct
 //==============================================================================
 // プロトタイプ宣言
 //==============================================================================
-HRESULT InitItem(void);						// アイテムの初期化処理
-void UninitItem(void);						// アイテムの終了処理
-void UpdateItem(void);						// アイテムの更新処理
-void DrawItem(void);						// アイテムの描画処理
+HRESULT InitItem(void);			// アイテムの初期化処理
+void UninitItem(void);			// アイテムの終了処理
+void UpdateItem(void);			// アイテムの更新処理
+void DrawItem(void);			// アイテムの描画処理
 void SetItem(D3DXVECTOR3 pos);	// アイテムの配置
 void TouchItem(
 	D3DXVECTOR3 *pPos,
@@ -52,8 +48,8 @@ void TouchItem(
 	float fDepthMax,
 	float fDepthMin,
 	float fHeightMax,
-	float fHeightMin);				// アイテムの取得
-ITEM *GetItem(void);						// アイテムの情報
-int RandItem(void);						// ランダムでハイスコアアイテムの選定
+	float fHeightMin);			// アイテムの取得
+ITEM *GetItem(void);			// アイテムの情報
+int RandItem(void);				// ランダムでハイスコアアイテムの選定
 
 #endif

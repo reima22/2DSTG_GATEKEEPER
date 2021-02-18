@@ -12,6 +12,7 @@
 #include "bullet.h"
 #include "object.h"
 #include "item.h"
+#include "enemy.h"
 #include "math.h"
 #include <stdio.h>
 
@@ -100,9 +101,11 @@ HRESULT InitPlayer(void)
 	g_player.nLife = MAX_LIFE;
 	g_player.motionType = MOTIONTYPE_NEUTRAL;
 	g_player.bLoopMotion = false;
+	g_player.bOnBlock = true;
 	g_player.nNumKey = 0;
 	g_player.nKey = 0;
 	g_player.nCounterMotion = 0;
+	g_player.nCntState = 0;
 	g_vtxMinPlayer = VTX_MINP;
 	g_vtxMaxPlayer = VTX_MAXP;
 
@@ -182,16 +185,15 @@ void UpdatePlayer(void)
 {
 	// カメラの取得
 	Camera camera = GetCamera();
-	//double dSqrt = sqrt(2);		// 2の平方根
+	StateChange();
 
 	// 直前の位置の保存
 	g_player.posOld = g_player.pos;
 
 	// 重力の発生
-	if (g_player.pos.y > 0.0f)
+	if (g_player.pos.y > 0.0f && g_player.bOnBlock == false)
 	{
 		g_player.move.y += -0.8f;
-
 	}
 	if (g_player.pos.y < 0.0f)
 	{
@@ -199,6 +201,7 @@ void UpdatePlayer(void)
 		g_player.move.y = 0.0f;
 		if (g_player.motionTypeOld == MOTIONTYPE_JUMP)
 		{
+			g_player.bOnBlock = true;
 			g_player.nKey = 0;
 			g_player.nCounterMotion = 0;
 			g_player.motionType = MOTIONTYPE_LANDING;
@@ -218,15 +221,18 @@ void UpdatePlayer(void)
 	if (GetKeyboardTrigger(KEYINFO_SHOT) == true)
 	{
 		//SetBullet(
-		//	D3DXVECTOR3(g_player.pos.x + sinf(D3DX_PI - g_player.rot.y) * -10.0f, g_player.pos.y + 50.0f, g_player.pos.z + cosf(D3DX_PI - g_player.rot.y) * 10.0f)
+			//D3DXVECTOR3(g_player.pos.x + sinf(D3DX_PI - g_player.rot.y) * -10.0f, g_player.pos.y + 50.0f, g_player.pos.z + cosf(D3DX_PI - g_player.rot.y) * 10.0f)
 		//	/*D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 30.0f, g_player.pos.z)*/,
 		//	D3DXVECTOR3(sinf(D3DX_PI - g_player.rot.y) * -5.0f, 0.0f, cosf(D3DX_PI - g_player.rot.y) * 5.0f),
 		//	100);
-		if(g_player.motionType == MOTIONTYPE_MOVE || g_player.motionType == MOTIONTYPE_NEUTRAL)
-		g_player.move.y = 13.0f;
-		g_player.nKey = 0;
-		g_player.nCounterMotion = 0;
-		g_player.motionType = MOTIONTYPE_JUMP;
+		if (g_player.motionType == MOTIONTYPE_MOVE || g_player.motionType == MOTIONTYPE_NEUTRAL)
+		{
+			g_player.bOnBlock = false;
+			g_player.move.y = 13.0f;
+			g_player.nKey = 0;
+			g_player.nCounterMotion = 0;
+			g_player.motionType = MOTIONTYPE_JUMP;
+		}
 	}
 
 	if (GetKeyboardTrigger(KEYINFO_ATTACK) == true && g_player.motionType == MOTIONTYPE_NEUTRAL)
@@ -238,8 +244,6 @@ void UpdatePlayer(void)
 
 	// モーションの更新
 	UpdateMotion(g_player.motionType);
-
-
 
 	// 移動量の加算
 	g_player.pos += g_player.move;
@@ -408,6 +412,7 @@ void UpdatePlayer(void)
 
 	CollisionVec(&g_player.pos, &g_player.posOld, &g_player.move, g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
 	TouchItem(&g_player.pos, g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
+	g_player.bOnBlock = TouchEnemy(&g_player.pos, &g_player.posOld,g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
 }
 
 //==============================================================================
@@ -796,5 +801,47 @@ void LoadMotion(void)
 	}
 	else
 	{ // ファイル展開不可
+	}
+}
+
+//==============================================================================
+// プレイヤーの状態変化
+//==============================================================================
+void StateChange(void)
+{
+	Player *pPlayer = &g_player;
+
+	switch (pPlayer->state)
+	{
+	case PLAYERSTATE_DAMAGE:	// ダメージ
+		if (pPlayer->nLife > 0)
+		{
+			pPlayer->nCntState--;
+			if (pPlayer->nCntState <= 0)
+			{
+				pPlayer->nCntState = 20;
+				pPlayer->state = PLAYERSTATE_APPEAR;
+			}
+		}
+		else
+		{
+			pPlayer->state = PLAYERSTATE_GAMEOVER;
+		}
+
+		break;
+
+	case PLAYERSTATE_GAMEOVER:	// ゲームオーバー
+		break;
+
+	case PLAYERSTATE_APPEAR:	// 出現時
+		pPlayer->nCntState--;
+		if (pPlayer->nCntState <= 0)
+		{
+			pPlayer->state = PLAYERSTATE_NORMAL;
+		}
+		break;
+
+	case PLAYERSTATE_NORMAL:	// 通常時
+		break;
 	}
 }
