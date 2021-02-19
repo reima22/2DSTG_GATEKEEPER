@@ -392,6 +392,7 @@ void DrawMeshfield(void)
 	// ローカル変数宣言
 	LPDIRECT3DDEVICE9 pDevice;		// デバイスのポインタ
 	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
+
 	//MeshField *pField;
 	//pField = &g_aField[0];
 

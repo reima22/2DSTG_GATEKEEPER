@@ -9,6 +9,9 @@
 #define _OBJECT_H_
 #include "main.h"
 
+// マクロ定義
+#define COLLISION_PARTS	(4)	// 当たり判定の面の数
+
 // モデルの構造体
 typedef struct
 {
@@ -19,6 +22,9 @@ typedef struct
 	D3DXVECTOR3 rotDest;
 	D3DXVECTOR3 vtxMinObject, vtxMaxObject;	// モデルの各座標の最大値・最小値
 	int nIdx;
+	D3DXVECTOR3 aPos[COLLISION_PARTS];
+	D3DXVECTOR3 aVec[COLLISION_PARTS];
+	float fPlayerVec[COLLISION_PARTS];
 } Object;
 
 //==============================================================================

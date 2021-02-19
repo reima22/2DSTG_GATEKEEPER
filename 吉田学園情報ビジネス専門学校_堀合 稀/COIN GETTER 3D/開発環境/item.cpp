@@ -17,7 +17,14 @@
 //==============================================================================
 // マクロ定義　
 //==============================================================================
-#define ITEM_TURN	(0.05f)	// アイテムの回転速度
+#define ITEM_TURN	(0.05f)				// アイテムの回転速度
+#define SET_ITEM_W	(5)					// アイテムの配置数(幅)
+#define SET_ITEM_D	(5)					// アイテムの配置数(奥行)
+#define SET_WIDTH	(150.0f)			// アイテムの配置開始(幅)
+#define SET_DEPTH	(150.0f)			// アイテムの配置開始(奥行)
+#define SET_HALF_W	(SET_WIDTH / 2.0f)	// アイテムの配置間隔(幅)
+#define SET_HALF_D	(SET_DEPTH / 2.0f)	// アイテムの配置間隔(奥行) 
+#define ON_BALOON	(D3DXVECTOR3(50.0f,100.0f,50.0f))	// 風船の上の配置
 
 //==============================================================================
 // グローバル変数
@@ -34,10 +41,8 @@ int g_nCntItem;							// 配置数カウント
 HRESULT InitItem(void)
 {
 	// ローカル変数宣言
-	//VERTEX_2D *pVtx;
 	LPDIRECT3DDEVICE9 pDevice;
 	ITEM *pItem;
-	//int nRand;
 
 	// 乱数処理から現時刻を除外
 	srand((unsigned int)time(0));
@@ -93,8 +98,6 @@ HRESULT InitItem(void)
 		//}
 	}
 
-
-
 	// 頂点座標の比較
 	for (int nCntItem = 0; nCntItem < MAX_ITEM; nCntItem++)
 	{
@@ -139,16 +142,15 @@ HRESULT InitItem(void)
 		g_pMeshItem->UnlockVertexBuffer();
 	}
 
-	for (int nCntDep = 0; nCntDep < 5; nCntDep++)
+	// アイテムの配置
+	for (int nCntDep = 0; nCntDep < SET_ITEM_D; nCntDep++)
 	{
-		for (int nCntWid = 0; nCntWid < 5; nCntWid++)
+		for (int nCntWid = 0; nCntWid < SET_ITEM_W; nCntWid++)
 		{
-			SetItem(D3DXVECTOR3(-150.0f + (75.0f * (float)nCntWid), 0.0f, 150.0f - (75.0f * (float)nCntDep)));
+			SetItem(D3DXVECTOR3(-SET_WIDTH + (SET_HALF_W * (float)nCntWid), 0.0f, SET_DEPTH - (SET_HALF_D * (float)nCntDep)));
 		}
 	}
-
-	SetItem(D3DXVECTOR3(50.0f, 100.0f, 50.0f));
-
+	SetItem(ON_BALOON);
 
 	return S_OK;
 }
@@ -185,11 +187,11 @@ void UpdateItem(void)
 	for (int nCntItem = 0; nCntItem < MAX_ITEM; nCntItem++,pItem++)
 	{
 		if (pItem->bUse == true)
-		{
-			pItem->rot.y += ITEM_TURN;
+		{// 使用状態か
+			pItem->rot.y += ITEM_TURN;	// 角度の加算
 
 			if (pItem->rot.y > D3DX_PI)
-			{
+			{// 角度の数値１周時
 				pItem->rot.y -= D3DX_PI * 2.0f;
 			}
 		}
@@ -255,29 +257,34 @@ void DrawItem(void)
 //==============================================================================
 void SetItem(D3DXVECTOR3 pos)
 {
+	// ローカル変数宣言
 	ITEM *pItem = &g_aItem[0];
 
+	// アイテムの設定
 	for (int nCntItem = 0; nCntItem < MAX_ITEM; nCntItem++,pItem++)
 	{
 		if (pItem->bUse == false)
-		{
-			pItem->pos = pos;
+		{// アイテムが未使用か
+			pItem->pos = pos;	// 位置
 
+			// 各頂点位置
 			pItem->posPoint[0] = D3DXVECTOR3(pItem->pos.x + pItem->vtxMinObject.x, 0.0f, pItem->pos.z + pItem->vtxMinObject.x);
 			pItem->posPoint[1] = D3DXVECTOR3(pItem->pos.x + pItem->vtxMinObject.x, 0.0f, pItem->pos.z + pItem->vtxMaxObject.x);
 			pItem->posPoint[2] = D3DXVECTOR3(pItem->pos.x + pItem->vtxMaxObject.x, 0.0f, pItem->pos.z + pItem->vtxMaxObject.x);
 			pItem->posPoint[3] = D3DXVECTOR3(pItem->pos.x + pItem->vtxMaxObject.x, 0.0f, pItem->pos.z + pItem->vtxMinObject.x);
 
+			// ４辺のベクトル
 			pItem->vecPoint[0] = pItem->posPoint[1] - pItem->posPoint[0];
 			pItem->vecPoint[1] = pItem->posPoint[2] - pItem->posPoint[1];
 			pItem->vecPoint[2] = pItem->posPoint[3] - pItem->posPoint[2];
 			pItem->vecPoint[3] = pItem->posPoint[0] - pItem->posPoint[3];
 
+			// 影の設定
 			pItem->nIdx = SetShadow(D3DXVECTOR3(pItem->pos.x, 0.0f, pItem->pos.z), 10.0f, 10.0f);
 
-			g_nCntItem++;
+			g_nCntItem++;		// 配置アイテム数の加算
 
-			pItem->bUse = true;
+			pItem->bUse = true;	// 使用状態へ移行
 
 			break;
 		}
@@ -328,11 +335,11 @@ void TouchItem(D3DXVECTOR3 *pPos, float fWidthMax, float fWidthMin, float fDepth
 {
 	// ローカル変数宣言
 	ITEM *pItem = &g_aItem[0];
-	Player *pPlayer = GetPlayer();
-	Shadow *pShadow = GetShadow();
-	D3DXVECTOR3 aVec[FOUR_POINT];
-	float fItemVec[FOUR_POINT];
-	D3DXVECTOR3 pos = *pPos;
+	Player *pPlayer = GetPlayer();	// プレイヤーの取得
+	Shadow *pShadow = GetShadow();	// 影の取得
+	D3DXVECTOR3 aVec[FOUR_POINT];	// 各頂点からプレイヤーへのベクトル
+	float fItemVec[FOUR_POINT];		// 判定用変数
+	D3DXVECTOR3 pos = *pPos;		// プレイヤーの位置
 
 	for (int nCntItem = 0; nCntItem < MAX_ITEM; nCntItem++, pItem++, pShadow++)
 	{
@@ -342,37 +349,39 @@ void TouchItem(D3DXVECTOR3 *pPos, float fWidthMax, float fWidthMin, float fDepth
 			{
 				switch (nCnt)
 				{
-				case 0:
+				case 0:	// 左側
 					aVec[nCnt] = pos + D3DXVECTOR3(fWidthMax, 0.0f, 0.0f) - pItem->posPoint[nCnt];
 					break;
 
-				case 1:
+				case 1:	// 奥側
 					aVec[nCnt] = pos + D3DXVECTOR3(0.0f, 0.0f, fDepthMin) - pItem->posPoint[nCnt];
 					break;
 
-				case 2:
+				case 2:	// 右側
 					aVec[nCnt] = pos + D3DXVECTOR3(fWidthMin, 0.0f, 0.0f) - pItem->posPoint[nCnt];
 					break;
 
-				case 3:
+				case 3:	// 手前側
 					aVec[nCnt] = pos + D3DXVECTOR3(0.0f, 0.0f, fDepthMin) - pItem->posPoint[nCnt];
 					break;
 				}
 
+				// 判定用数値算出
 				fItemVec[nCnt] = (pItem->vecPoint[nCnt].z * aVec[nCnt].x) - (pItem->vecPoint[nCnt].x * aVec[nCnt].z);
 			}
 
-
+			// アイテムとの接触
 			if (fItemVec[0] > 0.0f && fItemVec[1] > 0.0f && fItemVec[2] > 0.0f && fItemVec[3] > 0.0f && pPlayer->pos.y <= (pItem->pos.y + pItem->vtxMaxObject.y))
 			{// アイテムの取得
+				// エフェクトの発生
 				SetEffect(D3DXVECTOR3(pItem->pos.x, pItem->pos.y + 5.0f, pItem->pos.z), 0.01f, D3DXCOLOR(1.0f, 1.0f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
-				PlaySound(SOUND_LABEL_SE_COIN);
-				AddScore(1000);
-				pShadow->bUse = false;
-				pItem->bUse = false;
-				g_nCntItem--;
+				PlaySound(SOUND_LABEL_SE_COIN);	// 効果音の再生
+				AddScore(1000);					// スコアの加算
+				pShadow->bUse = false;			// 影の消滅
+				pItem->bUse = false;			// アイテムの消滅
+				g_nCntItem--;					// アイテムカウントの減算
 				if (g_nCntItem <= 0)
-				{
+				{// アイテム全取得したとき
 					pPlayer->state = PLAYERSTATE_CLEAR;
 				}
 				break;

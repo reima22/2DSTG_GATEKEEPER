@@ -11,9 +11,6 @@
 #include "shadow.h"
 #include "math.h"
 
-// マクロ定義
-#define COLLISION_PARTS	(4)	// 当たり判定の面の数
-
 //==============================================================================
 // グローバル変数
 //==============================================================================
@@ -289,7 +286,6 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 	// ローカル変数宣言
 	bool bLand;
 	D3DXVECTOR3 aVec[COLLISION_PARTS];	// 矩形頂点から判定対象へのベクトル
-	float fPlayerVec[COLLISION_PARTS];	// 各面のベクトルとの判定（＋－）
 	D3DXVECTOR3 pos = *pPos;			// 判定対象の位置
 	Player *pPlayer = GetPlayer();
 
@@ -322,14 +318,12 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 			aVec[nCnt] = pos + D3DXVECTOR3(0.0f, 0.0f, fDepthMax) - g_aPos[nCnt];
 		}
 
-		//aVec[nCnt] = pos - g_aPos[nCnt];	// 面の始点と対象のベクトル
-
 		// 数値が「+」の時、当たり判定が有効
-		fPlayerVec[nCnt] = (g_aVec[nCnt].z * aVec[nCnt].x) - (g_aVec[nCnt].x * aVec[nCnt].z);	
+		object.fPlayerVec[nCnt] = (g_aVec[nCnt].z * aVec[nCnt].x) - (g_aVec[nCnt].x * aVec[nCnt].z);	
 
 		if (pPos->y <= object.pos.y + object.vtxMaxObject.y - fHeightMin && pPos->y > object.pos.y + object.vtxMinObject.y - fHeightMax)
 		{
-			if (fPlayerVec[0] > 0.0f && fPlayerVec[1] > 0.0f && fPlayerVec[2] > 0.0f && fPlayerVec[3] > 0.0f)
+			if (object.fPlayerVec[0] > 0.0f && object.fPlayerVec[1] > 0.0f && object.fPlayerVec[2] > 0.0f && object.fPlayerVec[3] > 0.0f)
 			{
 				if (pPos->y <= pPosOld->y &&
 					pPos->y <= (object.pos.y + object.vtxMaxObject.y) &&
@@ -342,22 +336,18 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 				else if (pPos->x > pPosOld->x && pPosOld->x < object.pos.x + object.vtxMinObject.x)
 				{// 左側	
 					pPos->x = object.pos.x + object.vtxMinObject.x - fWidthMax;
-					//pMove->x = 0.0f;
 				}
 				else if (pPos->x < pPosOld->x && pPosOld->x > object.pos.x + object.vtxMaxObject.x)
 				{// 右側	
 					pPos->x = object.pos.x + object.vtxMaxObject.x - fWidthMin;
-					//pMove->x = 0.0f;
 				}
 				else if (pPos->z <= pPosOld->z && pPos->z > object.pos.z)
 				{// 奥側
 					pPos->z = object.pos.z + object.vtxMaxObject.z - fDepthMin;
-					//pMove->z = 0.0f;
 				}
 				else if (pPos->z >= pPosOld->z && pPos->z < object.pos.z)
 				{// 手前
 					pPos->z = object.pos.z + object.vtxMinObject.z - fDepthMax;
-					//pMove->z = 0.0f;
 				}
 			}
 		}

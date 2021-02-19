@@ -13,8 +13,12 @@
 #include "math.h"
 
 // マクロ定義
-#define COLLISION_PARTS	(4)	// 当たり判定の面の数
-#define MAX_ENEMY		(8)	// 
+#define COLLISION_PARTS	(4)			// 当たり判定の面の数
+#define MAX_ENEMY		(8)			// 敵の最大数
+#define MOVE_ENEMY0		(100.0f)	// 敵の移動範囲数値
+#define MOVE_ENEMY1		(150.0f)	// 敵の移動範囲数値
+#define MOVE0			(2.0f)		// 敵の移動力
+#define MOVE1			(3.0f)		// 敵の移動力
 
 //==============================================================================
 // グローバル変数
@@ -110,7 +114,10 @@ HRESULT InitEnemy(void)
 		g_pMeshEnemy->UnlockVertexBuffer();
 	}
 
-	SetEnemy(D3DXVECTOR3(0.0f, 0.0f, 100.0f), D3DXVECTOR3(2.0f, 0.0f, 0.0f), 0);
+	SetEnemy(D3DXVECTOR3(0.0f, 0.0f, MOVE_ENEMY0), D3DXVECTOR3(MOVE0, 0.0f, 0.0f), 0);
+	SetEnemy(D3DXVECTOR3(0.0f, 0.0f, -MOVE_ENEMY0), D3DXVECTOR3(-MOVE0, 0.0f, 0.0f), 0);
+	SetEnemy(D3DXVECTOR3(0.0f, 0.0f, MOVE_ENEMY1), D3DXVECTOR3(-MOVE1, 0.0f, 0.0f), 1);
+
 
 	return S_OK;
 }
@@ -145,6 +152,7 @@ void UpdateEnemy(void)
 	Player *pPlayer = GetPlayer();
 	D3DXVECTOR3 vec;
 
+	// 敵の移動処理
 	for (int nCntEnemy = 0; nCntEnemy < MAX_ENEMY; nCntEnemy++,pEnemy++)
 	{
 		if (pEnemy->bUse == true)
@@ -159,25 +167,48 @@ void UpdateEnemy(void)
 			switch (pEnemy->nMovePattern)
 			{
 			case 0:
-				if (pEnemy->pos == D3DXVECTOR3(100.0f, 0.0f, 100.0f))
-				{
+				if (pEnemy->pos == D3DXVECTOR3(MOVE_ENEMY0, 0.0f, MOVE_ENEMY0))
+				{// 右上到達
 					pEnemy->move.x = 0.0f;
-					pEnemy->move.z = -2.0f;
+					pEnemy->move.z = -MOVE0;
 				}
-				else if (pEnemy->pos == D3DXVECTOR3(100.0f, 0.0f, -100.0f))
-				{
-					pEnemy->move.x = -2.0f;
+				else if (pEnemy->pos == D3DXVECTOR3(MOVE_ENEMY0, 0.0f, -MOVE_ENEMY0))
+				{// 右下到達
+					pEnemy->move.x = -MOVE0;
 					pEnemy->move.z = 0.0f;
 				}
-				else if (pEnemy->pos == D3DXVECTOR3(-100.0f, 0.0f, -100.0f))
-				{
+				else if (pEnemy->pos == D3DXVECTOR3(-MOVE_ENEMY0, 0.0f, -MOVE_ENEMY0))
+				{// 左下到達
 					pEnemy->move.x = 0.0f;
-					pEnemy->move.z = 2.0f;
+					pEnemy->move.z = MOVE0;
 				}
-				else if (pEnemy->pos == D3DXVECTOR3(-100.0f, 0.0f, 100.0f))
-				{
-					pEnemy->move.x = 2.0f;
+				else if (pEnemy->pos == D3DXVECTOR3(-MOVE_ENEMY0, 0.0f, MOVE_ENEMY0))
+				{// 左上到達
+					pEnemy->move.x = MOVE0;
 					pEnemy->move.z = 0.0f;
+				}
+				break;
+
+			case 1:
+				if (pEnemy->pos == D3DXVECTOR3(MOVE_ENEMY1, 0.0f, MOVE_ENEMY1))
+				{// 右上到達
+					pEnemy->move.x = -MOVE1;
+					pEnemy->move.z = 0.0f;
+				}
+				else if (pEnemy->pos == D3DXVECTOR3(MOVE_ENEMY1, 0.0f, -MOVE_ENEMY1))
+				{// 右下到達
+					pEnemy->move.x = 0.0f;
+					pEnemy->move.z = MOVE1;
+				}
+				else if (pEnemy->pos == D3DXVECTOR3(-MOVE_ENEMY1, 0.0f, -MOVE_ENEMY1))
+				{// 左下到達
+					pEnemy->move.x = MOVE1;
+					pEnemy->move.z = 0.0f;
+				}
+				else if (pEnemy->pos == D3DXVECTOR3(-MOVE_ENEMY1, 0.0f, MOVE_ENEMY1))
+				{// 左上到達
+					pEnemy->move.x = 0.0f;
+					pEnemy->move.z = -MOVE1;
 				}
 				break;
 
@@ -273,33 +304,42 @@ Enemy *GetEnemy(void)
 //==============================================================================
 void SetEnemy(D3DXVECTOR3 pos, D3DXVECTOR3 move, int nMove)
 {
+	// ローカル変数宣言
 	Enemy *pEnemy = &g_enemy[0];
 
+	// 敵の設定
 	for (int nCntEnemy = 0; nCntEnemy < MAX_ENEMY; nCntEnemy++, pEnemy++)
 	{
 		if (pEnemy->bUse == false)
-		{
-			pEnemy->pos = pos;
-			pEnemy->move = move;
-			pEnemy->nMovePattern = nMove;
-			pEnemy->nIdx = SetShadow(D3DXVECTOR3(pEnemy->pos.x, 0.0f, pEnemy->pos.z), 15.0f, 15.0f);
+		{// 未使用状態の時
+			pEnemy->pos = pos;				// 位置
 
-			pEnemy->bUse = true;
+			pEnemy->move = move;			// 移動力
+			
+			pEnemy->nMovePattern = nMove;	// 行動パターン
+			
+			pEnemy->nIdx = SetShadow(D3DXVECTOR3(pEnemy->pos.x, 0.0f, pEnemy->pos.z), 15.0f, 15.0f);	// 影の設定
+
+			pEnemy->bUse = true;			// 使用状態へ
+			
+			break;
 		}
 	}
 }
 
 //==============================================================================
-// 敵との接触
+// 敵との外積利用した接触判定
 //==============================================================================
 bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld,float fWidthMax, float fWidthMin, float fDepthMax, float fDepthMin, float fHeightMax, float fHeightMin)
 {
 	// ローカル変数宣言
 	Enemy *pEnemy = &g_enemy[0];
-	D3DXVECTOR3 aVec[FOUR_POINT];
-	Player *pPlayer = GetPlayer();
-	D3DXVECTOR3 pos = *pPos;
-	bool bOnBlock;
+	Player *pPlayer = GetPlayer();		// プレイヤーの取得
+	D3DXVECTOR3 aVec[FOUR_POINT];		// 4頂点とプレイヤーのベクトル
+	D3DXVECTOR3 pos = *pPos;			// プレイヤーの位置
+	bool bOnBlock;						// 乗っているか
+
+	// 地面、オブジェクトに乗っているか
 	if (pPlayer->bOnBlock == false)
 	{
 		bOnBlock = false;
@@ -309,6 +349,7 @@ bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld,float fWidthMax, float f
 		bOnBlock = true;
 	}
 
+	// 敵ごとの判定
 	for (int nCntItem = 0; nCntItem < MAX_ENEMY; nCntItem++, pEnemy++)
 	{
 		if (pEnemy->bUse == true)
@@ -338,10 +379,11 @@ bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld,float fWidthMax, float f
 				pEnemy->fVec[nCnt] = (pEnemy->vecPoint[nCnt].z * aVec[nCnt].x) - (pEnemy->vecPoint[nCnt].x * aVec[nCnt].z);
 			}
 
+			// 当たり判定
 			if (pPos->y <= pEnemy->pos.y + pEnemy->vtxMaxObject.y - fHeightMin && pPos->y > pEnemy->pos.y + pEnemy->vtxMinObject.y - fHeightMax)
-			{
+			{// 敵の高さより下か
 				if (pEnemy->fVec[0] > 0.0f && pEnemy->fVec[1] > 0.0f && pEnemy->fVec[2] > 0.0f && pEnemy->fVec[3] > 0.0f)
-				{
+				{// 敵の四方ベクトル範囲内か
 					if (pPos->y <= pPosOld->y && 
 						pPos->y <= (pEnemy->pos.y + pEnemy->vtxMaxObject.y) && 
 						pPosOld->y >= (pEnemy->pos.y + pEnemy->vtxMaxObject.y) &&
@@ -356,7 +398,6 @@ bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld,float fWidthMax, float f
 						pPlayer->state = PLAYERSTATE_DAMAGE;
 						pPlayer->nCntState = 9;
 						pPlayer->nLife--;
-						PlaySound(SOUND_LABEL_SE_HIT000);
 					}
 					else if (pPos->x < pPosOld->x && pPosOld->x > pEnemy->pos.x + pEnemy->vtxMaxObject.x && pPlayer->state == PLAYERSTATE_NORMAL)
 					{// 右側	
@@ -364,7 +405,6 @@ bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld,float fWidthMax, float f
 						pPlayer->state = PLAYERSTATE_DAMAGE;
 						pPlayer->nCntState = 9;
 						pPlayer->nLife--;
-						PlaySound(SOUND_LABEL_SE_HIT000);
 					}
 					else if (pPos->z <= pPosOld->z && pPos->z > pEnemy->pos.z && pPlayer->state == PLAYERSTATE_NORMAL)
 					{// 奥側
@@ -372,7 +412,6 @@ bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld,float fWidthMax, float f
 						pPlayer->state = PLAYERSTATE_DAMAGE;
 						pPlayer->nCntState = 9;
 						pPlayer->nLife--;
-						PlaySound(SOUND_LABEL_SE_HIT000);
 					}
 					else if (pPos->z >= pPosOld->z && pPos->z < pEnemy->pos.z && pPlayer->state == PLAYERSTATE_NORMAL)
 					{// 手前
@@ -380,18 +419,9 @@ bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld,float fWidthMax, float f
 						pPlayer->state = PLAYERSTATE_DAMAGE;
 						pPlayer->nCntState = 9;
 						pPlayer->nLife--;
-						PlaySound(SOUND_LABEL_SE_HIT000);
 					}
 				}
 			}
-
-			//if (fEnemyVec[0] > 0.0f && fEnemyVec[1] > 0.0f && fEnemyVec[2] > 0.0f && fEnemyVec[3] > 0.0f)
-			//{// アイテムの取得
-			//	//SetEffect(D3DXVECTOR3(pEnemy->pos.x, pEnemy->pos.y + 5.0f, pEnemy->pos.z), 0.01f, D3DXCOLOR(1.0f, 1.0f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
-			//	PlaySound(SOUND_LABEL_SE_HIT000);
-			//	//AddScore(100);
-			//	break;
-			//}
 		}
 	}
 

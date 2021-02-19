@@ -31,6 +31,7 @@
 #define SCREEN_CENTERX	(640)		// 画面の中央X軸
 #define SCREEN_CENTERY	(360)		// 画面の中央Y軸
 #define FOUR_POINT		(4)			// 当たり判定の4個点
+#define PLUS_GRAVITY	(0.6f)		// 加算される重力値
 
 //#define POS1_PLAYER		(D3DXVECTOR3(40.0f,300.0f,0.0f))	// ステージ1のプレイヤーのスタート位置
 //#define POS2_PLAYER		(D3DXVECTOR3(40.0f,660.0f,0.0f))	// ステージ2のプレイヤーのスタート位置

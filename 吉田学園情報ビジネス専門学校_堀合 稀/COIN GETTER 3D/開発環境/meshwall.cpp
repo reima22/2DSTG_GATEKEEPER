@@ -29,6 +29,7 @@ Meshwall g_aMeshwall[MAX_MWALL];
 int g_nAllPointWall;								// 総頂点数
 int g_nPolygonWall;									// ポリゴン数
 int g_nIdxPointWall;								// インデックスバッファの必要な確保数
+
 //int g_nWidthWall = WIDTH_WALL + 1;			// 横幅の頂点数
 //int g_nHeightWall = HEIGHT_WALL + 1;		// 高さの頂点数
 
@@ -40,7 +41,7 @@ HRESULT InitMeshwall(void)
 	// ローカル変数宣言
 	VERTEX_3D *pVtx;
 	LPDIRECT3DDEVICE9 pDevice;
-	WORD *pIdx;
+	//WORD *pIdx;
 	int nCount = 0;
 
 	// デバイスの取得
@@ -109,6 +110,7 @@ HRESULT InitMeshwall(void)
 	}
 
 
+
 	//for (int nCnt = 0; nCnt < MAX_MWALL; nCnt++, pVtx += 9)
 	//{
 	//	// ポリゴンの各頂点座標
@@ -169,11 +171,11 @@ HRESULT InitMeshwall(void)
 		NULL);
 
 	// 壁の設定
-	SetMeshwall(D3DXVECTOR3(0.0f, 50.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f, 8, 2);
+	SetMeshwall(D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f, 8, 4);
 	//SetMeshwall(D3DXVECTOR3(0.0f, 50.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f, 8, 2);
-	SetMeshwall(D3DXVECTOR3(200.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f, 0.0f), 50.0f, 50.0f, 8, 2);
-	SetMeshwall(D3DXVECTOR3(0.0f, 50.0f, -200.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), 50.0f, 50.0f, 8, 2);
-	SetMeshwall(D3DXVECTOR3(-200.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / -2.0f, 0.0f), 50.0f, 50.0f, 8, 2);
+	SetMeshwall(D3DXVECTOR3(200.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f, 0.0f), 50.0f, 50.0f, 8, 4);
+	SetMeshwall(D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), 50.0f, 50.0f, 8, 4);
+	SetMeshwall(D3DXVECTOR3(-200.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / -2.0f, 0.0f), 50.0f, 50.0f, 8, 4);
 
 	return S_OK;
 }
@@ -213,6 +215,7 @@ void UpdateMeshwall(void)
 	// ローカル変数宣言
 	VERTEX_3D *pVtx;
 	WORD *pIdx;
+	D3DXVECTOR3 p[100];
 
 	// 頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffMeshwall->Lock(0, 0, (void**)&pVtx, 0);
@@ -234,7 +237,7 @@ void UpdateMeshwall(void)
 					//	g_aMeshwall[nCntMax].pos.y + g_aMeshwall[nCntMax].fHeight * 2 - g_aMeshwall[nCntMax].fHeight * nCntWall * 2 / HEIGHT_WALL,
 					//	g_aMeshwall[nCntMax].pos.z);
 					pVtx[0].pos = D3DXVECTOR3(
-						-g_aMeshwall[nCntMax].fWidthMax / 2.0f + (float)nCnt * g_aMeshwall[nCntMax].fWidth, 
+						-g_aMeshwall[nCntMax].fWidthMax / 2.0f + (float)nCnt * g_aMeshwall[nCntMax].fWidth,
 						g_aMeshwall[nCntMax].fHeightMax / 2.0f - (float)nCntWall * g_aMeshwall[nCntMax].fHeight,
 						0.0f);
 
@@ -252,7 +255,7 @@ void UpdateMeshwall(void)
 
 		for (int nCntA = 0; nCntA < g_aMeshwall[nCntMax].nHeight; nCntA++)
 		{
-			for (int nCnt = 0; nCnt < (g_aMeshwall[nCntMax].nWidthPoint + 1); nCnt++, pIdx += 2)
+			for (int nCnt = 0; nCnt < (g_aMeshwall[nCntMax].nWidthPoint + 1); nCnt++)
 			{
 				if (nCnt != 0 && nCnt == g_aMeshwall[nCntMax].nWidthPoint && nCntA != g_aMeshwall[nCntMax].nHeight - 1)
 				{// 右端から折り返す時
@@ -268,6 +271,7 @@ void UpdateMeshwall(void)
 					pIdx[0] = g_aMeshwall[nCntMax].nWidthPoint + (g_aMeshwall[nCntMax].nWidthPoint * nCntA) + nCnt;
 					pIdx[1] = pIdx[0] - (g_aMeshwall[nCntMax].nWidthPoint);
 				}
+				pIdx += 2;
 			}
 		}
 	}
@@ -309,11 +313,12 @@ void DrawMeshwall(void)
 	// ローカル変数宣言
 	LPDIRECT3DDEVICE9 pDevice;		// デバイスのポインタ
 	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
-	VERTEX_3D *pVtx;
-	WORD *pIdx;
+
 
 	// デバイスの取得
 	pDevice = GetDevice();
+
+
 
 	for (int nCnt = 0; nCnt < MAX_MWALL; nCnt++)
 	{
@@ -381,7 +386,7 @@ void SetMeshwall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight,i
 	// ローカル変数宣言
 	Meshwall *pMeshwall;
 	pMeshwall = &g_aMeshwall[0];
-	VERTEX_3D *pVtx;
+	//VERTEX_3D *pVtx;
 
 	// 壁の設定
 	for (int nCntWall = 0; nCntWall < MAX_MWALL; nCntWall++, pMeshwall++)
