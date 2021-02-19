@@ -12,6 +12,7 @@
 #include "bullet.h"
 #include "object.h"
 #include "item.h"
+#include "sound.h"
 #include "enemy.h"
 #include "math.h"
 #include <stdio.h>
@@ -184,7 +185,7 @@ void UninitPlayer(void)
 void UpdatePlayer(void)
 {
 	// ƒJƒƒ‰‚ÌŽæ“¾
-	Camera camera = GetCamera();
+	Camera camera = *GetCamera();
 	StateChange();
 
 	// ’¼‘O‚ÌˆÊ’u‚Ì•Û‘¶
@@ -228,6 +229,7 @@ void UpdatePlayer(void)
 		if (g_player.motionType == MOTIONTYPE_MOVE || g_player.motionType == MOTIONTYPE_NEUTRAL)
 		{
 			g_player.bOnBlock = false;
+			PlaySound(SOUND_LABEL_SE_JUMP);
 			g_player.move.y = 13.0f;
 			g_player.nKey = 0;
 			g_player.nCounterMotion = 0;
@@ -410,7 +412,25 @@ void UpdatePlayer(void)
 	g_player.move.x += (0.0f - g_player.move.x) * SPEEDDOWN;
 	g_player.move.z += (0.0f - g_player.move.z) * SPEEDDOWN;
 
-	CollisionVec(&g_player.pos, &g_player.posOld, &g_player.move, g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
+	if (g_player.pos.x >= 200.0f - g_vtxMaxPlayer.x)
+	{
+		g_player.pos.x = 200.0f - g_vtxMaxPlayer.x;
+	}
+	else if (g_player.pos.x <= -200.0f - g_vtxMinPlayer.x)
+	{
+		g_player.pos.x = -200.0f - g_vtxMinPlayer.x;
+	}
+
+	if (g_player.pos.z >= 200.0f - g_vtxMaxPlayer.z)
+	{
+		g_player.pos.z = 200.0f - g_vtxMaxPlayer.z;
+	}
+	else if (g_player.pos.z <= -200.0f - g_vtxMinPlayer.z)
+	{
+		g_player.pos.z = -200.0f - g_vtxMinPlayer.z;
+	}
+
+	g_player.bOnBlock = CollisionVec(&g_player.pos, &g_player.posOld, &g_player.move, g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
 	TouchItem(&g_player.pos, g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
 	g_player.bOnBlock = TouchEnemy(&g_player.pos, &g_player.posOld,g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
 }

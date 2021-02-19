@@ -28,6 +28,8 @@ typedef struct
 	int nPolygon;
 	int nIdxPoint;
 	bool bUse;				// 使用状態
+	D3DXVECTOR3 posPoint[FOUR_POINT];	// 4頂点の位置
+	D3DXVECTOR3 vecPoint[FOUR_POINT];	// 四辺のベクトル
 } Meshwall;
 
 //==============================================================================
@@ -43,6 +45,8 @@ void SetMeshwall(				// メッシュ壁の設定処理
 	float fWidth, 
 	float fHeight,
 	int nWidth,
-	int nHeight);			
+	int nHeight);	
+
+void CollisionWall(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 move, float fWidthMax, float fWidthMin, float fDepthMax, float fDepthMin, float fHeightMax, float fHeightMin);
 
 #endif

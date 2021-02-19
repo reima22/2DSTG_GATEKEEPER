@@ -287,10 +287,20 @@ bool CollisionObject(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove
 bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, float fWidthMax, float fWidthMin, float fDepthMax, float fDepthMin, float fHeightMax, float fHeightMin)
 {
 	// ローカル変数宣言
-	bool bLand = false;
+	bool bLand;
 	D3DXVECTOR3 aVec[COLLISION_PARTS];	// 矩形頂点から判定対象へのベクトル
 	float fPlayerVec[COLLISION_PARTS];	// 各面のベクトルとの判定（＋－）
 	D3DXVECTOR3 pos = *pPos;			// 判定対象の位置
+	Player *pPlayer = GetPlayer();
+
+	if (pPlayer->bOnBlock == false)
+	{
+		bLand = false;
+	}
+	else
+	{
+		bLand = true;
+	}
 
 	// オブジェクトとの当たり判定
 	for (int nCnt = 0; nCnt < COLLISION_PARTS; nCnt++)
@@ -321,7 +331,15 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 		{
 			if (fPlayerVec[0] > 0.0f && fPlayerVec[1] > 0.0f && fPlayerVec[2] > 0.0f && fPlayerVec[3] > 0.0f)
 			{
-				if (pPos->x > pPosOld->x && pPosOld->x < object.pos.x + object.vtxMinObject.x)
+				if (pPos->y <= pPosOld->y &&
+					pPos->y <= (object.pos.y + object.vtxMaxObject.y) &&
+					pPosOld->y >= (object.pos.y + object.vtxMaxObject.y) &&
+					object.vtxMaxObject.y >= pPos->y)
+				{// 上側
+					pPos->y = object.pos.y + object.vtxMaxObject.y;
+					bLand = true;
+				}
+				else if (pPos->x > pPosOld->x && pPosOld->x < object.pos.x + object.vtxMinObject.x)
 				{// 左側	
 					pPos->x = object.pos.x + object.vtxMinObject.x - fWidthMax;
 					//pMove->x = 0.0f;

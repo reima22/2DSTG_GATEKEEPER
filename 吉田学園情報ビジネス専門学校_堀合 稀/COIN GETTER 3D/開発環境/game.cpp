@@ -102,8 +102,8 @@ HRESULT InitGame(void)
 	// メッシュ壁の初期化処理
 	InitMeshwall();
 
-	// ビルボードの初期化
-	InitBillboard();
+	//// ビルボードの初期化
+	//InitBillboard();
 
 	// 弾の初期化
 	InitBullet();
@@ -182,7 +182,7 @@ void UninitGame(void)
 	UninitPlayer();
 
 	// ビルボードの終了処理
-	UninitBillboard();
+	//UninitBillboard();
 
 	// 弾の終了処理
 	UninitBullet();
@@ -235,7 +235,7 @@ void UpdateGame(void)
 	fade = GetFade();
 
 	// ポーズメニューへ移行
-	if (/*player->state != PLAYERSTATE_CLEAR && player->state != PLAYERSTATE_GAMEOVER &&*/ pause.colOption.a <= 0.0f && fade == FADE_NONE)
+	if (pPlayer->state != PLAYERSTATE_CLEAR && pPlayer->state != PLAYERSTATE_GAMEOVER && pause.colOption.a <= 0.0f && fade == FADE_NONE)
 	{
 		if (GetKeyboardTrigger(KEYINFO_PAUSE) == true || IsButtonDown(KEYINFO::KEYINFO_PAUSE) == true)
 		{
@@ -291,7 +291,7 @@ void UpdateGame(void)
 			UpdateLight();
 
 			// ビルボードの更新処理
-			UpdateBillboard();
+			//UpdateBillboard();
 
 			// 弾の更新処理
 			UpdateBullet();
@@ -351,10 +351,10 @@ void UpdateGame(void)
 			SetFade(FADE_OUT, MODE_RESULT);	// リザルトへ
 		}
 
-		if (GetKeyboardTrigger(KEYINFO_OK) == true && g_bPause == false)
-		{
-			SetFade(FADE_OUT, MODE_RESULT);
-		}
+		//if (GetKeyboardTrigger(KEYINFO_OK) == true && g_bPause == false)
+		//{
+		//	SetFade(FADE_OUT, MODE_RESULT);
+		//}
 	}
 }
 
@@ -394,7 +394,7 @@ void DrawGame(void)
 	DrawBullet();
 
 	// ビルボードの描画処理
-	DrawBillboard();
+	//DrawBillboard();
 
 	// エフェクトの更新処理
 	DrawParticle();

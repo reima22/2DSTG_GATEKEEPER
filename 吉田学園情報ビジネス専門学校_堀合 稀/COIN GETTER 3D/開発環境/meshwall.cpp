@@ -214,7 +214,6 @@ void UpdateMeshwall(void)
 	VERTEX_3D *pVtx;
 	WORD *pIdx;
 
-
 	// 頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffMeshwall->Lock(0, 0, (void**)&pVtx, 0);
 
@@ -271,12 +270,14 @@ void UpdateMeshwall(void)
 				}
 			}
 		}
-
 	}
+
 	// インデックスバッファをアンロックする
 	g_pIdxBuffMeshwall->Unlock();
+
 	// 頂点バッファをアンロックする
 	g_pVtxBuffMeshwall->Unlock();
+
 
 	//// 頂点バッファをロックし、頂点情報へのポインタを取得
 	//g_pVtxBuffMeshwall->Lock(0, 0, (void**)&pVtx, 0);
@@ -388,7 +389,6 @@ void SetMeshwall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight,i
 		if (pMeshwall->bUse == false)
 		{
 			pMeshwall->pos = pos;				// 位置
-			//pMeshwall->posMove = pos;
 
 			pMeshwall->rot = rot;				// 向き
 
@@ -417,4 +417,9 @@ void SetMeshwall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight,i
 			break;
 		}
 	}
+}
+
+void CollisionWall(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 move, float fWidthMax, float fWidthMin, float fDepthMax, float fDepthMin, float fHeightMax, float fHeightMin)
+{
+
 }

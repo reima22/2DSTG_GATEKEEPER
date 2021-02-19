@@ -55,7 +55,7 @@ HRESULT InitMeshfield(void)
 	// テクスチャの読み込み
 	D3DXCreateTextureFromFile(
 		pDevice,
-		"data/TEXTURE/block000.jpg",
+		"data/TEXTURE/field000.jpg",
 		&g_pTextureMeshfield);
 
 	// 変数の初期化

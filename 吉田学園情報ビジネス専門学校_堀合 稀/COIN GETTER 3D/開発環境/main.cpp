@@ -531,7 +531,7 @@ void DrawFPS(void)
 	RECT rect = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
 	char aStr[1024];
 	int nNum;
-	Camera camera = GetCamera();
+	Camera camera = *GetCamera();
 	Player player = *GetPlayer();
 	//Model model = *GetModel();
 

@@ -139,12 +139,15 @@ HRESULT InitItem(void)
 		g_pMeshItem->UnlockVertexBuffer();
 	}
 
-	SetItem(D3DXVECTOR3(-50.0f, 0.0f, -50.0f));
-	SetItem(D3DXVECTOR3(0.0f, 0.0f, -50.0f));
-	SetItem(D3DXVECTOR3(50.0f, 0.0f, -50.0f));
-	SetItem(D3DXVECTOR3(100.0f, 0.0f, -50.0f));
-	SetItem(D3DXVECTOR3(-100.0f, 0.0f, -50.0f));
-	SetItem(D3DXVECTOR3(-100.0f, 0.0f, 50.0f));
+	for (int nCntDep = 0; nCntDep < 5; nCntDep++)
+	{
+		for (int nCntWid = 0; nCntWid < 5; nCntWid++)
+		{
+			SetItem(D3DXVECTOR3(-150.0f + (75.0f * (float)nCntWid), 0.0f, 150.0f - (75.0f * (float)nCntDep)));
+		}
+	}
+
+	SetItem(D3DXVECTOR3(50.0f, 100.0f, 50.0f));
 
 
 	return S_OK;
@@ -360,11 +363,11 @@ void TouchItem(D3DXVECTOR3 *pPos, float fWidthMax, float fWidthMin, float fDepth
 			}
 
 
-			if (fItemVec[0] > 0.0f && fItemVec[1] > 0.0f && fItemVec[2] > 0.0f && fItemVec[3] > 0.0f)
+			if (fItemVec[0] > 0.0f && fItemVec[1] > 0.0f && fItemVec[2] > 0.0f && fItemVec[3] > 0.0f && pPlayer->pos.y <= (pItem->pos.y + pItem->vtxMaxObject.y))
 			{// ƒAƒCƒeƒ€‚ÌŽæ“¾
 				SetEffect(D3DXVECTOR3(pItem->pos.x, pItem->pos.y + 5.0f, pItem->pos.z), 0.01f, D3DXCOLOR(1.0f, 1.0f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
 				PlaySound(SOUND_LABEL_SE_COIN);
-				AddScore(100);
+				AddScore(1000);
 				pShadow->bUse = false;
 				pItem->bUse = false;
 				g_nCntItem--;

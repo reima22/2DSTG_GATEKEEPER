@@ -22,11 +22,6 @@ typedef struct
 	D3DXMATRIX mtxProjection;	// プロジェクションマトリックス
 	D3DXMATRIX mtxView;			// ビューマトリックス
 	D3DXVECTOR3 move;			// 移動量
-
-	//D3DXVECTOR3 moveV;			// 視点の移動量
-	//D3DXVECTOR3 moveR;			// 注視点の移動量
-	//D3DXVECTOR3 moveXVR;		// 視点・注視点両方同時のX軸移動量
-	//D3DXVECTOR3 moveZVR;		// 視点・注視点両方同時のZ軸移動量
 	D3DXVECTOR3 rot;			// カメラの角度
 	float fLength;				// 視点・注視点間の距離
 	float fHeightV;				// 視点の高さ
@@ -43,6 +38,7 @@ void InitCamera(void);		// カメラの初期化処理
 void UninitCamera(void);	// カメラの終了処理
 void UpdateCamera(void);	// カメラの更新処理
 void SetCamera(int nIdx);	// カメラの設定
-Camera GetCamera(void);		// カメラの取得
+Camera *GetCamera(void);		// カメラの取得
+void CameraInfo(int nIdx);		// カメラの情報
 
 #endif
