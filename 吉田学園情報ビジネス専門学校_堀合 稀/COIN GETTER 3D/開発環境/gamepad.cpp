@@ -18,7 +18,7 @@ typedef struct
 // グローバル変数
 //==============================================================================
 static LPDIRECTINPUT8 g_InputInterface;
-static LPDIRECTINPUTDEVICE8 device;						// 入力デバイスへのポインタ
+static LPDIRECTINPUTDEVICE8 device;				// 入力デバイスへのポインタ
 static ButtonState g_ButtonStates[KEYINFO::KEYINFO_MAX];
 
 //==============================================================================
@@ -195,6 +195,24 @@ void UpdateGamepad(void)
 	{// 下に傾けた
 		is_push[KEYINFO::KEYINFO_DOWN] = true;
 	}
+
+	//if (pad_data.lZ < -unresponsive_range)
+	//{// 左に傾けた
+	//	is_push[KEYINFO::KEYINFO_LEFT_TURN] = true;
+	//}
+	//else if (pad_data.lZ > unresponsive_range)
+	//{// 右に傾けた
+	//	is_push[KEYINFO::KEYINFO_RIGHT_TURN] = true;
+	//}
+
+	//if (pad_data.lRz < -unresponsive_range)
+	//{// 上に傾けた
+	//	is_push[KEYINFO::KEYINFO_UP_SIGHT] = true;
+	//}
+	//else if (pad_data.lRz > unresponsive_range)
+	//{// 下に傾けた
+	//	is_push[KEYINFO::KEYINFO_DOWN_SIGHT] = true;
+	//}
 
 	if (pad_data.rgdwPOV[0] != 0xFFFFFFFF)
 	{

@@ -8,6 +8,7 @@
 #ifndef _GAMEPAD_H_
 #define _GAMEPAD_H_
 #include "main.h"
+#include "input.h"
 
 //==============================================================================
 // ƒL[“ü—Í

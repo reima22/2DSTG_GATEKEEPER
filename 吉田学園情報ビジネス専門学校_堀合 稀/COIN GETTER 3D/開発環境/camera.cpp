@@ -6,6 +6,7 @@
 //==============================================================================
 #include "camera.h"
 #include "player.h"
+#include "gamepad.h"
 #include "input.h"
 
 //==============================================================================
@@ -125,7 +126,7 @@ void UpdateCamera(void)
 	}
 
 	 //視点の移動(左右)(Z,Cキー)
-	if (GetKeyboardPress(KEYINFO_LEFT_TURN) == true)
+	if (GetKeyboardPress(KEYINFO_LEFT_TURN) == true /*|| IsButtonPush(KEYINFO::KEYINFO_LEFT_TURN) == true*/)
 	{
 		g_camera[0].rot.y += CAMERA_TURN;
 
@@ -137,7 +138,7 @@ void UpdateCamera(void)
 		g_camera[0].posV.x = g_camera[0].posR.x - sinf(g_camera[0].rot.y) * g_camera[0].fLength;
 		g_camera[0].posV.z = g_camera[0].posR.z - cosf(g_camera[0].rot.y) * g_camera[0].fLength;
 	}
-	if (GetKeyboardPress(KEYINFO_RIGHT_TURN) == true)
+	if (GetKeyboardPress(KEYINFO_RIGHT_TURN) == true /*|| IsButtonPush(KEYINFO::KEYINFO_RIGHT_TURN) == true*/)
 	{
 		g_camera[0].rot.y -= CAMERA_TURN;
 
@@ -152,11 +153,11 @@ void UpdateCamera(void)
 
 
 	// 視点の移動(上下)(Y,Nキー)
-	if (GetKeyboardPress(KEYINFO_UP_SIGHT) == true)
+	if (GetKeyboardPress(KEYINFO_UP_SIGHT) == true /*|| IsButtonPush(KEYINFO::KEYINFO_UP_SIGHT) == true*/)
 	{
 		g_camera[0].fHeightV += CAMERA_MOVE;
 	}
-	if (GetKeyboardPress(KEYINFO_DOWN_SIGHT) == true)
+	if (GetKeyboardPress(KEYINFO_DOWN_SIGHT) == true /*|| IsButtonPush(KEYINFO::KEYINFO_DOWN_SIGHT) == true*/)
 	{
 		g_camera[0].fHeightV -= CAMERA_MOVE;
 	}

@@ -12,7 +12,9 @@
 #include "sound.h"
 #include "math.h"
 
+//==============================================================================
 // É}ÉNÉçíËã`
+//==============================================================================
 #define COLLISION_PARTS	(4)			// ìñÇΩÇËîªíËÇÃñ ÇÃêî
 #define MAX_ENEMY		(8)			// ìGÇÃç≈ëÂêî
 #define MOVE_ENEMY0		(100.0f)	// ìGÇÃà⁄ìÆîÕàÕêîíl
@@ -114,10 +116,10 @@ HRESULT InitEnemy(void)
 		g_pMeshEnemy->UnlockVertexBuffer();
 	}
 
+	// ìGÇÃê›íË
 	SetEnemy(D3DXVECTOR3(0.0f, 0.0f, MOVE_ENEMY0), D3DXVECTOR3(MOVE0, 0.0f, 0.0f), 0);
 	SetEnemy(D3DXVECTOR3(0.0f, 0.0f, -MOVE_ENEMY0), D3DXVECTOR3(-MOVE0, 0.0f, 0.0f), 0);
 	SetEnemy(D3DXVECTOR3(0.0f, 0.0f, MOVE_ENEMY1), D3DXVECTOR3(-MOVE1, 0.0f, 0.0f), 1);
-
 
 	return S_OK;
 }
