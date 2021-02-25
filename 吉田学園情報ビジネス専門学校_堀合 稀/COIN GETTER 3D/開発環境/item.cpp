@@ -11,6 +11,7 @@
 #include "particle.h"
 #include "sound.h"
 #include "player.h"
+#include "object.h"
 #include "time.h"
 #include "stdlib.h"
 
@@ -192,6 +193,8 @@ void UpdateItem(void)
 			{// Šp“x‚Ì”’l‚PŽüŽž
 				pItem->rot.y -= D3DX_PI * 2.0f;
 			}
+
+			//CollisionVec(&pItem->pos,NULL,NULL,pItem->vtxMaxObject.x, pItem->vtxMaxObject.y);
 		}
 	}
 }

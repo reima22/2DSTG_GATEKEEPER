@@ -31,9 +31,11 @@ Camera g_camera[CAMERA_MAX];
 //==============================================================================
 void InitCamera(void)
 {
+	
 	for (int nCnt = 0; nCnt < CAMERA_MAX; nCnt++)
 	{
 		CameraInfo(nCnt);
+		InitPlayer();
 	}
 }	
 
@@ -250,10 +252,9 @@ void SetCamera(int nIdx)
 		D3DXMatrixPerspectiveFovLH(
 			&g_camera[nIdx].mtxProjection,
 			D3DXToRadian(45.0f),							// 画角の設定
-			640.0f / 360.0f,
-			//(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,	// 画面比率の設定
+			(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,		// 画面比率の設定
 			10.0f,											// 手前限界の描画距離
-			1800.0f);										// 奥限界の描画距離
+			2200.0f);										// 奥限界の描画距離
 
 		// プロジェクションマトリックスの設定
 		pDevice->SetTransform(D3DTS_PROJECTION, &g_camera[nIdx].mtxProjection);
@@ -317,24 +318,25 @@ void CameraInfo(int nIdx)
 	case 1:
 		// 構造体の初期化
 		g_camera[nIdx].posV = D3DXVECTOR3(
-			player->pos.x + 300.0f,
-			player->pos.y + 300.0f,
-			player->pos.z - 1000.0f);							// カメラ視点の位置
+			player->pos.x,
+			player->pos.y + 1250.0f,
+			player->pos.z - 1.0f);							// カメラ視点の位置
 		g_camera[nIdx].posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 注視点位置
 		g_camera[nIdx].vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);	// 上方向ベクトル
 		g_camera[nIdx].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 移動量
-		g_camera[nIdx].rot = D3DXVECTOR3(0.0f, D3DX_PI /2.0f, 0.0f);		// カメラの角度
-		g_camera[nIdx].fLength = CAMERA_RANGE;					// 視点・注視点間の距離
-		g_camera[nIdx].fHeightV = -60.0f;						// 視点の高さ
-		g_camera[nIdx].fHeightR = player->pos.y;				// 注視点の高さ
-		g_camera[nIdx].fFront = 15.0f;							// モデルの前方の距離
+		g_camera[nIdx].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// カメラの角度
+		//g_camera[nIdx].fLength = CAMERA_RANGE;					// 視点・注視点間の距離
+		//g_camera[nIdx].fHeightV = -60.0f;						// 視点の高さ
+		//g_camera[nIdx].fHeightR = player->pos.y;				// 注視点の高さ
+		//g_camera[nIdx].fFront = 15.0f;							// モデルの前方の距離
 		g_camera[nIdx].bAutoTurn = false;						// カメラの回り込みON・OFF
-		g_camera[nIdx].viewport.X = (DWORD)800.0f;				// 描画する画面左上のＸ座標
+		g_camera[nIdx].viewport.X = (DWORD)880.0f;				// 描画する画面左上のＸ座標
 		g_camera[nIdx].viewport.Y = (DWORD)450.0f;				// 描画する画面左上のＹ座標
 		g_camera[nIdx].viewport.Width = (DWORD)480.0f;			// 描画する画面の幅
 		g_camera[nIdx].viewport.Height = (DWORD)270.0f;			// 描画する画面の高さ
 		g_camera[nIdx].viewport.MinZ = 0.0f;
 		g_camera[nIdx].viewport.MaxZ = 0.1f;
+
 		break;
 	default:
 		break;

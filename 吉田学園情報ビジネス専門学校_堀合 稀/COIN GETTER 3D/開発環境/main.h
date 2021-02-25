@@ -36,7 +36,7 @@
 //#define POS1_PLAYER		(D3DXVECTOR3(40.0f,300.0f,0.0f))	// ステージ1のプレイヤーのスタート位置
 //#define POS2_PLAYER		(D3DXVECTOR3(40.0f,660.0f,0.0f))	// ステージ2のプレイヤーのスタート位置
 //#define POS3_PLAYER		(D3DXVECTOR3(50.0f,660.0f,0.0f))	// ステージ3のプレイヤーのスタート位置
-#define MAX_LIFE		(3)			// 体力の最大値
+#define MAX_LIFE		(5)			// 体力の最大値
 //#define SPEEDUP			(1.0f)		// 移動の加速度
 //#define JUMP_POWER		(20.0f)	// ジャンプ力s
 //#define DROP_SPEEDUP	(1.4f)		// 落下の加速度

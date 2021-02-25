@@ -32,11 +32,6 @@
 //==============================================================================
 // グローバル変数
 //==============================================================================
-
-//LPD3DXMESH g_pMeshPlayer = NULL;						// メッシュ(頂点情報)へのポインタ
-//LPD3DXBUFFER g_pBuffMatPlayer = NULL;					// マテリアル(材質情報)へのポインタ
-//LPDIRECT3DTEXTURE9 g_apTextureModel[TEX_MAX] = {};	// テクスチャへのポインタ
-//DWORD g_nNumMatPlayer = 0;							// マテリアルの数
 D3DXVECTOR3 g_vtxMinPlayer, g_vtxMaxPlayer;	// モデルの各座標の最大値・最小値
 Player g_player;							// プレイヤーの構造体
 bool g_bJump;

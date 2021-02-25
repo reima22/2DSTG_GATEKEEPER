@@ -378,6 +378,7 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 	D3DXVECTOR3 pos = *pPos;			// 判定対象の位置
 	Player *pPlayer = GetPlayer();
 	Object *pObject = &object[0];
+	
 
 	if (pPlayer->bOnBlock == false)
 	{
@@ -415,17 +416,15 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 				// 数値が「+」の時、当たり判定が有効
 				pObject->fPlayerVec[nCnt] = (pObject->aVec[nCnt].z * aVec[nCnt].x) - (pObject->aVec[nCnt].x * aVec[nCnt].z);
 			}
+
+			// 当たり判定
 			if (pObject->fPlayerVec[0] > 0.0f && pObject->fPlayerVec[1] > 0.0f && pObject->fPlayerVec[2] > 0.0f && pObject->fPlayerVec[3] > 0.0f)
 			{
 				SetPositionShadow(pPlayer->nIdx, D3DXVECTOR3(pPlayer->pos.x, pObject->pos.y + pObject->vtxMaxObject.y, pPlayer->pos.z));
 				if (pPos->y <= (pObject->pos.y + pObject->vtxMaxObject.y) && pPos->y > pObject->pos.y + pObject->vtxMinObject.y - fHeight)
 				{
-
-
-					if (pPos->y <= pPosOld->y &&
-						pPos->y <= (pObject->pos.y + pObject->vtxMaxObject.y) &&
-						pPosOld->y >= (pObject->pos.y + pObject->vtxMaxObject.y) &&
-						pObject->vtxMaxObject.y >= pPos->y)
+					if (pPos->y <= (pObject->pos.y + pObject->vtxMaxObject.y) &&
+						pPosOld->y >= (pObject->pos.y + pObject->vtxMaxObject.y))
 					{// 上側
 						if (pPos->y < pObject->pos.y + pObject->vtxMaxObject.y)
 						{

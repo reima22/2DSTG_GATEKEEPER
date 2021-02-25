@@ -21,6 +21,7 @@
 #define POS_TIMERY	(50.0f)		// タイマーの上一桁の中心Y座標
 #define TIMER_SIZEX	(20.0f)		// タイマーの数字の幅
 #define TIMER_SIZEY	(40.0f)		// タイマーの数字の高さ
+#define TIMER		(180)		// タイム設定
 //#define TIMER_0		(100)		// ステージ1のタイマー
 //#define TIMER_1		(80)		// ステージ2のタイマー
 //#define TIMER_2		(120)		// ステージ3のタイマー
@@ -55,7 +56,7 @@ HRESULT InitTimer(void)
 
 	// タイマーの初期化
 	//SetTimer();
-	g_nTimer = 120;
+	g_nTimer = TIMER;
 	g_nCntDownTimer = 1;
 	g_nClearCnt = 0;
 
