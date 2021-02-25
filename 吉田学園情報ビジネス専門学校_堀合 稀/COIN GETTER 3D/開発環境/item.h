@@ -43,12 +43,8 @@ void DrawItem(void);			// アイテムの描画処理
 void SetItem(D3DXVECTOR3 pos);	// アイテムの配置
 void TouchItem(
 	D3DXVECTOR3 *pPos,
-	float fWidthMax,
-	float fWidthMin,
-	float fDepthMax,
-	float fDepthMin,
-	float fHeightMax,
-	float fHeightMin);			// アイテムの取得
+	float fInRadius,
+	float fHeight);			// アイテムの取得
 ITEM *GetItem(void);			// アイテムの情報
 int RandItem(void);				// ランダムでハイスコアアイテムの選定
 

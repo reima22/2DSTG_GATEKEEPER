@@ -67,7 +67,7 @@ LPDIRECT3D9 g_pD3D = NULL;				// Direct3Dオブジェクトへのポインタ
 LPDIRECT3DDEVICE9 g_pD3DDevice = NULL;	// Direct3Dデバイスへのポインタ(描画処理に必要)
 LPD3DXFONT g_pFont = NULL;				// フォントへのポインタ
 int g_nCountFPS;						// FPSカウンタ
-MODE g_mode = MODE_TITLE;				// ゲームモード
+MODE g_mode = MODE_GAME;				// ゲームモード
 
 //==============================================================================
 // メイン関数
@@ -533,13 +533,10 @@ void DrawFPS(void)
 	int nNum;
 	Camera camera = *GetCamera();
 	Player player = *GetPlayer();
-	//Model model = *GetModel();
 
 	nNum = sprintf(&aStr[0], "FPS:%d\n",g_nCountFPS);
 	nNum += sprintf(&aStr[nNum], " (視点)  X:%.2f Y:%.2f Z:%.2f\n", camera.posV.x, camera.posV.y, camera.posV.z);
 	nNum += sprintf(&aStr[nNum], " (注視点) X:%.2f Y:%.2f Z:%.2f\n", camera.posR.x, camera.posR.y, camera.posR.z);
-	//nNum += sprintf(&aStr[nNum], "(モデルの位置) X:%.2f Y:%.2f Z:%.2f\n", model.pos.x, model.pos.y, model.pos.z);
-	//nNum += sprintf(&aStr[nNum], "(モデルの向き) X:%.3f Y:%.3f Z:%.3f\n", model.rot.x, model.rot.y, model.rot.z);
 	nNum += sprintf(&aStr[nNum], "(モデルのキー):%d\n",player.nKey);
 	nNum += sprintf(&aStr[nNum], "(モーションカウンター):%d\n",player.nCounterMotion);
 	nNum += sprintf(&aStr[nNum], "(モデルとカメラの距離) %.1f\n", camera.fLength);
@@ -552,6 +549,8 @@ void DrawFPS(void)
 	nNum += sprintf(&aStr[nNum], "ズームイン・アウト：[U:イン M:アウト]\n");
 	nNum += sprintf(&aStr[nNum], "ジャンプ　　　　　：[SPACE]\n");
 	nNum += sprintf(&aStr[nNum], "画面遷移：[ENTER]\nプレイヤー位置リセット：[1]\nカメラ位置リセット：[2]\n");
+	nNum += sprintf(&aStr[nNum], "ジャンプカウント：%d\n",player.nJumpCnt);
+
 
 
 

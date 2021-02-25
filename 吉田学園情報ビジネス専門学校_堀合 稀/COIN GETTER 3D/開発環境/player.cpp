@@ -21,16 +21,13 @@
 //==============================================================================
 // マクロ定義
 //==============================================================================
-//#define MODEL_MOVE	(1.0f)
-//#define MODEL_TURN	(0.1f)
 #define PLAYER_MOVE		(1.0f)
 #define PLAYER_TURN		(0.1f)
 #define VTX_MINP		(D3DXVECTOR3(10000.0f, 10000.0f, 10000.0f))		// 仮頂点最小値
 #define	VTX_MAXP		(D3DXVECTOR3(-10000.0f, -10000.0f, -10000.0f))	// 仮頂点最大値
-//#define MAT_MAX		(3)		// マテリアルの最大数
-//#define TEX_MAX		(3)		// テクスチャの最大数
 #define TEXT_LENGTH		(128)	// テキスト読み込みの最大数
 #define DATA_LENGTH		(64)	// データ読み込みの最大数
+#define MOVE_MIN		(0.5f)	// 移動モーション時の最小移動力
 
 //==============================================================================
 // グローバル変数
@@ -42,6 +39,7 @@
 //DWORD g_nNumMatPlayer = 0;							// マテリアルの数
 D3DXVECTOR3 g_vtxMinPlayer, g_vtxMaxPlayer;	// モデルの各座標の最大値・最小値
 Player g_player;							// プレイヤーの構造体
+bool g_bJump;
 
 //==============================================================================
 // 初期化処理
@@ -72,21 +70,6 @@ HRESULT InitPlayer(void)
 	DWORD sizeFVF;			// 頂点フォーマットのサイズ
 	BYTE *pVtxBuff;			// 頂点バッファへのポインタ
 
-	//D3DXMATERIAL *pMat;		// マテリアルへのポインタ
-	//						// マテリアル情報に対するポインタを取得
-	//pMat = (D3DXMATERIAL*)g_pBuffMatModel->GetBufferPointer();
-	//for (int nCntMat = 0; nCntMat < (int)g_nNumMatModel; nCntMat++)
-	//{
-	//	if (pMat[nCntMat].pTextureFilename != NULL)
-	//	{
-	//		// ファイル名を使用してテクスチャを読み込む
-	//		D3DXCreateTextureFromFile(
-	//			pDevice,
-	//			pMat[nCntMat].pTextureFilename,
-	//			&g_apTextureModel[nCntMat]);
-	//	}
-	//}
-
 	// 頂点数を取得
 	nNumVtx = g_player.aModel[0].pMeshModel->GetNumVertices();
 
@@ -96,10 +79,10 @@ HRESULT InitPlayer(void)
 	// 変数の初期化
 	g_player.pos = D3DXVECTOR3(0.0f, 200.0f, 0.0f);
 	g_player.posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_player.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_player.rotDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_player.rot = D3DXVECTOR3(0.0f, D3DX_PI, 0.0f);
+	g_player.rotDest = D3DXVECTOR3(0.0f, D3DX_PI, 0.0f);
 	g_player.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_player.state = PLAYERSTATE_NORMAL;
+	g_player.state = PLAYERSTATE_APPEAR;
 	g_player.nLife = MAX_LIFE;
 	g_player.motionType = MOTIONTYPE_NEUTRAL;
 	g_player.bLoopMotion = false;
@@ -107,9 +90,11 @@ HRESULT InitPlayer(void)
 	g_player.nNumKey = 0;
 	g_player.nKey = 0;
 	g_player.nCounterMotion = 0;
-	g_player.nCntState = 0;
+	g_player.nCntState = 120;
+	g_player.fInRadius = 0.0f;
 	g_vtxMinPlayer = VTX_MINP;
 	g_vtxMaxPlayer = VTX_MAXP;
+	g_bJump = true;
 
 	// 影の設定
 	g_player.nIdx = SetShadow(D3DXVECTOR3(g_player.pos.x, 0.0f, g_player.pos.z), 10.0f, 10.0f);
@@ -156,6 +141,24 @@ HRESULT InitPlayer(void)
 	// 頂点バッファをアンロック
 	g_player.aModel[0].pMeshModel->UnlockVertexBuffer();
 
+	// 内半径の計算
+	if (g_player.fInRadius < g_vtxMaxPlayer.x)
+	{// X軸最大値
+		g_player.fInRadius = g_vtxMaxPlayer.x;
+	}
+	if (g_player.fInRadius < g_vtxMaxPlayer.z)
+	{// Z軸最大値
+		g_player.fInRadius = g_vtxMaxPlayer.z;
+	}
+	if (g_player.fInRadius < -g_vtxMinPlayer.x)
+	{// X軸最小値
+		g_player.fInRadius = -g_vtxMinPlayer.x;
+	}
+	if (g_player.fInRadius < -g_vtxMinPlayer.z)
+	{// Z軸最小値
+		g_player.fInRadius = -g_vtxMinPlayer.z;
+	}
+
 	return S_OK;
 }
 
@@ -187,6 +190,7 @@ void UpdatePlayer(void)
 {
 	// カメラの取得
 	Camera camera = *GetCamera();
+	//bool bJump = true;
 	StateChange();
 
 	// 直前の位置の保存
@@ -195,56 +199,107 @@ void UpdatePlayer(void)
 	// 重力の発生
 	if (g_player.pos.y > 0.0f && g_player.bOnBlock == false)
 	{
-		g_player.move.y -= PLUS_GRAVITY;
-	}
-	if (g_player.pos.y < 0.0f/* || g_player.bOnBlock == true*/)
-	{
-		g_player.pos.y = 0.0f;
-		g_player.move.y = 0.0f;
-		
-		if (g_player.bOnBlock == false)
+		if (GetKeyboardPress(KEYINFO_JUMP) != true || IsButtonPush(KEYINFO::KEYINFO_OK) != true)
 		{
-			g_player.bOnBlock = true;
-			g_player.nKey = 0;
-			g_player.nCounterMotion = 0;
-			g_player.motionType = MOTIONTYPE_LANDING;
+			g_player.move.y -= PLUS_GRAVITY;
 		}
+	}
+
+	if (g_player.pos.y < 0.0f)
+	{
+		g_player.bOnBlock = true;
+		g_player.nKey = 0;
+		g_player.nCounterMotion = 0;
+		g_player.motionType = MOTIONTYPE_LANDING;
+	}
+
+	if (g_player.bOnBlock == true)
+	{
+		if (g_player.pos.y < 0.0f)
+		{
+			g_player.pos.y = 0.0f;
+		}
+		g_bJump = false;
+		g_player.move.y = 0.0f;
+
+		//g_player.nJumpCnt = 0;
+		//if (g_player.bOnBlock == false)
+		//{
+		//	g_player.bOnBlock = true;
+		//}
 	}
 
 	// 位置のリセット
 	if (GetKeyboardTrigger(KEYINFO_PRESET) == true)
 	{
 		g_player.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		g_player.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_player.rot = D3DXVECTOR3(0.0f, D3DX_PI, 0.0f);
 		g_player.rotDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_player.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	}
 
 	// ジャンプ
+	//if (GetKeyboardTrigger(KEYINFO_JUMP) == true || IsButtonDown(KEYINFO::KEYINFO_OK) == true)
+	//{
+	//	//SetBullet(
+	//		//D3DXVECTOR3(g_player.pos.x + sinf(D3DX_PI - g_player.rot.y) * -10.0f, g_player.pos.y + 50.0f, g_player.pos.z + cosf(D3DX_PI - g_player.rot.y) * 10.0f)
+	//	//	/*D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 30.0f, g_player.pos.z)*/,
+	//	//	D3DXVECTOR3(sinf(D3DX_PI - g_player.rot.y) * -5.0f, 0.0f, cosf(D3DX_PI - g_player.rot.y) * 5.0f),
+	//	//	100);
+	//	if (g_player.motionType == MOTIONTYPE_MOVE || g_player.motionType == MOTIONTYPE_NEUTRAL)
+	//	{
+	//		g_player.bOnBlock = false;
+	//		PlaySound(SOUND_LABEL_SE_JUMP);
+	//		g_player.move.y = 10.0f;
+	//		g_player.nKey = 0;
+	//		g_player.nCounterMotion = 0;
+	//		g_player.motionType = MOTIONTYPE_JUMP;
+	//	}
+	//}
+
+	// ジャンプ
 	if (GetKeyboardTrigger(KEYINFO_JUMP) == true || IsButtonDown(KEYINFO::KEYINFO_OK) == true)
 	{
-		//SetBullet(
-			//D3DXVECTOR3(g_player.pos.x + sinf(D3DX_PI - g_player.rot.y) * -10.0f, g_player.pos.y + 50.0f, g_player.pos.z + cosf(D3DX_PI - g_player.rot.y) * 10.0f)
-		//	/*D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 30.0f, g_player.pos.z)*/,
-		//	D3DXVECTOR3(sinf(D3DX_PI - g_player.rot.y) * -5.0f, 0.0f, cosf(D3DX_PI - g_player.rot.y) * 5.0f),
-		//	100);
-		if (g_player.motionType == MOTIONTYPE_MOVE || g_player.motionType == MOTIONTYPE_NEUTRAL)
+		if (g_player.bOnBlock == true)
 		{
-			g_player.bOnBlock = false;
 			PlaySound(SOUND_LABEL_SE_JUMP);
-			g_player.move.y = 10.0f;
 			g_player.nKey = 0;
 			g_player.nCounterMotion = 0;
+			
 			g_player.motionType = MOTIONTYPE_JUMP;
+		}
+		g_player.bOnBlock = false;
+	}
+	if (GetKeyboardPress(KEYINFO_JUMP) == true || IsButtonPush(KEYINFO::KEYINFO_OK) == true)
+	{
+		if (g_bJump == false)
+		{
+			if (g_player.nJumpCnt == 1)
+			{
+				g_player.move.y = 5.0f;
+			}
+			if (g_player.nJumpCnt < 7)
+			{
+				g_player.nJumpCnt++;
+				g_player.move.y += 1.0f;
+			}
+		}
+	}
+	if (GetKeyboardRelease(KEYINFO_JUMP) == true || IsButtonUp(KEYINFO::KEYINFO_OK) == true)
+	{
+		//if (g_player.bOnBlock == true)
+		{
+			g_player.nJumpCnt = 0;
+			g_bJump = true;
 		}
 	}
 
-	if (GetKeyboardTrigger(KEYINFO_ATTACK) == true && g_player.motionType == MOTIONTYPE_NEUTRAL)
-	{
-		g_player.nKey = 0;
-		g_player.nCounterMotion = 0;
-		g_player.motionType = MOTIONTYPE_ACTION;
-	}
+	//if (GetKeyboardTrigger(KEYINFO_ATTACK) == true && g_player.motionType == MOTIONTYPE_NEUTRAL)
+	//{
+	//	g_player.nKey = 0;
+	//	g_player.nCounterMotion = 0;
+	//	g_player.motionType = MOTIONTYPE_ACTION;
+	//}
 
 	// モーションの更新
 	UpdateMotion(g_player.motionType);
@@ -337,57 +392,37 @@ void UpdatePlayer(void)
 
 	if (GetKeyboardRelease(KEYINFO_UP) == true || GetKeyboardRelease(KEYINFO_DOWN) == true || GetKeyboardRelease(KEYINFO_RIGHT) == true || GetKeyboardRelease(KEYINFO_LEFT) == true
 		|| IsButtonUp(KEYINFO::KEYINFO_UP) == true || IsButtonUp(KEYINFO::KEYINFO_LEFT) == true || IsButtonUp(KEYINFO::KEYINFO_RIGHT) == true || IsButtonUp(KEYINFO::KEYINFO_DOWN) == true)
-	{// 移動からニュートラルへ移行
+	{// 移動終了時の位置補正
+		g_player.aModel[0].pos.y = 20.0f;
+	}
+
+	// 移動モーションから待機モーションへ
+	if (g_player.motionType == MOTIONTYPE_MOVE && g_player.move.x <= MOVE_MIN && g_player.move.x >= -MOVE_MIN && g_player.move.z <= MOVE_MIN && g_player.move.z >= -MOVE_MIN)
+	{
 		g_player.nCounterMotion = 0;
 		g_player.nKey = 0;
-		g_player.aModel[0].pos.y = 20.0f;
 		g_player.motionType = MOTIONTYPE_NEUTRAL;
 	}
 
-	//	//model.moveZ.x = sinf(camera.rot.y - D3DX_PI) * MODEL_MOVE;
-	//	//model.moveZ.z = cosf(camera.rot.y - D3DX_PI) * MODEL_MOVE;
-	//	//model.rot.y = camera.rot.y;
-	//	//if (GetKeyboardPress(KEYINFO_LEFT_MODEL) == true)
-	//	//{
-	//	//	model.moveX.x = cosf(-camera.rot.y - D3DX_PI) * MODEL_MOVE;
-	//	//	model.moveX.z = sinf(-camera.rot.y - D3DX_PI) * MODEL_MOVE;
-	//	//	model.rot.y = camera.rot.y + D3DX_PI / 4;
-	//	//	//model.moveX.x /= dSqrt;
-	//	//	//model.moveX.z /= dSqrt;
-	//	//	//model.moveZ.x /= dSqrt;
-	//	//	//model.moveZ.z /= dSqrt;
-	//	//}
-	//	//else if (GetKeyboardPress(KEYINFO_RIGHT_MODEL) == true)
-	//	//{
-	//	//	model.moveX.x = cosf(-camera.rot.y) * MODEL_MOVE;
-	//	//	model.moveX.z = sinf(-camera.rot.y) * MODEL_MOVE;
-	//	//	model.rot.y = camera.rot.y + D3DX_PI / -4;
-	//	//	//model.moveX.x /= dSqrt;
-	//	//	//model.moveX.z /= dSqrt;
-	//	//	//model.moveZ.x /= dSqrt;
-	//	//	//model.moveZ.z /= dSqrt;
-	//	//}
+	// モデルの上昇・下降
+	//if (GetKeyboardPress(KEYINFO_UP_MODEL) == true)
+	//{
+	//	g_player.pos.y += 2;
+	//}
+	//else if (GetKeyboardPress(KEYINFO_DOWN_MODEL) == true)
+	//{
+	//	g_player.pos.y += -2;
 	//}
 
-	// モデルの上昇・下降
-	if (GetKeyboardPress(KEYINFO_UP_MODEL) == true)
-	{
-		g_player.pos.y += 2;
-	}
-	else if (GetKeyboardPress(KEYINFO_DOWN_MODEL) == true)
-	{
-		g_player.pos.y += -2;
-	}
-
 	// モデルの旋回
-	if (GetKeyboardPress(KEYINFO_TURN_LEFT_MODEL) == true)
-	{
-		g_player.rotDest.y += D3DX_PI / 36;
-	}
-	if (GetKeyboardPress(KEYINFO_TURN_RIGHT_MODEL) == true)
-	{
-		g_player.rotDest.y -= D3DX_PI / 36;
-	}
+	//if (GetKeyboardPress(KEYINFO_TURN_LEFT_MODEL) == true)
+	//{
+	//	g_player.rotDest.y += D3DX_PI / 36;
+	//}
+	//if (GetKeyboardPress(KEYINFO_TURN_RIGHT_MODEL) == true)
+	//{
+	//	g_player.rotDest.y -= D3DX_PI / 36;
+	//}
 
 	// 目的の回転角の上限
 	if (g_player.rotDest.y - g_player.rot.y < -D3DX_PI)
@@ -417,28 +452,29 @@ void UpdatePlayer(void)
 	g_player.move.z += (0.0f - g_player.move.z) * SPEEDDOWN;
 
 	// 移動限界X軸
-	if (g_player.pos.x >= 200.0f - g_vtxMaxPlayer.x)
+	if (g_player.pos.x >= 500.0f - g_vtxMaxPlayer.x)
 	{
-		g_player.pos.x = 200.0f - g_vtxMaxPlayer.x;
+		g_player.pos.x = 500.0f - g_vtxMaxPlayer.x;
 	}
-	else if (g_player.pos.x <= -200.0f - g_vtxMinPlayer.x)
+	else if (g_player.pos.x <= -500.0f - g_vtxMinPlayer.x)
 	{
-		g_player.pos.x = -200.0f - g_vtxMinPlayer.x;
+		g_player.pos.x = -500.0f - g_vtxMinPlayer.x;
 	}
 
 	// 移動限界Z軸
-	if (g_player.pos.z >= 200.0f - g_vtxMaxPlayer.z)
+	if (g_player.pos.z >= 500.0f - g_vtxMaxPlayer.z)
 	{
-		g_player.pos.z = 200.0f - g_vtxMaxPlayer.z;
+		g_player.pos.z = 500.0f - g_vtxMaxPlayer.z;
 	}
-	else if (g_player.pos.z <= -200.0f - g_vtxMinPlayer.z)
+	else if (g_player.pos.z <= -500.0f - g_vtxMinPlayer.z)
 	{
-		g_player.pos.z = -200.0f - g_vtxMinPlayer.z;
+		g_player.pos.z = -500.0f - g_vtxMinPlayer.z;
 	}
 
-	g_player.bOnBlock = CollisionVec(&g_player.pos, &g_player.posOld, &g_player.move, g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
-	TouchItem(&g_player.pos, g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
-	g_player.bOnBlock = TouchEnemy(&g_player.pos, &g_player.posOld,g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
+	// 当たり判定
+	g_player.bOnBlock = CollisionVec(&g_player.pos, &g_player.posOld, &g_player.move, g_player.fInRadius,g_player.fHeight);
+	TouchItem(&g_player.pos, g_player.fInRadius,g_player.fHeight);
+	g_player.bOnBlock = TouchEnemy(&g_player.pos, &g_player.posOld ,&g_player.move,g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
 }
 
 //==============================================================================
@@ -452,7 +488,7 @@ void DrawPlayer(void)
 	D3DMATERIAL9 matDef;						// 現在のマテリアル保存用
 	D3DXMATERIAL *pMat;							// マテリアルデータへのポインタ
 
-	// プレイヤーのワールドマトリックスの初期化
+												// プレイヤーのワールドマトリックスの初期化
 	D3DXMatrixIdentity(&g_player.mtxWorld);
 
 	// プレイヤーの向きの反映
@@ -478,7 +514,7 @@ void DrawPlayer(void)
 		D3DXMatrixIdentity(&g_player.aModel[nCntModel].mtxWorld);
 
 		// 各パーツの向きを反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRotModel,g_player.aModel[nCntModel].rot.y, g_player.aModel[nCntModel].rot.x, g_player.aModel[nCntModel].rot.z);
+		D3DXMatrixRotationYawPitchRoll(&mtxRotModel, g_player.aModel[nCntModel].rot.y, g_player.aModel[nCntModel].rot.x, g_player.aModel[nCntModel].rot.z);
 		D3DXMatrixMultiply(&g_player.aModel[nCntModel].mtxWorld, &g_player.aModel[nCntModel].mtxWorld, &mtxRotModel);
 
 		// 各パーツの位置を反映
@@ -489,14 +525,6 @@ void DrawPlayer(void)
 		if (g_player.aModel[nCntModel].nIdxModelParent != -1)
 		{
 			mtxParent = g_player.aModel[g_player.aModel[nCntModel].nIdxModelParent].mtxWorld;
-			//if (g_player.aModel[nCntModel].nIdxModelParent == 0)
-			//{// 親が0の時
-			//	mtxParent = g_player.aModel[0].mtxWorld;
-			//}
-			//else if (g_player.aModel[nCntModel].nIdxModelParent != 0)
-			//{// 親が0以外の時
-			//	mtxParent = g_player.aModel[nCntModel - 1].mtxWorld;
-			//}
 		}
 		else
 		{
@@ -514,6 +542,15 @@ void DrawPlayer(void)
 
 		for (int nCntMat = 0; nCntMat < (int)g_player.aModel[nCntModel].nNumMatModel; nCntMat++)
 		{
+			if (g_player.state == PLAYERSTATE_APPEAR && g_player.nCntState % 2 != 0)
+			{
+				pMat[nCntMat].MatD3D.Diffuse.a = 0.0f;
+			}
+			else
+			{
+				pMat[nCntMat].MatD3D.Diffuse.a = 1.0f;
+			}
+
 			// マテリアルの設定
 			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
@@ -527,6 +564,7 @@ void DrawPlayer(void)
 
 	// 保存していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);
+
 }
 
 //==============================================================================
@@ -634,7 +672,6 @@ void LoadMotion(void)
 	char *pKeySet = &aKeySet[0];
 	char *pKey = &aKey[0];
 
-
 	// データの読み込み
 	pFile = fopen("data/TEXT/player_horiai.txt", "r");
 	if (pFile != NULL)
@@ -671,6 +708,16 @@ void LoadMotion(void)
 							if (strcmp("NUM_PARTS", pCharaSet) == 0)
 							{
 
+							}
+							else if (strcmp("RADIUS", pCharaSet) == 0)
+							{// 当たり判定
+								fscanf(pFile, "%s", &aEqual[0]);
+								fscanf(pFile, "%f", &g_player.fOutRadius);
+							}
+							else if (strcmp("HEIGHT", pCharaSet) == 0)
+							{// 当たり判定
+								fscanf(pFile, "%s", &aEqual[0]);
+								fscanf(pFile, "%f", &g_player.fHeight);
 							}
 							else if (strcmp("PARTSSET", pCharaSet) == 0)
 							{
@@ -834,6 +881,7 @@ void StateChange(void)
 		g_player.move.x *= -1;						// 移動力を反転
 		g_player.move.z *= -1;
 		g_player.move.y = 5.0f;						// プレイヤーを飛ばす
+		g_bJump = true;
 		g_player.nKey = 0;							// キーカウントのリセット
 		g_player.nCounterMotion = 0;				// モーションカウントのリセット
 		pPlayer->motionType = MOTIONTYPE_DAMAGE;	// ダメージモーションの実行
@@ -844,7 +892,7 @@ void StateChange(void)
 			pPlayer->nCntState--;					// 状態カウントの減算
 			if (pPlayer->nCntState <= 0)
 			{// 次の状態へ移行
-				pPlayer->nCntState = 20;
+				pPlayer->nCntState = 120;
 				pPlayer->state = PLAYERSTATE_APPEAR;
 			}
 		}
@@ -857,6 +905,7 @@ void StateChange(void)
 
 	case PLAYERSTATE_APPEAR:	// 出現時
 		pPlayer->nCntState--;							// 状態カウントの減算
+
 		if (pPlayer->nCntState <= 0)
 		{// 通常状態への移行
 			pPlayer->state = PLAYERSTATE_NORMAL;		// 通常状態

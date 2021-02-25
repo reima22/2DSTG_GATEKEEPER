@@ -48,7 +48,8 @@ SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 	{"data/SE/pause_select.wav", 0},	// ポーズカーソル
 	{"data/SE/stock_lost.wav", 0},		// 残機減少
 	{"data/SE/score_up.wav", 0},		// スコア上昇
-	{"data/SE/highcoin.wav", 0},		// ハイスコアコイン獲得
+	{"data/SE/nodamage00.wav", 0},		// ハイスコアコイン獲得
+	{ "data/SE/stomp.wav", 0 },			// 踏む音
 };
 
 //=============================================================================

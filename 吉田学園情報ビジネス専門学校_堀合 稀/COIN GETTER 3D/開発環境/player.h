@@ -93,6 +93,20 @@ typedef struct
 	char aFileName[128];		
 }Model;
 
+// 当たり判定の構造体
+typedef struct
+{
+	//float fHeight;		// 高さ
+	float fFront;		// 正面
+	float fBack;		// 後方
+	float fLeft;		// 左
+	float fRight;		// 右
+	float fFrontLeft;	// 左前
+	float fFrontRight;	// 右前
+	float fBackLeft;	// 左後方
+	float fBackRight;	// 右後方
+}Collision;
+
 //==============================================================================
 // プレイヤーの構造体
 //==============================================================================
@@ -108,7 +122,7 @@ typedef struct
 	int nLife;
 	int nIdx;
 	Model aModel[MODEL_PARTS];					// モデル(パーツ)
-	int nNumModel/* = MODEL_PARTS*/;			// モデル(パーツ)数
+	int nNumModel;								// モデル(パーツ)数
 	MOTION_INFO aMotionInfo[MOTIONTYPE_MAX];	// モーション情報
 	int nNumMotion = MOTIONTYPE_MAX;			// モーション数
 	MOTIONTYPE motionType;						// モーションタイプ
@@ -119,6 +133,11 @@ typedef struct
 	int nCounterMotion;							// モーションのカウンター
 	bool bOnBlock;								// 何かに乗っているか
 	int nCntState;								// 状態変化のカウンター
+	float fInRadius;							// モデル参照の内半径
+	float fOutRadius;							// プレイヤーの外半径
+	float fHeight;								// プレイヤーの高さ
+	Collision collision;						// プレイヤーの当たり判定
+	int nJumpCnt;								// ジャンプ力のカウント
 } Player;
 
 //==============================================================================
@@ -131,6 +150,6 @@ void DrawPlayer(void);		// プレイヤーの描画処理
 Player *GetPlayer(void);	// プレイヤーの取得
 void UpdateMotion(MOTIONTYPE motionType);	// モーションの更新
 void LoadMotion(void);						// .txtフォルダの読み込み
-void StateChange(void);
+void StateChange(void);						// 状態変化
 
 #endif

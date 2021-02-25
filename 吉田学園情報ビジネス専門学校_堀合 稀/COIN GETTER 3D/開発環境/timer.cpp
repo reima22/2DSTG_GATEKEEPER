@@ -9,7 +9,7 @@
 #include "player.h"
 #include "sound.h"
 #include "game.h"
-//#include "nodamage.h"
+#include "nodamage.h"
 #include "input.h"
 #include "gamepad.h"
 #include "math.h"
@@ -55,7 +55,7 @@ HRESULT InitTimer(void)
 
 	// タイマーの初期化
 	//SetTimer();
-	g_nTimer = 60;
+	g_nTimer = 120;
 	g_nCntDownTimer = 1;
 	g_nClearCnt = 0;
 
@@ -140,7 +140,7 @@ void UpdateTimer(void)
 	// ローカル変数宣言
 	int aNumber[MAX_TIMER];
 	int nData = (int)pow(10, (MAX_TIMER - 1));
-	//BONUS Bonus = GetBonus();
+	BONUS Bonus = GetBonus();
 	Player *pPlayer;
 	pPlayer = GetPlayer();
 
@@ -153,7 +153,7 @@ void UpdateTimer(void)
 		g_nTimer--;
 	}
 
-	if (pPlayer->state == PLAYERSTATE_CLEAR/* && Bonus.nBonus == 0*/)
+	if (pPlayer->state == PLAYERSTATE_CLEAR && Bonus.nBonus == 0)
 	{
 		g_nClearCnt++;	//クリア時の待機カウンター増加
 

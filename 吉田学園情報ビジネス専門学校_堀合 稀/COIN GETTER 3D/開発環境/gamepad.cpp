@@ -97,14 +97,23 @@ HRESULT InitGamepad(HINSTANCE hInstance, HWND hWnd)
 		return false;
 	}
 
+	// 左スティックの初期化
 	DIPROPRANGE diprg;
 	ZeroMemory(&diprg, sizeof(diprg));
 	diprg.diph.dwSize = sizeof(diprg);
 	diprg.diph.dwHeaderSize = sizeof(diprg.diph);
 	diprg.diph.dwHow = DIPH_BYOFFSET;
 	diprg.diph.dwObj = DIJOFS_X;
-	diprg.lMin = -1000;
-	diprg.lMax = 1000;
+	diprg.lMin = -10000;
+	diprg.lMax = 10000;
+
+	// 右スティックの初期化
+	DIPROPDWORD dipdw;
+	dipdw.diph.dwSize = sizeof(dipdw);
+	dipdw.diph.dwHeaderSize = sizeof(dipdw.diph);
+	dipdw.diph.dwHow = DIPH_BYOFFSET;
+	dipdw.dwData = 0;
+
 	if (FAILED(device->SetProperty(DIPROP_RANGE, &diprg.diph)))
 	{
 		return false;
@@ -177,7 +186,9 @@ void UpdateGamepad(void)
 	bool is_push[KEYINFO::KEYINFO_MAX];
 
 	int unresponsive_range = 200;
+	float rightRange = 32767.0f;
 
+	// 左スティックの範囲
 	if (pad_data.lX < -unresponsive_range)
 	{// 左に傾けた
 		is_push[KEYINFO::KEYINFO_LEFT] = true;
@@ -196,24 +207,26 @@ void UpdateGamepad(void)
 		is_push[KEYINFO::KEYINFO_DOWN] = true;
 	}
 
-	//if (pad_data.lZ < -unresponsive_range)
-	//{// 左に傾けた
-	//	is_push[KEYINFO::KEYINFO_LEFT_TURN] = true;
-	//}
-	//else if (pad_data.lZ > unresponsive_range)
-	//{// 右に傾けた
-	//	is_push[KEYINFO::KEYINFO_RIGHT_TURN] = true;
-	//}
+	// 右スティックの範囲
+	if (pad_data.lZ < rightRange / 5.0f)
+	{// 左に傾けた
+		is_push[KEYINFO::KEYINFO_RIGHT_TURN] = true;
+	}
+	else if (pad_data.lZ > rightRange * 1.2f)
+	{// 右に傾けた
+		is_push[KEYINFO::KEYINFO_LEFT_TURN] = true;
+	}
 
-	//if (pad_data.lRz < -unresponsive_range)
-	//{// 上に傾けた
-	//	is_push[KEYINFO::KEYINFO_UP_SIGHT] = true;
-	//}
-	//else if (pad_data.lRz > unresponsive_range)
-	//{// 下に傾けた
-	//	is_push[KEYINFO::KEYINFO_DOWN_SIGHT] = true;
-	//}
+	if (pad_data.lRz < rightRange / 5.0f)
+	{// 上に傾けた
+		is_push[KEYINFO::KEYINFO_UP_SIGHT] = true;
+	}
+	else if (pad_data.lRz > rightRange * 1.2f)
+	{// 下に傾けた
+		is_push[KEYINFO::KEYINFO_DOWN_SIGHT] = true;
+	}
 
+	// 十字キーの設定
 	if (pad_data.rgdwPOV[0] != 0xFFFFFFFF)
 	{
 		// 8方向での制御
@@ -267,15 +280,23 @@ void UpdateGamepad(void)
 		
 		switch (nCnt)
 		{
-		//case 0:
+		//case 0:	// Xボタン
 		//	is_push[KEYINFO::KEYINFO_JUMP] = true;
 		//	break;
 
-		case 2:
+		case 2:		// Aボタン
 			is_push[KEYINFO::KEYINFO_OK] = true;
 			break;
 
-		case 11:
+		case 4:		// LBボタン
+			is_push[KEYINFO::KEYINFO_CAMERA_FRONT] = true;
+			break;
+
+		case 6:		// LTボタン
+			is_push[KEYINFO::KEYINFO_CAMERA_FRONT] = true;
+			break;
+
+		case 11:	// STARTボタン
 			is_push[KEYINFO::KEYINFO_PAUSE] = true;
 			break;
 		}

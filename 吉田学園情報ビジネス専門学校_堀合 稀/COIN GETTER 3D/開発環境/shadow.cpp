@@ -237,27 +237,6 @@ int SetShadow(D3DXVECTOR3 pos, float fWidth, float fDepth)
 void SetPositionShadow(int nIdx, D3DXVECTOR3 pos)
 {
 	g_aShadow[nIdx].pos = pos;
-
-	//// ローカル変数宣言
-	//VERTEX_3D *pVtx;
-	//Shadow *pShadow;
-	//pShadow = &g_aShadow[0];
-
-	//// 頂点バッファをロックし、頂点情報へのポインタを取得
-	//g_pVtxBuffShadow->Lock(0, 0, (void**)&pVtx, 0);
-
-	//// ポインタの移動
-	//pVtx += nIdx * 4;
-	//pShadow += nIdx;
-
-	//// ポリゴンの各頂点座標
-	//pVtx[0].pos = D3DXVECTOR3(pos.x - pShadow->fWidth, 0.0f, pos.z - pShadow->fDepth);
-	//pVtx[1].pos = D3DXVECTOR3(pos.x - pShadow->fWidth, 0.0f, pos.z + pShadow->fDepth);
-	//pVtx[2].pos = D3DXVECTOR3(pos.x + pShadow->fWidth, 0.0f, pos.z - pShadow->fDepth);
-	//pVtx[3].pos = D3DXVECTOR3(pos.x + pShadow->fWidth, 0.0f, pos.z + pShadow->fDepth);
-
-	//// 頂点バッファをアンロックする
-	//g_pVtxBuffShadow->Unlock();
 }
 
 Shadow *GetShadow(void)

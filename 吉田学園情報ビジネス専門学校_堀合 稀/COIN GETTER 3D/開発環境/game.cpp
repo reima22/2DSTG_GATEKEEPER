@@ -29,10 +29,9 @@
 #include "pause.h"
 #include "life.h"
 #include "particle.h"
-//#include "block.h"
 #include "timer.h"
 #include "gamepad.h"
-//#include "nodamage.h"
+#include "nodamage.h"
 #include "time.h"
 #include "stdlib.h"
 #include "stdio.h"
@@ -40,18 +39,18 @@
 //==============================================================================
 // マクロ定義
 //==============================================================================
-#define VERTICAL_STEP	(90)	// 縦移動するブロックのカウント間隔
-#define SIDE_STEP		(240)	// 横移動するブロックのカウント間隔
-#define BLOCKX			(46)	// ブロック配置のcsvファイルの列数
-#define BLOCKY			(24)	// ブロック配置のcsvファイルの行数
+//#define VERTICAL_STEP	(90)	// 縦移動するブロックのカウント間隔
+//#define SIDE_STEP		(240)	// 横移動するブロックのカウント間隔
+//#define BLOCKX			(46)	// ブロック配置のcsvファイルの列数
+//#define BLOCKY			(24)	// ブロック配置のcsvファイルの行数
 
 //==============================================================================
 // グローバル変数
 //==============================================================================
 bool g_bPause;				// ポーズの状態
-int g_nGameCnt = START_NUM;	// ステージカウント
-int g_nStartCnt;
-int g_aMapData[BLOCKY][BLOCKX];
+//int g_nGameCnt = START_NUM;	// ステージカウント
+//int g_nStartCnt;
+//int g_aMapData[BLOCKY][BLOCKX];
 
 //==============================================================================
 // ゲーム画面の初期化処理
@@ -63,7 +62,7 @@ HRESULT InitGame(void)
 
 	// 変数の初期化
 	g_bPause = false;
-	g_nStartCnt = g_nGameCnt;
+	//g_nStartCnt = g_nGameCnt;
 
 	// 背景ポリゴンの初期化設定
 	//InitBg();
@@ -124,23 +123,10 @@ HRESULT InitGame(void)
 	InitUI();
 
 	// ノーダメージボーナスの初期化処理
-	//InitNodamage();
+	InitNodamage();
 
 	// BGMの再生
 	PlaySound(SOUND_LABEL_BGM001);
-
-	//if (g_nGameCnt == 0)
-	//{
-	//	PlaySound(SOUND_LABEL_BGM001);
-	//}
-	//else if (g_nGameCnt == 1)
-	//{
-	//	PlaySound(SOUND_LABEL_BGM005);	
-	//}
-	//else if (g_nGameCnt == 2)
-	//{
-	//	PlaySound(SOUND_LABEL_BGM006);
-	//}
 
 	return S_OK;
 }
@@ -210,7 +196,7 @@ void UninitGame(void)
 	// UIの終了処理
 	UninitUI();
 	// ノーダメージボーナスの終了処理
-	//UninitNodamage();
+	UninitNodamage();
 }
 
 //==============================================================================
@@ -223,7 +209,7 @@ void UpdateGame(void)
 	PAUSE pause;
 	FADE fade;
 	int nTime = GetTimer();
-	int nGameCnt = g_nGameCnt;
+	//int nGameCnt = g_nGameCnt;
 
 	// プレイヤーの取得
 	pPlayer = GetPlayer();
@@ -331,13 +317,12 @@ void UpdateGame(void)
 			UpdateTimer();
 
 			// ノーダメージボーナスの更新処理
-			//UpdateNodamage();
+			UpdateNodamage();
 		}
 	
 		// 画面の遷移（ゲームクリア時）
 		if (nTime <= 0 && pPlayer->state == PLAYERSTATE_CLEAR)
 		{
-			//g_nGameCnt++;					// ステージカウント加算
 			SetFade(FADE_OUT, MODE_RESULT);	// ゲームモード続行
 		}
 		//else if(nTime <= 0 && g_nGameCnt == MAX_STAGE)
@@ -350,11 +335,6 @@ void UpdateGame(void)
 		{
 			SetFade(FADE_OUT, MODE_RESULT);	// リザルトへ
 		}
-
-		//if (GetKeyboardTrigger(KEYINFO_OK) == true && g_bPause == false)
-		//{
-		//	SetFade(FADE_OUT, MODE_RESULT);
-		//}
 	}
 }
 
@@ -399,9 +379,6 @@ void DrawGame(void)
 	// エフェクトの更新処理
 	DrawParticle();
 
-	//// ブロックの描画処理
-	//DrawBlock();
-
 	// UIの描画処理
 	DrawUI();
 
@@ -414,8 +391,8 @@ void DrawGame(void)
 	// 体力表示の描画処理
 	DrawLife();
 
-	//// ノーダメージボーナスの描画処理
-	//DrawNodamage();
+	// ノーダメージボーナスの描画処理
+	DrawNodamage();
 
 	// ポーズの描画処理
 	if (g_bPause == true)

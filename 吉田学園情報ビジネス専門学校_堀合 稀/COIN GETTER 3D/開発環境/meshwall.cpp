@@ -171,11 +171,11 @@ HRESULT InitMeshwall(void)
 		NULL);
 
 	// ï«ÇÃê›íË
-	SetMeshwall(D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f, 8, 4);
+	SetMeshwall(D3DXVECTOR3(0.0f, 100.0f, 500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f, 20, 4);
 	//SetMeshwall(D3DXVECTOR3(0.0f, 50.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f, 8, 2);
-	SetMeshwall(D3DXVECTOR3(200.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f, 0.0f), 50.0f, 50.0f, 8, 4);
-	SetMeshwall(D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), 50.0f, 50.0f, 8, 4);
-	SetMeshwall(D3DXVECTOR3(-200.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / -2.0f, 0.0f), 50.0f, 50.0f, 8, 4);
+	SetMeshwall(D3DXVECTOR3(500.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f, 0.0f), 50.0f, 50.0f, 20, 4);
+	SetMeshwall(D3DXVECTOR3(0.0f, 100.0f, -500.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), 50.0f, 50.0f, 20, 4);
+	SetMeshwall(D3DXVECTOR3(-500.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / -2.0f, 0.0f), 50.0f, 50.0f, 20, 4);
 
 	return S_OK;
 }

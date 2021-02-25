@@ -165,6 +165,7 @@ void UpdateParticle(void)
 			// 拡散の抑制
 			pParticle->move.x *= 0.9f;
 			pParticle->move.y *= 0.9f;
+			pParticle->move.z *= 0.9f;
 
 			// 移動更新
 			pParticle->pos += pParticle->move;
@@ -307,6 +308,7 @@ void SetEffect(D3DXVECTOR3 pos, float fMove, D3DXCOLOR color, float fRadius, flo
 				fAngle = (float)((rand() % 628) - 314) / 100.0f;
 				pParticle->move.x = (sinf(fAngle) * (float)(rand() % 500 + 1) * fMove);
 				pParticle->move.y = (cosf(fAngle) * (float)(rand() % 500 + 1) * fMove);
+				pParticle->move.z = (cosf(fAngle) * (float)(rand() % 500 + 1) * fMove);
 
 				// パーティクルの色設定
 				pParticle->color = color;

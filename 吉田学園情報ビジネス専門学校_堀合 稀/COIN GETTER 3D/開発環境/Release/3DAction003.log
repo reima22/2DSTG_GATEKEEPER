@@ -1,7 +1,0 @@
-﻿  camera.cpp
-c:\users\student\documents\visual studio 2015\projects\3daction003\gamepad.h(43): error C2065: 'KEYINFO': 定義されていない識別子です。
-c:\users\student\documents\visual studio 2015\projects\3daction003\gamepad.h(43): error C2146: 構文エラー: ')' が、識別子 'button' の前に必要です。
-c:\users\student\documents\visual studio 2015\projects\3daction003\gamepad.h(44): error C2065: 'KEYINFO': 定義されていない識別子です。
-c:\users\student\documents\visual studio 2015\projects\3daction003\gamepad.h(44): error C2146: 構文エラー: ')' が、識別子 'button' の前に必要です。
-c:\users\student\documents\visual studio 2015\projects\3daction003\gamepad.h(45): error C2065: 'KEYINFO': 定義されていない識別子です。
-c:\users\student\documents\visual studio 2015\projects\3daction003\gamepad.h(45): error C2146: 構文エラー: ')' が、識別子 'button' の前に必要です。

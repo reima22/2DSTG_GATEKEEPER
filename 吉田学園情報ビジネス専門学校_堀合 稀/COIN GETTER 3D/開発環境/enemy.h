@@ -35,7 +35,7 @@ void UpdateEnemy(void);		// “G‚ÌXVˆ—
 void DrawEnemy(void);		// “G‚Ì•`‰æˆ—
 Enemy *GetEnemy(void);		// “G‚Ìæ“¾
 void SetEnemy(D3DXVECTOR3 pos,D3DXVECTOR3 move,int nMove);
-bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, float fWidthMax, float fWidthMin, float fDepthMax, float fDepthMin, float fHeightMax, float fHeightMin);
+bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove,float fWidthMax, float fWidthMin, float fDepthMax, float fDepthMin, float fHeightMax, float fHeightMin);
 
 //bool CollisionObject(		// “–‚½‚è”»’è
 //	D3DXVECTOR3 *pPos,
