@@ -371,7 +371,8 @@ void TouchItem(D3DXVECTOR3 *pPos, float fInRadius, float fHeight)
 			}
 
 			// アイテムとの接触
-			if (fItemVec[0] > 0.0f && fItemVec[1] > 0.0f && fItemVec[2] > 0.0f && fItemVec[3] > 0.0f && pPlayer->pos.y <= (pItem->pos.y + pItem->vtxMaxObject.y))
+			if (fItemVec[0] > 0.0f && fItemVec[1] > 0.0f && fItemVec[2] > 0.0f && fItemVec[3] > 0.0f && 
+				pPlayer->pos.y <= (pItem->pos.y + pItem->vtxMaxObject.y) && (pPlayer->pos.y + pPlayer->fHeight) >= pItem->pos.y)
 			{// アイテムの取得
 				// エフェクトの発生
 				SetEffect(D3DXVECTOR3(pItem->pos.x, pItem->pos.y + 5.0f, pItem->pos.z), 0.01f, D3DXCOLOR(1.0f, 1.0f, 0.1f, 1.0f), 5.0f, 0.05f, 30);

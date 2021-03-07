@@ -32,25 +32,11 @@
 #define SCREEN_CENTERY	(360)		// 画面の中央Y軸
 #define FOUR_POINT		(4)			// 当たり判定の4個点
 #define PLUS_GRAVITY	(0.6f)		// 加算される重力値
-
-//#define POS1_PLAYER		(D3DXVECTOR3(40.0f,300.0f,0.0f))	// ステージ1のプレイヤーのスタート位置
-//#define POS2_PLAYER		(D3DXVECTOR3(40.0f,660.0f,0.0f))	// ステージ2のプレイヤーのスタート位置
-//#define POS3_PLAYER		(D3DXVECTOR3(50.0f,660.0f,0.0f))	// ステージ3のプレイヤーのスタート位置
 #define MAX_LIFE		(5)			// 体力の最大値
-//#define SPEEDUP			(1.0f)		// 移動の加速度
-//#define JUMP_POWER		(20.0f)	// ジャンプ力s
-//#define DROP_SPEEDUP	(1.4f)		// 落下の加速度
-//#define MAX_GRAVITY		(30.0f)		// 重力の最大値
-//#define GRAVITY_ENEMY	(25.0f)		// 敵の重力の最大値
-//#define ENEMY_SIZEX		(20)		// 敵の幅
-//#define ENEMY_SIZEY		(40)		// 敵の高さ
-//#define COIN_SCORE		(5000)		// コインのスコア
-//#define REDCOIN_SCORE	(54000)		// ハイスコアコインのスコア
-//#define TIME_BONUS		(2000)		// 1カウント当たりのタイムボーナススコア
-//#define BONUS_STAGE1	(150000)	// ステージ1のノーダメージボーナススコア
-//#define BONUS_STAGE2	(100000)	// ステージ2のノーダメージボーナススコア
-//#define BONUS_STAGE3	(300000)	// ステージ3のノーダメージボーナススコア
-//#define DAMAGE_SCORE	(10000)		// 被ダメージ時の減少スコア
+#define TITLE_BGM		(false)		// タイトルBGMのオン・オフ
+#define GAME_BGM		(false)		// ゲームBGMのオン・オフ
+#define RESULT_BGM		(false)		// リザルトBGMのオン・オフ
+#define RANKING_BGM		(false)		// ランキングBGMのオン・オフ
 
 //==============================================================================
 // 頂点フォーマットに合わせた構造体

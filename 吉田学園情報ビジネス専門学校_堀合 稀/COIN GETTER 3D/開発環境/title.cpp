@@ -188,8 +188,13 @@ HRESULT InitTitle(void)
 	// 頂点バッファをアンロックする
 	g_pVtxBuffTitle->Unlock();
 
-	// BGMの再生
-	PlaySound(SOUND_LABEL_BGM000);
+	bool bTitlebgm = TITLE_BGM;
+
+	if (bTitlebgm == true)
+	{
+		// BGMの再生
+		PlaySound(SOUND_LABEL_BGM000);
+	}
 
 	return S_OK;
 }

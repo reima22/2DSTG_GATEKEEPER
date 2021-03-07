@@ -12,6 +12,7 @@
 #include "fade.h"
 #include "sound.h"
 #include "gamepad.h"
+#include "particle.h"
 #include "stdio.h"
 
 //==============================================================================
@@ -127,14 +128,20 @@ HRESULT InitRanking(void)
 	// 初期化におけるポリゴンの配置
 	SetInitRanking();
 
-	// BGMの再生
-	PlaySound(SOUND_LABEL_BGM004);
+	bool bRankingbgm = RANKING_BGM;
+	if (bRankingbgm == true)
+	{
+		// BGMの再生
+		PlaySound(SOUND_LABEL_BGM004);
+	}
 
 	// ランキングの読み込み
 	LoadData();
 
 	// ランキングの並び替え
 	SetRanking(nScore);
+
+	InitParticle();
 
 	return S_OK;
 }
@@ -184,6 +191,7 @@ void UninitRanking(void)
 		g_pTextureNowLogo->Release();
 		g_pTextureNowLogo = NULL;
 	}
+	UninitParticle();
 }
 
 //==============================================================================
@@ -203,15 +211,35 @@ void UpdateRanking(void)
 	float fBlue = 0.0f;
 	int aNowNum[MAX_SCORE];
 	float fAlpha;
-
-	//XINPUT_STATE state;
-	//XInputGetState(0, &state);
-
 	// フェードの取得
 	fade = GetFade();
 
 	// 変色カウントの増加
 	g_nColorCnt++;
+
+	if (g_aScoreR[4] <= nScore && title.titleauto != TITLE_AUTO)
+	{
+		if (g_nColorCnt == 1)
+		{
+			PlaySound(SOUND_LABEL_SE_RANKIN);
+		}
+
+		//if (g_nColorCnt < 300)
+		{
+			if (g_nColorCnt % 8 == 0)
+			{
+				float fposA = rand() % 2400 - 1200;
+				//fposA /= 100.0f;
+				SetEffect1(D3DXVECTOR3(fposA, 0.0f, 720.0f), -15.0f, D3DXCOLOR(1.0f, 0.5f, 0.1f, 0.5f), 50.0f, 0.0f, 1, 1);
+			}
+			if (g_nColorCnt % 6 == 0)
+			{
+				float fposB = rand() % 2400 - 1200;
+				//fposB /= 100.0f;
+				SetEffect1(D3DXVECTOR3(fposB, 0.0f, 720.0f), -15.0f, D3DXCOLOR(1.0f, 0.5f, 0.1f, 0.5f), 50.0f, 0.0f, 1, 1);
+			}
+		}
+	}
 
 	// 頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffRanking->Lock(0, 0, (void**)&pVtx, 0);
@@ -374,7 +402,7 @@ void UpdateRanking(void)
 	// タイトルへの切り替え
 	if ( fade == FADE_NONE)
 	{
-		if (GetKeyboardTrigger(KEYINFO_OK) == true || IsButtonDown(KEYINFO::KEYINFO_OK) == true || g_nCounter >= 300/* || state.Gamepad.wButtons & XINPUT_GAMEPAD_A*/)
+		if (GetKeyboardTrigger(KEYINFO_OK) == true || IsButtonDown(KEYINFO::KEYINFO_OK) == true || g_nCounter >= 300)
 		{
 			SetFade(FADE_OUT, MODE_TITLE);
 		}
@@ -384,6 +412,8 @@ void UpdateRanking(void)
 	{
 		g_nCounter++;
 	}
+
+	UpdateParticle();
 }
 
 //==============================================================================
@@ -442,6 +472,8 @@ void DrawRanking(void)
 			nCnt * 4,				// 描画を開始する頂点インデックス
 			2);						// 描画するプリミティブ数
 	}
+
+	DrawParticle();
 }
 
 //==============================================================================

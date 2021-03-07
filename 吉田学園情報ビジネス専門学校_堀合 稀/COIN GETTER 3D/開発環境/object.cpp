@@ -149,16 +149,16 @@ HRESULT InitObject(void)
 	}
 
 	// 風船
-	SetObject(D3DXVECTOR3(300.0f, 0.0f, 0.0f), 0);
-	SetObject(D3DXVECTOR3(-300.0f, 0.0f, 0.0f), 0);
-	SetObject(D3DXVECTOR3(0.0f, 0.0f, 300.0f), 0);
-	SetObject(D3DXVECTOR3(0.0f, 0.0f, -300.0f), 0);
+	SetObject(D3DXVECTOR3(300.0f, 0.0f, 0.0f), 0, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	SetObject(D3DXVECTOR3(-300.0f, 0.0f, 0.0f), 0, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	SetObject(D3DXVECTOR3(0.0f, 0.0f, 300.0f), 0, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	SetObject(D3DXVECTOR3(0.0f, 0.0f, -300.0f), 0, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// ブロック
-	SetObject(D3DXVECTOR3(200.0f, 0.0f, 200.0f), 1);
-	SetObject(D3DXVECTOR3(-200.0f, 0.0f, 200.0f), 1);
-	SetObject(D3DXVECTOR3(200.0f, 0.0f, -200.0f), 1);
-	SetObject(D3DXVECTOR3(-200.0f, 0.0f, -200.0f), 1);
+	SetObject(D3DXVECTOR3(200.0f, 0.0f, 200.0f), 1, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	SetObject(D3DXVECTOR3(-200.0f, 0.0f, 200.0f), 1, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	SetObject(D3DXVECTOR3(200.0f, 0.0f, -200.0f), 1, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	SetObject(D3DXVECTOR3(-200.0f, 0.0f, -200.0f), 1, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	return S_OK;
 }
@@ -314,7 +314,7 @@ Object *GetObject(void)
 //==============================================================================
 // オブジェクト設定
 //==============================================================================
-void SetObject(D3DXVECTOR3 pos, int nType)
+void SetObject(D3DXVECTOR3 pos, int nType,D3DXVECTOR3 rot)
 {
 	// ローカル変数宣言
 	Object *pObject = &object[0];
@@ -325,6 +325,7 @@ void SetObject(D3DXVECTOR3 pos, int nType)
 		if (pObject->bUse == false)
 		{
 			pObject->pos = pos;		// 位置
+			pObject->rot = rot;
 
 			SetItem(D3DXVECTOR3(pos.x, 100.0f, pos.z));
 
@@ -372,7 +373,7 @@ void SetObject(D3DXVECTOR3 pos, int nType)
 //==============================================================================
 bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, float fInRadius ,float fHeight)
 {
-	//// ローカル変数宣言
+	// ローカル変数宣言
 	bool bLand;
 	D3DXVECTOR3 aVec[COLLISION_PARTS];	// 矩形頂点から判定対象へのベクトル
 	D3DXVECTOR3 pos = *pPos;			// 判定対象の位置
@@ -424,7 +425,7 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 				if (pPos->y <= (pObject->pos.y + pObject->vtxMaxObject.y) && pPos->y > pObject->pos.y + pObject->vtxMinObject.y - fHeight)
 				{
 					if (pPos->y <= (pObject->pos.y + pObject->vtxMaxObject.y) &&
-						pPosOld->y >= (pObject->pos.y + pObject->vtxMaxObject.y))
+						pPosOld->y >= pObject->pos.y + pObject->vtxMaxObject.y)
 					{// 上側
 						if (pPos->y < pObject->pos.y + pObject->vtxMaxObject.y)
 						{
@@ -461,13 +462,10 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 					}
 
 					break;
-
-
 				}
 			}
 			else if (pObject->fPlayerVec[0] < 0.0f || pObject->fPlayerVec[1] < 0.0f || pObject->fPlayerVec[2] < 0.0f || pObject->fPlayerVec[3] < 0.0f)
 			{
-
 				if (pPlayer->bOnBlock == true && pos.y > 0.0f)
 				{
 					bLand = false;

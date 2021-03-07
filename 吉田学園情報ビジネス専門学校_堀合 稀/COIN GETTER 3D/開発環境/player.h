@@ -63,7 +63,8 @@ typedef struct
 //==============================================================================
 typedef struct
 {
-	int nFrame;				// 再生フレーム			
+	int nFrame;				// 再生フレーム
+	int nBrendFrame;		// モーションブレンド用再生フレーム
 	KEY aKey[MODEL_PARTS];	// 各モデルのキー要素 
 } KEY_SET;
 
@@ -90,13 +91,13 @@ typedef struct
 	D3DXVECTOR3 rot;			// 向き
 	D3DXMATRIX mtxWorld;		// ワールドマトリックス
 	int nIdxModelParent;		// 親モデルのインデックス
-	char aFileName[128];		
+	char aFileName[128];		// 読み込むXデータ名
+	D3DXVECTOR3 rotMemo;		// 保存用角度
 }Model;
 
 // 当たり判定の構造体
 typedef struct
 {
-	//float fHeight;		// 高さ
 	float fFront;		// 正面
 	float fBack;		// 後方
 	float fLeft;		// 左
@@ -112,15 +113,15 @@ typedef struct
 //==============================================================================
 typedef struct
 {
-	D3DXVECTOR3 pos;
-	D3DXVECTOR3 posOld;
-	D3DXVECTOR3 rot;
-	D3DXMATRIX mtxWorld;
-	D3DXVECTOR3 move;
-	D3DXVECTOR3 rotDest;
-	PLAYERSTATE state;
-	int nLife;
-	int nIdx;
+	D3DXVECTOR3 pos;							// 位置
+	D3DXVECTOR3 posOld;							// 過去の位置
+	D3DXVECTOR3 rot;							// 角度
+	D3DXMATRIX mtxWorld;						// ワールドマトリックス
+	D3DXVECTOR3 move;							// 移動力
+	D3DXVECTOR3 rotDest;						// 過去の角度
+	PLAYERSTATE state;							// プレイヤーの状態
+	int nLife;									// 体力
+	int nIdx;									// 影の割り当て番号
 	Model aModel[MODEL_PARTS];					// モデル(パーツ)
 	int nNumModel;								// モデル(パーツ)数
 	MOTION_INFO aMotionInfo[MOTIONTYPE_MAX];	// モーション情報
@@ -138,6 +139,9 @@ typedef struct
 	float fHeight;								// プレイヤーの高さ
 	Collision collision;						// プレイヤーの当たり判定
 	int nJumpCnt;								// ジャンプ力のカウント
+	int nMoveCnt;								// 移動モーションカウント
+	bool bMotionChange;							// モーション変化時の判定
+	int nBrendFrame;
 } Player;
 
 //==============================================================================

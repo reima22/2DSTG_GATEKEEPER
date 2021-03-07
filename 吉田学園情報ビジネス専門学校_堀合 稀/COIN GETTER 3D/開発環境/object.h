@@ -53,7 +53,7 @@ void UninitObject(void);	// 3Dオブジェクトの終了処理
 void UpdateObject(void);	// 3Dオブジェクトの更新処理
 void DrawObject(void);		// 3Dオブジェクトの描画処理
 Object *GetObject(void);	// 3Dオブジェクトの取得
-void SetObject(D3DXVECTOR3 pos,int nType);
+void SetObject(D3DXVECTOR3 pos,int nType,D3DXVECTOR3 rot);
 bool CollisionVec(
 	D3DXVECTOR3 *pPos,
 	D3DXVECTOR3 *pPosOld,

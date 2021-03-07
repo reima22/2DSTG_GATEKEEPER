@@ -234,15 +234,19 @@ HRESULT InitResult(void)
 	// 頂点バッファをアンロックする
 	g_pVtxBuffResult->Unlock();
 
-	if (Player->state == PLAYERSTATE_GAMEOVER)
+	bool bResultbgm = RESULT_BGM;
+	if (bResultbgm == true)
 	{
-		// BGMの再生
-		PlaySound(SOUND_LABEL_BGM003);
-	}
-	else
-	{
-		// BGMの再生
-		PlaySound(SOUND_LABEL_BGM002);
+		if (Player->state == PLAYERSTATE_GAMEOVER)
+		{
+			// BGMの再生
+			PlaySound(SOUND_LABEL_BGM003);
+		}
+		else
+		{
+			// BGMの再生
+			PlaySound(SOUND_LABEL_BGM002);
+		}
 	}
 
 	return S_OK;
@@ -287,7 +291,6 @@ void UpdateResult(void)
 	int nScore = GetScore();	// スコアの取得
 	int aNumber[MAX_SCORE];
 	int nData = (int)pow(10, MAX_SCORE - 1);
-
 	//XINPUT_STATE state;
 	//XInputGetState(0, &state);
 

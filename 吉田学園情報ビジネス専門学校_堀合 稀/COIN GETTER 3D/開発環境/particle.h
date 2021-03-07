@@ -24,4 +24,13 @@ void SetEffect(					// エフェクトの設定
 	float fAlphaDown,			// 透過度
 	int nEffect);				// エフェクトの個数
 
+void SetEffect1(				// エフェクトの設定
+	D3DXVECTOR3 pos,			// 位置
+	float fMove,				// 移動量
+	D3DXCOLOR color,			// 色・透明度
+	float fRadius,				// 半径
+	float fAlphaDown,			// 透過度
+	int nEffect,
+	int nPattern);
+
 #endif

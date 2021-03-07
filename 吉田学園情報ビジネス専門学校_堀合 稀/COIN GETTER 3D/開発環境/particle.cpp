@@ -28,6 +28,7 @@ typedef struct
 	int nLife;			// 寿命
 	bool bUse;			// 使用しているかどうか
 	D3DXMATRIX mtxWorld;
+	int nPattern;
 } PARTICLE;
 
 //==============================================================================
@@ -35,7 +36,6 @@ typedef struct
 //==============================================================================
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffParticle = NULL;		// バッファへのポインタ
 LPDIRECT3DTEXTURE9 g_pTextureParticle = NULL;			// パーティクルテクスチャーへのポインタ
-//LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffParticle = NULL;	// バッファへのポインタ
 PARTICLE g_aParticle[MAX_PARTICLE];						// パーティクルの構造体
 
 //==============================================================================
@@ -69,6 +69,7 @@ HRESULT InitParticle(void)
 		g_aParticle[nCntParticle].fAlphaDown = 0.0f;
 		g_aParticle[nCntParticle].nLife = 0;
 		g_aParticle[nCntParticle].bUse = false;
+		g_aParticle[nCntParticle].nPattern = 0;
 	}
 
 	// 頂点情報の設定
@@ -162,10 +163,13 @@ void UpdateParticle(void)
 	{
 		if (pParticle->bUse == true)
 		{ // エフェクトが使用されていた場合
-			// 拡散の抑制
-			pParticle->move.x *= 0.9f;
-			pParticle->move.y *= 0.9f;
-			pParticle->move.z *= 0.9f;
+			if(pParticle->nPattern == 0)
+			{
+				// 拡散の抑制
+				pParticle->move.x *= 0.9f;
+				pParticle->move.y *= 0.9f;
+				pParticle->move.z *= 0.9f;
+			}
 
 			// 移動更新
 			pParticle->pos += pParticle->move;
@@ -173,7 +177,7 @@ void UpdateParticle(void)
 			// 透明度の減少
 			pParticle->color.a -= pParticle->fAlphaDown;
 
-			// 位置と色の設定
+			// 位置の設定
 			pVtx[0].pos = D3DXVECTOR3(-pParticle->fRadius, -pParticle->fRadius, 0.0f);
 			pVtx[1].pos = D3DXVECTOR3(-pParticle->fRadius, pParticle->fRadius, 0.0f);
 			pVtx[2].pos = D3DXVECTOR3(pParticle->fRadius, -pParticle->fRadius, 0.0f);
@@ -298,7 +302,7 @@ void SetEffect(D3DXVECTOR3 pos, float fMove, D3DXCOLOR color, float fRadius, flo
 	{
 		for (int nCntParticle = 0; nCntParticle < nEffect; nCntParticle++, pParticle++)
 		{
-			if (pParticle->bUse == false)
+			if (pParticle->bUse == false/* && pParticle->nPattern == 0*/)
 			{ // 使用されていない場合
 				// 位置を設定
 				pParticle->pos = pos;
@@ -322,6 +326,50 @@ void SetEffect(D3DXVECTOR3 pos, float fMove, D3DXCOLOR color, float fRadius, flo
 				// パーティクルの寿命設定
 				pParticle->nLife = 200;
 				
+				// パーティクルの有効化
+				pParticle->bUse = true;
+				break;
+			}
+		}
+	}
+}
+
+//==============================================================================
+// ランキングエフェクトの設定
+//==============================================================================
+void SetEffect1(D3DXVECTOR3 pos, float fMove, D3DXCOLOR color, float fRadius, float fAlphaDown, int nEffect,int nPattern)
+{
+	// ローカル変数宣言
+	PARTICLE *pParticle;
+
+	// パーティクルの取得
+	pParticle = &g_aParticle[0];
+
+	for (int nCntAppear = 0; nCntAppear < nEffect; nCntAppear++)
+	{
+		for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++, pParticle++)
+		{
+			if (pParticle->bUse == false)
+			{ // 使用されていない場合
+			  // 位置を設定
+				pParticle->pos = pos;
+				pParticle->nPattern = nPattern;
+
+				// 移動量
+				pParticle->move.z = fMove;
+
+				// パーティクルの色設定
+				pParticle->color = color;
+
+				// パーティクル1つの大きさ
+				pParticle->fRadius = fRadius;
+
+				// パーティクルの透明度減少値
+				pParticle->fAlphaDown = fAlphaDown;
+
+				// パーティクルの寿命設定
+				pParticle->nLife = 200;
+
 				// パーティクルの有効化
 				pParticle->bUse = true;
 				break;

@@ -27,6 +27,7 @@
 #include "result.h"
 #include "gamepad.h"
 #include "sound.h"
+#include "particle.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -67,7 +68,7 @@ LPDIRECT3D9 g_pD3D = NULL;				// Direct3Dオブジェクトへのポインタ
 LPDIRECT3DDEVICE9 g_pD3DDevice = NULL;	// Direct3Dデバイスへのポインタ(描画処理に必要)
 LPD3DXFONT g_pFont = NULL;				// フォントへのポインタ
 int g_nCountFPS;						// FPSカウンタ
-MODE g_mode = MODE_TITLE;				// ゲームモード
+MODE g_mode = MODE_GAME;				// ゲームモード
 
 //==============================================================================
 // メイン関数
@@ -124,7 +125,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		NULL);
 
 	// 初期化処理
-	if (FAILED(Init(hInstance, hWnd, FALSE)))
+	if (FAILED(Init(hInstance, hWnd, TRUE)))
 	{
 		return -1;
 	}
@@ -550,7 +551,7 @@ void DrawFPS(void)
 	nNum += sprintf(&aStr[nNum], "ジャンプ　　　　　：[SPACE]\n");
 	nNum += sprintf(&aStr[nNum], "画面遷移：[ENTER]\nプレイヤー位置リセット：[1]\nカメラ位置リセット：[2]\n");
 	nNum += sprintf(&aStr[nNum], "ジャンプカウント：%d\n",player.nJumpCnt);
-
+	nNum += sprintf(&aStr[nNum], "モーション変化：%d\n", player.bMotionChange);
 
 
 

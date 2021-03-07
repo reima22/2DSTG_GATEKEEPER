@@ -31,6 +31,7 @@ typedef enum
 	SOUND_LABEL_SE_SCORE_UP,		// スコア上昇
 	SOUND_LABEL_SE_NODAMAGE,		// ハイスコアコイン獲得
 	SOUND_LABEL_SE_STOMP,			// 踏む音
+	SOUND_LABEL_SE_RANKIN,			// ランクイン音
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;
 

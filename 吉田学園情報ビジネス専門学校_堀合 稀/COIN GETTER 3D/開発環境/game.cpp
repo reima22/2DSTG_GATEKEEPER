@@ -125,8 +125,12 @@ HRESULT InitGame(void)
 	// ノーダメージボーナスの初期化処理
 	InitNodamage();
 
-	// BGMの再生
-	PlaySound(SOUND_LABEL_BGM001);
+	bool bGamebgm = GAME_BGM;
+	if (bGamebgm == true)
+	{
+		// BGMの再生
+		PlaySound(SOUND_LABEL_BGM001);
+	}
 
 	return S_OK;
 }
