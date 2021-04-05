@@ -32,6 +32,7 @@
 #include "timer.h"
 #include "gamepad.h"
 #include "nodamage.h"
+#include "start.h"
 #include "time.h"
 #include "stdlib.h"
 #include "stdio.h"
@@ -48,9 +49,7 @@
 // グローバル変数
 //==============================================================================
 bool g_bPause;				// ポーズの状態
-//int g_nGameCnt = START_NUM;	// ステージカウント
-//int g_nStartCnt;
-//int g_aMapData[BLOCKY][BLOCKX];
+bool g_bGamebgm;	// ゲームBGMのON・OFF
 
 //==============================================================================
 // ゲーム画面の初期化処理
@@ -62,7 +61,6 @@ HRESULT InitGame(void)
 
 	// 変数の初期化
 	g_bPause = false;
-	//g_nStartCnt = g_nGameCnt;
 
 	// 背景ポリゴンの初期化設定
 	//InitBg();
@@ -125,12 +123,10 @@ HRESULT InitGame(void)
 	// ノーダメージボーナスの初期化処理
 	InitNodamage();
 
-	bool bGamebgm = GAME_BGM;
-	if (bGamebgm == true)
-	{
-		// BGMの再生
-		PlaySound(SOUND_LABEL_BGM001);
-	}
+	// ゲーム開始の初期化処理
+	InitStart();
+
+	g_bGamebgm = GAME_BGM;	// ゲームBGMのON・OFF
 
 	return S_OK;
 }
@@ -197,10 +193,15 @@ void UninitGame(void)
 
 	// 体力表示の終了処理
 	UninitLife();
+
 	// UIの終了処理
 	UninitUI();
+
 	// ノーダメージボーナスの終了処理
 	UninitNodamage();
+
+	// ゲーム開始の終了処理
+	UninitStart();
 }
 
 //==============================================================================
@@ -213,7 +214,7 @@ void UpdateGame(void)
 	PAUSE pause;
 	FADE fade;
 	int nTime = GetTimer();
-	//int nGameCnt = g_nGameCnt;
+	Start start = GetStart();
 
 	// プレイヤーの取得
 	pPlayer = GetPlayer();
@@ -224,105 +225,120 @@ void UpdateGame(void)
 	// フェードの取得
 	fade = GetFade();
 
-	// ポーズメニューへ移行
-	if (pPlayer->state != PLAYERSTATE_CLEAR && pPlayer->state != PLAYERSTATE_GAMEOVER && pause.colOption.a <= 0.0f && fade == FADE_NONE)
+	// ゲーム開始の更新処理
+	UpdateStart();
+
+	// ゲーム開始の可否
+	if (start.bStart == true)
 	{
-		if (GetKeyboardTrigger(KEYINFO_PAUSE) == true || IsButtonDown(KEYINFO::KEYINFO_PAUSE) == true)
+		// BGMの再生処理
+		if (g_bGamebgm == true)
 		{
+			// BGMの再生
+			PlaySound(SOUND_LABEL_BGM_GAME);
+			g_bGamebgm = false;
+		}
+
+		// ポーズメニューへ移行
+		if (pPlayer->state != PLAYERSTATE_CLEAR && pPlayer->state != PLAYERSTATE_GAMEOVER && pause.colOption.a <= 0.0f && fade == FADE_NONE)
+		{
+			if (GetKeyboardTrigger(KEYINFO_PAUSE) == true || IsButtonDown(KEYINFO::KEYINFO_PAUSE) == true)
+			{
 				// 音の再生
-				PlaySound(SOUND_LABEL_SE_START000);
+				PlaySound(SOUND_LABEL_SE_DECIDE);
 
 				g_bPause = g_bPause ? false : true;	// ポーズの切り替え
+			}
 		}
+
+		if (g_bPause == true)
+		{ // ポーズ時の設定
+			UpdatePause();	// ポーズの更新処理
+
+			if (GetKeyboardTrigger(KEYINFO_OK) == true || IsButtonDown(KEYINFO::KEYINFO_OK) == true)
+			{ // 選択時の画面遷移処理
+				if (fade != FADE_OUT && pause.colOption.a <= 0.0f)
+				{ // 選択処理の重複防止
+				  // サウンドの再生
+					PlaySound(SOUND_LABEL_SE_DECIDE);
+				}
+
+				if (pause.PauseMenu == PAUSE_MENU_CONTINUE)
+				{ // CONTINUEの時
+					g_bPause = false;				// ポーズの解除(ゲームの続行)
+				}
+				else if (pause.PauseMenu == PAUSE_MENU_RETRY)
+				{ // RETRYの時
+					SetFade(FADE_OUT, MODE_GAME);	// ゲームのやり直し
+													//g_nGameCnt = START_NUM;
+				}
+				else if (pause.PauseMenu == PAUSE_MENU_QUIT)
+				{ // QUITの時
+					SetFade(FADE_OUT, MODE_TITLE);	// タイトルへ移行
+				}
+			}
+		}
+		else
+		{ // 非ポーズ時の処理
+			if (pPlayer->state != PLAYERSTATE_CLEAR && pPlayer->state != PLAYERSTATE_GAMEOVER)
+			{ // ゲーム中の処理
+			  // 背景ポリゴンの更新処理
+			  //UpdateBg();
+				// 体力の更新処理
+				UpdateLife();
+				// 敵の更新処理
+				UpdateEnemy();
+
+				// カメラの更新処理
+				UpdateCamera();
+
+				// ライトの更新処理
+				UpdateLight();
+
+				// ビルボードの更新処理
+				//UpdateBillboard();
+
+				// 弾の更新処理
+				UpdateBullet();
+
+				// プレイヤーの更新処理
+				UpdatePlayer();
+
+				// ポリゴンの更新処理
+				UpdatePolygon();
+
+				// メッシュフィールドの更新処理
+				UpdateMeshfield();
+
+				// 壁の更新処理
+				UpdateWall();
+
+				// メッシュ壁の更新処理
+				UpdateMeshwall();
+
+				UpdateObject();
+
+				UpdateItem();
+
+				// 影の更新処理
+				UpdateShadow();
+			}
+
+			// エフェクトの更新処理
+			UpdateParticle();
+
+			if (pPlayer->state != PLAYERSTATE_GAMEOVER)
+			{
+				// スコアの更新処理
+				UpdateScore();
+
+				// タイマーの更新処理
+				UpdateTimer();
+
+				// ノーダメージボーナスの更新処理
+				UpdateNodamage();
+			}
 	}
-
-	if (g_bPause == true)
-	{ // ポーズ時の設定
-		UpdatePause();	// ポーズの更新処理
-
-		if (GetKeyboardTrigger(KEYINFO_OK) == true || IsButtonDown(KEYINFO::KEYINFO_OK) == true)
-		{ // 選択時の画面遷移処理
-			if (fade != FADE_OUT && pause.colOption.a <= 0.0f)
-			{ // 選択処理の重複防止
-				// サウンドの再生
-				PlaySound(SOUND_LABEL_SE_START000);
-			}
-			
-			if (pause.PauseMenu == PAUSE_MENU_CONTINUE)
-			{ // CONTINUEの時
-				g_bPause = false;				// ポーズの解除(ゲームの続行)
-			}
-			else if(pause.PauseMenu == PAUSE_MENU_RETRY)
-			{ // RETRYの時
-				SetFade(FADE_OUT, MODE_GAME);	// ゲームのやり直し
-				//g_nGameCnt = START_NUM;
-			}
-			else if (pause.PauseMenu == PAUSE_MENU_QUIT)
-			{ // QUITの時
-				SetFade(FADE_OUT, MODE_TITLE);	// タイトルへ移行
-			}
-		}
-	}
-	else
-	{ // 非ポーズ時の処理
-		if (pPlayer->state != PLAYERSTATE_CLEAR && pPlayer->state != PLAYERSTATE_GAMEOVER)
-		{ // ゲーム中の処理
-		  // 背景ポリゴンの更新処理
-			//UpdateBg();
-			// 体力の更新処理
-			UpdateLife();
-			// 敵の更新処理
-			UpdateEnemy();
-
-			// カメラの更新処理
-			UpdateCamera();
-
-			// ライトの更新処理
-			UpdateLight();
-
-			// ビルボードの更新処理
-			//UpdateBillboard();
-
-			// 弾の更新処理
-			UpdateBullet();
-
-			// プレイヤーの更新処理
-			UpdatePlayer();
-
-			// ポリゴンの更新処理
-			UpdatePolygon();
-
-			// メッシュフィールドの更新処理
-			UpdateMeshfield();
-
-			// 壁の更新処理
-			UpdateWall();
-
-			// メッシュ壁の更新処理
-			UpdateMeshwall();
-
-			UpdateObject();
-
-			UpdateItem();
-
-			// 影の更新処理
-			UpdateShadow();
-		}
-
-		// エフェクトの更新処理
-		UpdateParticle();
-
-		if (pPlayer->state != PLAYERSTATE_GAMEOVER)
-		{
-			// スコアの更新処理
-			UpdateScore();
-
-			// タイマーの更新処理
-			UpdateTimer();
-
-			// ノーダメージボーナスの更新処理
-			UpdateNodamage();
-		}
 	
 		// 画面の遷移（ゲームクリア時）
 		if (nTime <= 0 && pPlayer->state == PLAYERSTATE_CLEAR)
@@ -397,6 +413,9 @@ void DrawGame(void)
 
 	// ノーダメージボーナスの描画処理
 	DrawNodamage();
+
+	// ゲーム開始の描画処理
+	DrawStart();
 
 	// ポーズの描画処理
 	if (g_bPause == true)

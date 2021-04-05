@@ -34,6 +34,8 @@ LPD3DXBUFFER g_pBuffMatItem = NULL;		// マテリアル(材質情報)へのポインタ
 DWORD g_nNumMatItem = 0;				// マテリアルの数
 ITEM g_aItem[MAX_ITEM];					// アイテムの情報
 int g_nCntItem;							// 配置数カウント
+int g_nCntAnim;							// アニメーションカウント
+D3DMATERIAL9 g_matHigh;
 
 //==============================================================================
 // アイテムの初期化処理
@@ -66,6 +68,8 @@ HRESULT InitItem(void)
 
 	// 変数の初期化
 	g_nCntItem = 0;
+	g_nCntAnim = 0;
+	g_matHigh.Diffuse = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);
 
 	// ローカル変数宣言
 	int nNumVtx;	// 頂点数
@@ -82,20 +86,13 @@ HRESULT InitItem(void)
 	for (int nCntItem = 0; nCntItem < MAX_ITEM; nCntItem++, pItem++)
 	{
 		pItem->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		pItem->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		pItem->col = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);
 		pItem->nType = NULL;
 		pItem->bUse = false;
+		pItem->bHiScore = false;
 		pItem->vtxMaxObject = D3DXVECTOR3(-10000.0f, -10000.0f, -10000.0f);
 		pItem->vtxMinObject = D3DXVECTOR3(10000.0f, 10000.0f, 10000.0f);
-		//pItem->fAnim = 0.0f;
-		//if (nCntItem == nRand)
-		//{
-		//	pItem->bHiScore = true;
-		//}
-		//else
-		//{
-		//	pItem->bHiScore = false;
-		//}
 	}
 
 	// 頂点座標の比較
@@ -138,6 +135,11 @@ HRESULT InitItem(void)
 
 			pVtxBuff += sizeFVF;	// 頂点フォーマットのサイズ分ポインタを進める
 		}
+
+		g_aItem[nCntItem].pBuffMat = g_pBuffMatItem;
+		g_aItem[nCntItem].pMesh = g_pMeshItem;
+		g_aItem[nCntItem].nNumMat = g_nNumMatItem;
+
 		// 頂点バッファをアンロック
 		g_pMeshItem->UnlockVertexBuffer();
 	}
@@ -150,6 +152,8 @@ HRESULT InitItem(void)
 			SetItem(D3DXVECTOR3(-SET_WIDTH + (SET_HALF_W * (float)nCntWid), 0.0f, SET_DEPTH - (SET_HALF_D * (float)nCntDep)));
 		}
 	}
+
+	g_aItem[RandItem()].bHiScore = true;
 
 	return S_OK;
 }
@@ -197,6 +201,18 @@ void UpdateItem(void)
 			//CollisionVec(&pItem->pos,NULL,NULL,pItem->vtxMaxObject.x, pItem->vtxMaxObject.y);
 		}
 	}
+
+	g_nCntAnim++;
+
+	// ハイスコアコインの色変化
+	if (g_nCntAnim % 120 == 0)
+	{
+		g_matHigh.Diffuse = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+	else if (g_nCntAnim % 60 == 0 && g_nCntAnim % 120 != 0)
+	{
+		g_matHigh.Diffuse = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);
+	}
 }
 
 //==============================================================================
@@ -210,6 +226,7 @@ void DrawItem(void)
 	D3DMATERIAL9 matDef;						// 現在のマテリアル保存用
 	D3DXMATERIAL *pMat;							// マテリアルデータへのポインタ
 	ITEM *pItem = &g_aItem[0];
+
 
 	for (int nCntItem = 0; nCntItem < MAX_ITEM; nCntItem++,pItem++)
 	{
@@ -233,18 +250,25 @@ void DrawItem(void)
 			pDevice->GetMaterial(&matDef);
 
 			// マテリアルデータへのポインタを取得
-			pMat = (D3DXMATERIAL*)g_pBuffMatItem->GetBufferPointer();
+			pMat = (D3DXMATERIAL*)pItem->pBuffMat->GetBufferPointer();
 
-			for (int nCntMat = 0; nCntMat < (int)g_nNumMatItem; nCntMat++)
+			for (int nCntMat = 0; nCntMat < (int)pItem->nNumMat; nCntMat++)
 			{
-				// マテリアルの設定
-				pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-
+				if (pItem->bHiScore == true)
+				{
+					pDevice->SetMaterial(&g_matHigh);
+				}
+				else if(pItem->bHiScore == false)
+				{
+					// マテリアルの設定
+					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+				}
+				
 				// テクスチャの設定
 				pDevice->SetTexture(0, NULL);
 
 				// モデル(パーツ)の描画
-				g_pMeshItem->DrawSubset(nCntMat);
+				pItem->pMesh->DrawSubset(nCntMat);
 			}
 
 			// 保存していたマテリアルを戻す
@@ -305,26 +329,10 @@ ITEM *GetItem(void)
 //==============================================================================
 int RandItem(void)
 {
-	//// ローカル変数宣言
-	//ITEM *pItem;
-	//int nStage = GetStage();
+	// ローカル変数宣言
 	int nHigh = 0;
 
-	//// アイテムの取得
-	//pItem = &g_aItem[0];
-
-	//if (nStage == 0)
-	//{
-	//	nHigh = rand() % COIN_STAGE1;
-	//}
-	//else if (nStage == 1)
-	//{
-	//	nHigh = rand() % COIN_STAGE2;
-	//}
-	//else if(nStage == 2)
-	//{
-	//	nHigh = rand() % COIN_STAGE3;
-	//}
+	nHigh = rand() % g_nCntItem;;
 
 	return nHigh;
 }
@@ -374,10 +382,22 @@ void TouchItem(D3DXVECTOR3 *pPos, float fInRadius, float fHeight)
 			if (fItemVec[0] > 0.0f && fItemVec[1] > 0.0f && fItemVec[2] > 0.0f && fItemVec[3] > 0.0f && 
 				pPlayer->pos.y <= (pItem->pos.y + pItem->vtxMaxObject.y) && (pPlayer->pos.y + pPlayer->fHeight) >= pItem->pos.y)
 			{// アイテムの取得
-				// エフェクトの発生
-				SetEffect(D3DXVECTOR3(pItem->pos.x, pItem->pos.y + 5.0f, pItem->pos.z), 0.01f, D3DXCOLOR(1.0f, 1.0f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
-				PlaySound(SOUND_LABEL_SE_COIN);	// 効果音の再生
-				AddScore(1000);					// スコアの加算
+				
+				if (pItem->bHiScore == true && g_matHigh.Diffuse.g == 0.0f)
+				{
+					// エフェクトの発生
+					SetEffect(D3DXVECTOR3(pItem->pos.x, pItem->pos.y + 5.0f, pItem->pos.z), 0.01f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
+					PlaySound(SOUND_LABEL_SE_HIGHSCORE);	// 効果音の再生
+					AddScore(10000);						// 高いスコアの加算
+				}
+				else
+				{
+					// エフェクトの発生
+					SetEffect(D3DXVECTOR3(pItem->pos.x, pItem->pos.y + 5.0f, pItem->pos.z), 0.01f, D3DXCOLOR(1.0f, 1.0f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
+					PlaySound(SOUND_LABEL_SE_COIN);	// 効果音の再生
+					AddScore(1000);					// スコアの加算
+				}
+				
 				Shadow *pShadow = GetShadow();	// 影の取得
 				pShadow += pItem->nIdx;
 				pShadow->bUse = false;			// 影の消滅

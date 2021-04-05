@@ -33,24 +33,23 @@ DWORD g_aSizeAudio[SOUND_LABEL_MAX] = {};					// オーディオデータサイズ
 // 各音素材のパラメータ
 SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 {
-	{"data/BGM/bgm000.wav", -1},		// BGM0(タイトル)
-	{"data/BGM/bgm001.wav", -1},		// BGM1(ステージ1)
-	{"data/BGM/bgm002.wav", -1},		// BGM2(クリア)
-	{"data/BGM/bgm003.wav", -1},		// BGM3(ゲームオーバー)
-	{"data/BGM/bgm004.wav", -1},		// BGM4(ランキング)
-	{"data/BGM/bgm005.wav", -1},		// BGM5(ステージ2)
-	{"data/BGM/bgm006.wav", -1},		// BGM6(ステージ3)
-	{"data/SE/hit000.wav", 0},			// ヒット音
-	{"data/SE/hit001.wav", 0},			// ヒット音
-	{"data/SE/start000.wav", 0},		// 決定
-	{"data/SE/coin.wav", 0},			// アイテム取得
-	{"data/SE/jump.wav", 0},			// ジャンプ音
-	{"data/SE/pause_select.wav", 0},	// ポーズカーソル
-	{"data/SE/stock_lost.wav", 0},		// 残機減少
-	{"data/SE/score_up.wav", 0},		// スコア上昇
-	{"data/SE/nodamage00.wav", 0},		// ハイスコアコイン獲得
-	{ "data/SE/stomp.wav", 0 },			// 踏む音
-	{ "data/SE/rankin.wav", 0 },		// ランクイン音
+	{"data/BGM/bgm_title.wav", -1},				// タイトルBGM
+	{"data/BGM/bgm_game.wav", -1},				// ゲームBGM
+	{"data/BGM/bgm_result_clear.wav", -1},		// ゲームクリアリザルトBGM
+	{"data/BGM/bgm_result_failed.wav", -1},		// ゲームオーバーリザルトBGM
+	{"data/BGM/bgm_ranking.wav", -1},			// ランキングBGM
+	{"data/SE/damage.wav", 0},					// 被ダメージ音
+	{"data/SE/decide.wav", 0},					// 決定
+	{"data/SE/coin.wav", 0},					// アイテム取得
+	{"data/SE/jump.wav", 0},					// ジャンプ音
+	{"data/SE/pause_select.wav", 0},			// ポーズカーソル
+	{"data/SE/score_up.wav", 0},				// スコア上昇
+	{"data/SE/nodamage.wav", 0},				// ノーダメージボーナス獲得
+	{"data/SE/stomp.wav", 0},					// 踏む音
+	{"data/SE/rankin.wav", 0},					// ランクイン音
+	{"data/SE/countdown.wav",0},				// 開始カウントダウン音
+	{"data/SE/gamestart.wav",0},				// ゲーム開始音
+	{"data/SE/highscore.wav",0},				// ハイスコアアイテム取得音
 };
 
 //=============================================================================

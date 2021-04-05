@@ -193,7 +193,7 @@ HRESULT InitTitle(void)
 	if (bTitlebgm == true)
 	{
 		// BGMの再生
-		PlaySound(SOUND_LABEL_BGM000);
+		PlaySound(SOUND_LABEL_BGM_TITLE);
 	}
 
 	return S_OK;
@@ -297,7 +297,7 @@ void UpdateTitle(void)
 			if (title.Sign != ENTERSIGN_ACTIVE)
 			{
 				// サウンドの再生
-				PlaySound(SOUND_LABEL_SE_START000);
+				PlaySound(SOUND_LABEL_SE_DECIDE);
 			}
 
 			// フェードアウト

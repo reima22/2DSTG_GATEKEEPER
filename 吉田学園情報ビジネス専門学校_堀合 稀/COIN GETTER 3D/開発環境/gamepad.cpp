@@ -112,6 +112,7 @@ HRESULT InitGamepad(HINSTANCE hInstance, HWND hWnd)
 	dipdw.diph.dwSize = sizeof(dipdw);
 	dipdw.diph.dwHeaderSize = sizeof(dipdw.diph);
 	dipdw.diph.dwHow = DIPH_BYOFFSET;
+	//dipdw.diph.dwObj = DIJOFS_Y;
 	dipdw.dwData = 0;
 
 	if (FAILED(device->SetProperty(DIPROP_RANGE, &diprg.diph)))

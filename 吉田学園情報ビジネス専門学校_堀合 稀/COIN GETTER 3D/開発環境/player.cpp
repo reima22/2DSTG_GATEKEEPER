@@ -23,11 +23,9 @@
 //==============================================================================
 #define PLAYER_MOVE		(1.0f)
 #define PLAYER_TURN		(0.1f)
-#define VTX_MINP		(D3DXVECTOR3(10000.0f, 10000.0f, 10000.0f))		// 仮頂点最小値
-#define	VTX_MAXP		(D3DXVECTOR3(-10000.0f, -10000.0f, -10000.0f))	// 仮頂点最大値
-#define TEXT_LENGTH		(128)	// テキスト読み込みの最大数
-#define DATA_LENGTH		(64)	// データ読み込みの最大数
+
 #define MOVE_MIN		(0.5f)	// 移動モーション時の最小移動力
+#define MOVECNT_MAX		(20)
 
 //==============================================================================
 // グローバル変数
@@ -87,11 +85,11 @@ HRESULT InitPlayer(void)
 	g_player.nCounterMotion = 0;
 	g_player.nCntState = 120;
 	g_player.fInRadius = 0.0f;
-	g_vtxMinPlayer = VTX_MINP;
-	g_vtxMaxPlayer = VTX_MAXP;
+	g_vtxMinPlayer = VTX_MIN;
+	g_vtxMaxPlayer = VTX_MAX;
 	g_bJump = true;
 	g_player.nMoveCnt = 0;
-	g_player.nBrendFrame = 9;
+	g_player.nBrendFrame = 5;
 	g_player.bMotionChange = false;
 
 	// 影の設定
@@ -189,321 +187,14 @@ void UninitPlayer(void)
 //==============================================================================
 void UpdatePlayer(void)
 {
-	// カメラの取得
-	Camera camera = *GetCamera();
-	//bool bJump = true;
+	// プレイヤーの状態変化
 	StateChange();
-
-	// 直前の位置の保存
-	g_player.posOld = g_player.pos;
-
-	// 重力の発生
-	if (g_player.pos.y > 0.0f && g_player.bOnBlock == false)
-	{
-		if (GetKeyboardPress(KEYINFO_JUMP) != true || IsButtonPush(KEYINFO::KEYINFO_OK) != true)
-		{
-			g_player.move.y -= PLUS_GRAVITY;
-		}
-	}
-
-	if (g_player.pos.y < 0.0f)
-	{
-		g_player.bOnBlock = true;
-		g_player.nKey = 0;
-		g_player.nCounterMotion = 0;
-		g_player.motionType = MOTIONTYPE_LANDING;
-	}
-
-	if (g_player.bOnBlock == true)
-	{
-		if (g_player.pos.y < 0.0f)
-		{
-			g_player.pos.y = 0.0f;
-		}
-		g_bJump = false;
-		g_player.move.y = 0.0f;
-
-		//g_player.nJumpCnt = 0;
-		//if (g_player.bOnBlock == false)
-		//{
-		//	g_player.bOnBlock = true;
-		//}
-	}
-
-	// 位置のリセット
-	if (GetKeyboardTrigger(KEYINFO_PRESET) == true)
-	{
-		g_player.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		g_player.rot = D3DXVECTOR3(0.0f, D3DX_PI, 0.0f);
-		g_player.rotDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		g_player.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	}
-
-	// ジャンプ
-	//if (GetKeyboardTrigger(KEYINFO_JUMP) == true || IsButtonDown(KEYINFO::KEYINFO_OK) == true)
-	//{
-	//	//SetBullet(
-	//		//D3DXVECTOR3(g_player.pos.x + sinf(D3DX_PI - g_player.rot.y) * -10.0f, g_player.pos.y + 50.0f, g_player.pos.z + cosf(D3DX_PI - g_player.rot.y) * 10.0f)
-	//	//	/*D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 30.0f, g_player.pos.z)*/,
-	//	//	D3DXVECTOR3(sinf(D3DX_PI - g_player.rot.y) * -5.0f, 0.0f, cosf(D3DX_PI - g_player.rot.y) * 5.0f),
-	//	//	100);
-	//	if (g_player.motionType == MOTIONTYPE_MOVE || g_player.motionType == MOTIONTYPE_NEUTRAL)
-	//	{
-	//		g_player.bOnBlock = false;
-	//		PlaySound(SOUND_LABEL_SE_JUMP);
-	//		g_player.move.y = 10.0f;
-	//		g_player.nKey = 0;
-	//		g_player.nCounterMotion = 0;
-	//		g_player.motionType = MOTIONTYPE_JUMP;
-	//	}
-	//}
-
-	// ジャンプ
-	if (GetKeyboardTrigger(KEYINFO_JUMP) == true || IsButtonDown(KEYINFO::KEYINFO_OK) == true)
-	{
-		if (g_player.bOnBlock == true)
-		{
-			PlaySound(SOUND_LABEL_SE_JUMP);
-			g_player.nKey = 0;
-			g_player.nCounterMotion = 0;
-			g_player.motionType = MOTIONTYPE_JUMP;
-		}
-		g_player.bOnBlock = false;
-	}
-	if (GetKeyboardPress(KEYINFO_JUMP) == true || IsButtonPush(KEYINFO::KEYINFO_OK) == true)
-	{
-		if (g_bJump == false)
-		{
-			if (g_player.nJumpCnt == 1)
-			{
-				g_player.move.y = 5.0f;
-			}
-			if (g_player.nJumpCnt < 7)
-			{
-				g_player.nJumpCnt++;
-				g_player.move.y += 1.0f;
-			}
-		}
-	}
-	if (GetKeyboardRelease(KEYINFO_JUMP) == true || IsButtonUp(KEYINFO::KEYINFO_OK) == true)
-	{
-		//if (g_player.bOnBlock == true)
-		{
-			g_player.nJumpCnt = 0;
-			g_bJump = true;
-		}
-	}
-
-	//if (GetKeyboardTrigger(KEYINFO_ATTACK) == true && g_player.motionType == MOTIONTYPE_NEUTRAL)
-	//{
-	//	g_player.nKey = 0;
-	//	g_player.nCounterMotion = 0;
-	//	g_player.motionType = MOTIONTYPE_ACTION;
-	//}
 
 	// モーションの更新
 	UpdateMotion(g_player.motionType);
 
-	// 移動量の加算
-	g_player.pos += g_player.move;
-
-	// 影の追従
-	SetPositionShadow(g_player.nIdx, D3DXVECTOR3(g_player.pos.x, 0.0f, g_player.pos.z));
-
-	// モデルの移動
-	if (GetKeyboardPress(KEYINFO_UP) == true || IsButtonPush(KEYINFO::KEYINFO_UP) == true)
-	{
-		if (g_player.nMoveCnt < 20)
-		{
-			g_player.nMoveCnt++;
-		}
-
-		if (g_player.motionType != MOTIONTYPE_JUMP)
-		{
-			g_player.motionType = MOTIONTYPE_MOVE;
-		}
-		if (GetKeyboardPress(KEYINFO_LEFT) == true || IsButtonPush(KEYINFO::KEYINFO_LEFT) == true)
-		{// 左上方向
-			g_player.move.x -= cosf(camera.rot.y + D3DX_PI / 4) * PLAYER_MOVE;
-			g_player.move.z += sinf(camera.rot.y + D3DX_PI / 4) * PLAYER_MOVE;
-			g_player.rotDest.y = camera.rot.y + (D3DX_PI * 3 / 4);
-		}
-		else if (GetKeyboardPress(KEYINFO_RIGHT) == true || IsButtonPush(KEYINFO::KEYINFO_RIGHT) == true)
-		{// 右上方向
-			g_player.move.x += cosf(camera.rot.y - D3DX_PI / 4) * PLAYER_MOVE;
-			g_player.move.z -= sinf(camera.rot.y - D3DX_PI / 4) * PLAYER_MOVE;
-			g_player.rotDest.y = camera.rot.y - (D3DX_PI * 3 / 4);
-		}
-		else
-		{// 上方向
-			g_player.move.x += sinf(camera.rot.y) * PLAYER_MOVE;
-			g_player.move.z += cosf(camera.rot.y) * PLAYER_MOVE;
-			g_player.rotDest.y = camera.rot.y + D3DX_PI;
-		}
-	}
-	else if (GetKeyboardPress(KEYINFO_DOWN) == true || IsButtonPush(KEYINFO::KEYINFO_DOWN) == true)
-	{
-		if (g_player.nMoveCnt < 20)
-		{
-			g_player.nMoveCnt++;
-		}
-
-		if (g_player.motionType != MOTIONTYPE_JUMP)
-		{
-			g_player.motionType = MOTIONTYPE_MOVE;
-		}
-
-		if (GetKeyboardPress(KEYINFO_LEFT) == true || IsButtonPush(KEYINFO::KEYINFO_LEFT) == true)
-		{// 左下方向
-			g_player.move.x += cosf(camera.rot.y + D3DX_PI * 3 / 4) * PLAYER_MOVE;
-			g_player.move.z -= sinf(camera.rot.y + D3DX_PI * 3 / 4) * PLAYER_MOVE;
-			g_player.rotDest.y = camera.rot.y + D3DX_PI / 4;
-		}
-		else if (GetKeyboardPress(KEYINFO_RIGHT) == true || IsButtonPush(KEYINFO::KEYINFO_RIGHT) == true)
-		{// 右下方向
-			g_player.move.x -= cosf(camera.rot.y - D3DX_PI * 3 / 4) * PLAYER_MOVE;
-			g_player.move.z += sinf(camera.rot.y - D3DX_PI * 3 / 4) * PLAYER_MOVE;
-			g_player.rotDest.y = camera.rot.y + D3DX_PI / -4;
-		}
-		else
-		{// 下方向
-			g_player.move.x += sinf(camera.rot.y - D3DX_PI) * PLAYER_MOVE;
-			g_player.move.z += cosf(camera.rot.y - D3DX_PI) * PLAYER_MOVE;
-			g_player.rotDest.y = camera.rot.y;
-		}
-	}
-	else if (GetKeyboardPress(KEYINFO_LEFT) == true || IsButtonPush(KEYINFO::KEYINFO_LEFT) == true)
-	{// 左方向
-		if (g_player.nMoveCnt < 20)
-		{
-			g_player.nMoveCnt++;
-		}
-
-		g_player.move.x -= cosf(camera.rot.y) * PLAYER_MOVE;
-		g_player.move.z += sinf(camera.rot.y) * PLAYER_MOVE;
-		g_player.rotDest.y = camera.rot.y + (D3DX_PI / 2);
-		if (g_player.motionType != MOTIONTYPE_JUMP)
-		{
-			g_player.motionType = MOTIONTYPE_MOVE;
-		}
-	}
-	else if (GetKeyboardPress(KEYINFO_RIGHT) == true || IsButtonPush(KEYINFO::KEYINFO_RIGHT) == true)
-	{// 右方向
-		if (g_player.nMoveCnt < 20)
-		{
-			g_player.nMoveCnt++;
-		}
-
-		g_player.move.x += cosf(camera.rot.y) * PLAYER_MOVE;
-		g_player.move.z -= sinf(camera.rot.y) * PLAYER_MOVE;
-		g_player.rotDest.y = camera.rot.y + (D3DX_PI / -2);
-		if (g_player.motionType != MOTIONTYPE_JUMP)
-		{
-			g_player.motionType = MOTIONTYPE_MOVE;
-		}
-	}
-	else
-	{
-		if (g_player.nMoveCnt > 0)
-		{
-			g_player.nMoveCnt--;
-
-		}
-	}
-
-	if (GetKeyboardTrigger(KEYINFO_UP) == true || GetKeyboardTrigger(KEYINFO_DOWN) == true || GetKeyboardTrigger(KEYINFO_RIGHT) == true || GetKeyboardTrigger(KEYINFO_LEFT) == true
-		|| IsButtonDown(KEYINFO::KEYINFO_UP) == true || IsButtonDown(KEYINFO::KEYINFO_LEFT) == true || IsButtonDown(KEYINFO::KEYINFO_RIGHT) == true || IsButtonDown(KEYINFO::KEYINFO_DOWN) == true)
-	{// モーションカウントと位置の修正
-		g_player.nCounterMotion = 0;
-		g_player.aModel[0].pos.y = 20.0f;
-	}
-
-	if (GetKeyboardRelease(KEYINFO_UP) == true || GetKeyboardRelease(KEYINFO_DOWN) == true || GetKeyboardRelease(KEYINFO_RIGHT) == true || GetKeyboardRelease(KEYINFO_LEFT) == true
-		|| IsButtonUp(KEYINFO::KEYINFO_UP) == true || IsButtonUp(KEYINFO::KEYINFO_LEFT) == true || IsButtonUp(KEYINFO::KEYINFO_RIGHT) == true || IsButtonUp(KEYINFO::KEYINFO_DOWN) == true)
-	{// 移動終了時の位置補正
-		g_player.aModel[0].pos.y = 20.0f;
-	}
-
-	// 移動モーションから待機モーションへ
-	if (g_player.motionType == MOTIONTYPE_MOVE && g_player.nMoveCnt == 0)
-	{
-		g_player.nCounterMotion = 0;
-		g_player.nKey = 0;
-		g_player.motionType = MOTIONTYPE_NEUTRAL;
-	}
-	//if (g_player.motionType == MOTIONTYPE_MOVE && g_player.move.x <= MOVE_MIN && g_player.move.x >= -MOVE_MIN && g_player.move.z <= MOVE_MIN && g_player.move.z >= -MOVE_MIN)
-	//{
-	//	g_player.nCounterMotion = 0;
-	//	g_player.nKey = 0;
-	//	g_player.motionType = MOTIONTYPE_NEUTRAL;
-	//}
-
-	// モデルの上昇・下降
-	//if (GetKeyboardPress(KEYINFO_UP_MODEL) == true)
-	//{
-	//	g_player.pos.y += 2;
-	//}
-	//else if (GetKeyboardPress(KEYINFO_DOWN_MODEL) == true)
-	//{
-	//	g_player.pos.y += -2;
-	//}
-
-	// モデルの旋回
-	//if (GetKeyboardPress(KEYINFO_TURN_LEFT_MODEL) == true)
-	//{
-	//	g_player.rotDest.y += D3DX_PI / 36;
-	//}
-	//if (GetKeyboardPress(KEYINFO_TURN_RIGHT_MODEL) == true)
-	//{
-	//	g_player.rotDest.y -= D3DX_PI / 36;
-	//}
-
-	// 目的の回転角の上限
-	if (g_player.rotDest.y - g_player.rot.y < -D3DX_PI)
-	{
-		g_player.rotDest.y += D3DX_PI * 2.0f;
-	}
-	else if (g_player.rotDest.y - g_player.rot.y > D3DX_PI)
-	{
-		g_player.rotDest.y -= D3DX_PI * 2.0f;
-	}
-
-	// 向きの更新
-	g_player.rot.y += (g_player.rotDest.y - g_player.rot.y) * 0.1f;
-
-	// 現在の回転角の上限
-	if (g_player.rot.y < -D3DX_PI)
-	{
-		g_player.rot.y += D3DX_PI * 2.0f;
-	}
-	else if (g_player.rot.y > D3DX_PI)
-	{
-		g_player.rot.y -= D3DX_PI * 2.0f;
-	}
-
-	// 加速後の減速処理
-	g_player.move.x += (0.0f - g_player.move.x) * SPEEDDOWN;
-	g_player.move.z += (0.0f - g_player.move.z) * SPEEDDOWN;
-
-	// 移動限界X軸
-	if (g_player.pos.x >= 500.0f - g_vtxMaxPlayer.x)
-	{
-		g_player.pos.x = 500.0f - g_vtxMaxPlayer.x;
-	}
-	else if (g_player.pos.x <= -500.0f - g_vtxMinPlayer.x)
-	{
-		g_player.pos.x = -500.0f - g_vtxMinPlayer.x;
-	}
-
-	// 移動限界Z軸
-	if (g_player.pos.z >= 500.0f - g_vtxMaxPlayer.z)
-	{
-		g_player.pos.z = 500.0f - g_vtxMaxPlayer.z;
-	}
-	else if (g_player.pos.z <= -500.0f - g_vtxMinPlayer.z)
-	{
-		g_player.pos.z = -500.0f - g_vtxMinPlayer.z;
-	}
+	// プレイヤーの操作
+	MovePlayer();
 
 	// 当たり判定
 	g_player.bOnBlock = CollisionVec(&g_player.pos, &g_player.posOld, &g_player.move, g_player.fInRadius,g_player.fHeight);
@@ -620,72 +311,65 @@ void UpdateMotion(MOTIONTYPE motionType)
 
 	// モーションカウンターの加算
 	if (g_player.bMotionChange == true)
-	{
+	{// モーションブレンド実行時
 		if (g_player.nCounterMotion < g_player.nBrendFrame)
 		{// カウント上限
 			g_player.nCounterMotion++;
 		}
 	}
-	else if (g_player.bMotionChange == false)
-	{
+	else
+	{// 通常時
 		if (g_player.nCounterMotion < g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame)
 		{// カウント上限
 			g_player.nCounterMotion++;
 		}
 	}
 
-
-	//// モーション変化判定
-	//if (g_player.motionTypeOld != g_player.motionType)
-	//{
-	//	g_player.bMotionChange = true;
-	//}
-	//if (g_player.nCounterMotion == g_player.nBrendFrame && g_player.bMotionChange == true)
-	//{
-	//	g_player.bMotionChange = false;
-	//}
-
 	// モデルパーツごとのモーションアニメーション
 	for (int nCnt = 0; nCnt < MODEL_PARTS; nCnt++)
 	{
-		if (g_player.nKey == g_player.nNumKey - 1 && g_player.bLoopMotion == true && g_player.motionTypeOld == g_player.motionType)
+		if (g_player.nKey == g_player.nNumKey - 1 && g_player.bLoopMotion == true)
 		{// ループして最初に戻るとき
-			g_player.aModel[nCnt].pos.x += (g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fPosX - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosX) / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame;
-			g_player.aModel[nCnt].pos.y += (g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fPosY - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosY) / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame;
-			g_player.aModel[nCnt].pos.z += (g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fPosZ - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosZ) / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame;
+			g_player.aModel[nCnt].pos.x = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosX + (g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fPosX - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosX) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
+			g_player.aModel[nCnt].pos.y = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosY + (g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fPosY - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosY) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
+			g_player.aModel[nCnt].pos.z = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosZ + (g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fPosZ - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosZ) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
 			g_player.aModel[nCnt].rot.x = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotX + (g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fRotX - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotX) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
 			g_player.aModel[nCnt].rot.y = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotY + (g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fRotY - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotY) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
 			g_player.aModel[nCnt].rot.z = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotZ + (g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fRotZ - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotZ) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
+			g_player.aModel[nCnt].posMemo = g_player.aModel[nCnt].pos;
 			g_player.aModel[nCnt].rotMemo = g_player.aModel[nCnt].rot;
 		}
 		else if (g_player.bMotionChange == true)
-		{
-			//g_player.aModel[nCnt].pos.x += (g_player.aModel[nCnt].pos.x - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosX) / (float)g_player.nBrendFrame;
-			//g_player.aModel[nCnt].pos.y += (g_player.aModel[nCnt].pos.y - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosY) / (float)g_player.nBrendFrame;
-			//g_player.aModel[nCnt].pos.z += (g_player.aModel[nCnt].pos.z - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosZ) / (float)g_player.nBrendFrame;
+		{// モーションブレンド
+			g_player.aModel[nCnt].pos.x = g_player.aModel[nCnt].posMemo.x + (g_player.aMotionInfo[g_player.motionTypeOld].aKeySet[0].aKey[nCnt].fPosX - g_player.aModel[nCnt].posMemo.x) * ((float)g_player.nCounterMotion / (float)g_player.nBrendFrame);
+			g_player.aModel[nCnt].pos.y = g_player.aModel[nCnt].posMemo.y + (g_player.aMotionInfo[g_player.motionTypeOld].aKeySet[0].aKey[nCnt].fPosY - g_player.aModel[nCnt].posMemo.y) * ((float)g_player.nCounterMotion / (float)g_player.nBrendFrame);
+			g_player.aModel[nCnt].pos.z = g_player.aModel[nCnt].posMemo.z + (g_player.aMotionInfo[g_player.motionTypeOld].aKeySet[0].aKey[nCnt].fPosZ - g_player.aModel[nCnt].posMemo.z) * ((float)g_player.nCounterMotion / (float)g_player.nBrendFrame);
 			g_player.aModel[nCnt].rot.x = g_player.aModel[nCnt].rotMemo.x + (g_player.aMotionInfo[g_player.motionTypeOld].aKeySet[0].aKey[nCnt].fRotX - g_player.aModel[nCnt].rotMemo.x) * ((float)g_player.nCounterMotion / (float)g_player.nBrendFrame);
 			g_player.aModel[nCnt].rot.y = g_player.aModel[nCnt].rotMemo.y + (g_player.aMotionInfo[g_player.motionTypeOld].aKeySet[0].aKey[nCnt].fRotY - g_player.aModel[nCnt].rotMemo.y) * ((float)g_player.nCounterMotion / (float)g_player.nBrendFrame);
 			g_player.aModel[nCnt].rot.z = g_player.aModel[nCnt].rotMemo.z + (g_player.aMotionInfo[g_player.motionTypeOld].aKeySet[0].aKey[nCnt].fRotZ - g_player.aModel[nCnt].rotMemo.z) * ((float)g_player.nCounterMotion / (float)g_player.nBrendFrame);
+			g_player.aModel[nCnt].posMemo = g_player.aModel[nCnt].pos;
+			g_player.aModel[nCnt].rotMemo = g_player.aModel[nCnt].rot;
 		}
 		else
 		{// 通常時
-			g_player.aModel[nCnt].pos.x += (g_player.aMotionInfo[motionType].aKeySet[g_player.nKey + 1].aKey[nCnt].fPosX - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosX) / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame;
-			g_player.aModel[nCnt].pos.y += (g_player.aMotionInfo[motionType].aKeySet[g_player.nKey + 1].aKey[nCnt].fPosY - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosY) / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame;
-			g_player.aModel[nCnt].pos.z += (g_player.aMotionInfo[motionType].aKeySet[g_player.nKey + 1].aKey[nCnt].fPosZ - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosZ) / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame;
+			g_player.aModel[nCnt].pos.x = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosX + (g_player.aMotionInfo[motionType].aKeySet[g_player.nKey + 1].aKey[nCnt].fPosX - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosX) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
+			g_player.aModel[nCnt].pos.y = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosY + (g_player.aMotionInfo[motionType].aKeySet[g_player.nKey + 1].aKey[nCnt].fPosY - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosY) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
+			g_player.aModel[nCnt].pos.z = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosZ + (g_player.aMotionInfo[motionType].aKeySet[g_player.nKey + 1].aKey[nCnt].fPosZ - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fPosZ) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
 			g_player.aModel[nCnt].rot.x = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotX + (g_player.aMotionInfo[motionType].aKeySet[g_player.nKey + 1].aKey[nCnt].fRotX - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotX) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
 			g_player.aModel[nCnt].rot.y = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotY + (g_player.aMotionInfo[motionType].aKeySet[g_player.nKey + 1].aKey[nCnt].fRotY - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotY) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
 			g_player.aModel[nCnt].rot.z = g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotZ + (g_player.aMotionInfo[motionType].aKeySet[g_player.nKey + 1].aKey[nCnt].fRotZ - g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].aKey[nCnt].fRotZ) * ((float)g_player.nCounterMotion / (float)g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame);
+			g_player.aModel[nCnt].posMemo = g_player.aModel[nCnt].pos;
 			g_player.aModel[nCnt].rotMemo = g_player.aModel[nCnt].rot;
-
 		}
 
 		if (g_player.bMotionChange == false)
-		{
+		{// モーション変化なし
 			if (g_player.nCounterMotion == g_player.aMotionInfo[motionType].aKeySet[g_player.nKey].nFrame)
 			{// キーフレーム終了時
-				if (g_player.motionType != MOTIONTYPE_JUMP/* || g_player.motionTypeOld != g_player.motionType*/)
+				if (g_player.motionType != MOTIONTYPE_JUMP)
 				{// ジャンプ以外でキー終了時リセット
 					g_player.nCounterMotion = 0;
+
 				}
 
 				if (g_player.nKey == g_player.nNumKey - 1 && g_player.bLoopMotion == true)
@@ -694,12 +378,16 @@ void UpdateMotion(MOTIONTYPE motionType)
 				}
 				else if (g_player.nKey == g_player.nNumKey - 2 && g_player.bLoopMotion == false)
 				{// ループせず終了するとき
-					if (g_player.motionTypeOld != MOTIONTYPE_NEUTRAL && g_player.motionTypeOld != MOTIONTYPE_JUMP)
-					{// 動作直前がニュートラル以外の時
+					if (g_player.motionTypeOld != MOTIONTYPE_JUMP)
+					{// 直前がジャンプ以外の時
 						g_player.motionType = MOTIONTYPE_NEUTRAL;	// ニュートラルへ移行
-						g_player.nKey = 0;							// キーのリセット
-						g_player.aModel[0].pos.y = 20.0f;			// 位置のリセット
-						break;
+						//g_player.nKey = 0;							// キーのリセット
+						//g_player.nCounterMotion = 0;
+						if (g_player.motionTypeOld == MOTIONTYPE_LANDING)
+						{
+							break;
+
+						}
 					}
 				}
 				else if (g_player.nKey < g_player.nNumKey)
@@ -707,25 +395,43 @@ void UpdateMotion(MOTIONTYPE motionType)
 					g_player.nKey++;
 				}
 			}
-			else if (g_player.motionTypeOld != g_player.motionType)
-			{
+			else if (g_player.motionTypeOld != g_player.motionType && g_player.motionTypeOld != MOTIONTYPE_JUMP)
+			{// モーション変化時	
+				g_player.nKey = 0;
+				g_player.nCounterMotion = 0;
 				g_player.bMotionChange = true;
+
+				if (g_player.motionTypeOld == MOTIONTYPE_NEUTRAL && g_player.motionType == MOTIONTYPE_MOVE)
+				{// ニュートラルから移動時
+					g_player.nBrendFrame = MBF_NEU_MOVE;
+				}
+				else if (g_player.motionTypeOld == MOTIONTYPE_MOVE && g_player.motionType == MOTIONTYPE_NEUTRAL)
+				{// 移動からニュートラル時
+					g_player.nBrendFrame = MBF_MOVE_NEU;
+				}
+				else if (g_player.motionTypeOld == MOTIONTYPE_NEUTRAL && g_player.motionType == MOTIONTYPE_ACTION)
+				{// ニュートラルからアクション時
+					g_player.nBrendFrame = g_player.aMotionInfo[MOTIONTYPE_ACTION].aKeySet[0].nFrame;
+				}
+				else if (g_player.motionTypeOld == MOTIONTYPE_ACTION && g_player.motionType == MOTIONTYPE_NEUTRAL)
+				{// アクションからニュートラル時
+					g_player.nBrendFrame = MBF_ACT_NEU;
+				}
+				else if (g_player.motionTypeOld == MOTIONTYPE_LANDING && g_player.motionType == MOTIONTYPE_NEUTRAL)
+				{// 着地からニュートラル
+					g_player.nBrendFrame = MBF_LND_NEU;
+				}
+				break;
 			}
 		}
 		else if (g_player.bMotionChange == true)
-		{
-			if (g_player.nCounterMotion == g_player.nBrendFrame)
+		{// モーションブレンド時のカウントリセット
+			if (g_player.nCounterMotion == g_player.nBrendFrame || g_player.motionTypeOld != g_player.motionType)
 			{
+				g_player.nKey = 0;
 				g_player.nCounterMotion = 0;
 				g_player.bMotionChange = false;
 			}
-		}
-
-		if (g_player.nKey == 0 && g_player.bLoopMotion == false && g_player.nCounterMotion == 1)
-		{// モーション開始時の位置修正
-			g_player.aModel[nCnt].pos.x += g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fPosX;
-			g_player.aModel[nCnt].pos.y += g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fPosY;
-			g_player.aModel[nCnt].pos.z += g_player.aMotionInfo[motionType].aKeySet[0].aKey[nCnt].fPosZ;
 		}
 	}
 
@@ -830,6 +536,7 @@ void LoadMotion(void)
 										fscanf(pFile, "%f", &g_player.aModel[nIdxParts].pos.x);
 										fscanf(pFile, "%f", &g_player.aModel[nIdxParts].pos.y);
 										fscanf(pFile, "%f", &g_player.aModel[nIdxParts].pos.z);
+										g_player.aModel[nIdxParts].posReset = g_player.aModel[nIdxParts].pos;
 									}
 									else if (strcmp("ROT", pPartsSet) == 0)
 									{// パーツの角度情報
@@ -906,6 +613,9 @@ void LoadMotion(void)
 												fscanf(pFile, "%f", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosX);
 												fscanf(pFile, "%f", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosY);
 												fscanf(pFile, "%f", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosZ);
+												g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosX += g_player.aModel[nKey].pos.x;
+												g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosY += g_player.aModel[nKey].pos.y;
+												g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosZ += g_player.aModel[nKey].pos.z;
 											}
 											else if (strcmp("ROT", pKey) == 0)
 											{// 角度情報の読み込み
@@ -965,7 +675,7 @@ void StateChange(void)
 	{
 	case PLAYERSTATE_DAMAGE:	// 被ダメージ
 		g_player.bOnBlock = false;					// 地面から離れる
-		PlaySound(SOUND_LABEL_SE_HIT000);			// 命中音の再生
+		PlaySound(SOUND_LABEL_SE_DAMAGE);			// 命中音の再生
 		g_player.move.x *= -1;						// 移動力を反転
 		g_player.move.z *= -1;
 		g_player.move.y = 5.0f;						// プレイヤーを飛ばす
@@ -999,5 +709,254 @@ void StateChange(void)
 			pPlayer->state = PLAYERSTATE_NORMAL;		// 通常状態
 		}
 		break;
+	}
+}
+
+//==============================================================================
+// プレイヤーの操作
+//==============================================================================
+void MovePlayer(void)
+{
+	// カメラの取得
+	Camera camera = *GetCamera();
+
+	// 直前の位置の保存
+	g_player.posOld = g_player.pos;
+
+	// 重力の発生
+	if (g_player.pos.y > 0.0f && g_player.bOnBlock == false)
+	{
+		if (GetKeyboardPress(KEYINFO_JUMP) != true || IsButtonPush(KEYINFO::KEYINFO_OK) != true)
+		{
+			g_player.move.y -= PLUS_GRAVITY;
+		}
+	}
+
+	// プレイヤーの着地判定
+	if (g_player.pos.y < 0.0f)
+	{
+		g_player.bOnBlock = true;
+		g_player.nKey = 0;
+		g_player.nCounterMotion = 0;
+		g_player.motionType = MOTIONTYPE_LANDING;
+	}
+	if (g_player.bOnBlock == true)
+	{
+		if (g_player.pos.y < 0.0f)
+		{
+			g_player.pos.y = 0.0f;
+		}
+		g_bJump = false;
+		g_player.move.y = 0.0f;
+	}
+
+	// 位置のリセット
+	if (GetKeyboardTrigger(KEYINFO_PRESET) == true)
+	{
+		g_player.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_player.rot = D3DXVECTOR3(0.0f, D3DX_PI, 0.0f);
+		g_player.rotDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_player.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	}
+
+	// ジャンプ
+	if (GetKeyboardTrigger(KEYINFO_JUMP) == true || IsButtonDown(KEYINFO::KEYINFO_OK) == true)
+	{
+		if (g_player.bOnBlock == true)
+		{
+			PlaySound(SOUND_LABEL_SE_JUMP);
+			g_player.nKey = 0;
+			g_player.nCounterMotion = 0;
+			g_player.motionType = MOTIONTYPE_JUMP;
+		}
+		g_player.bOnBlock = false;
+	}
+	if (GetKeyboardPress(KEYINFO_JUMP) == true || IsButtonPush(KEYINFO::KEYINFO_OK) == true)
+	{
+		if (g_bJump == false)
+		{
+			if (g_player.nJumpCnt == 1)
+			{
+				g_player.move.y = 5.0f;
+			}
+			if (g_player.nJumpCnt < 7)
+			{
+				g_player.nJumpCnt++;
+				g_player.move.y += 1.0f;
+			}
+		}
+	}
+	if (GetKeyboardRelease(KEYINFO_JUMP) == true || IsButtonUp(KEYINFO::KEYINFO_OK) == true)
+	{
+		g_player.nJumpCnt = 0;
+		g_bJump = true;
+	}
+
+	if (GetKeyboardTrigger(KEYINFO_ATTACK) == true && g_player.motionType == MOTIONTYPE_NEUTRAL)
+	{
+		g_player.nKey = 0;
+		g_player.nCounterMotion = 0;
+		g_player.motionType = MOTIONTYPE_ACTION;
+	}
+
+	// 移動量の加算
+	g_player.pos += g_player.move;
+
+	// 影の追従
+	SetPositionShadow(g_player.nIdx, D3DXVECTOR3(g_player.pos.x, 0.0f, g_player.pos.z));
+
+	// モデルの移動
+	if (GetKeyboardPress(KEYINFO_UP) == true || IsButtonPush(KEYINFO::KEYINFO_UP) == true)
+	{
+		if (g_player.nMoveCnt < 20)
+		{
+			g_player.nMoveCnt++;
+		}
+
+		if (g_player.motionType != MOTIONTYPE_JUMP)
+		{
+			g_player.motionType = MOTIONTYPE_MOVE;
+		}
+		if (GetKeyboardPress(KEYINFO_LEFT) == true || IsButtonPush(KEYINFO::KEYINFO_LEFT) == true)
+		{// 左上方向
+			g_player.move.x -= cosf(camera.rot.y + D3DX_PI / 4) * PLAYER_MOVE;
+			g_player.move.z += sinf(camera.rot.y + D3DX_PI / 4) * PLAYER_MOVE;
+			g_player.rotDest.y = camera.rot.y + (D3DX_PI * 3 / 4);
+		}
+		else if (GetKeyboardPress(KEYINFO_RIGHT) == true || IsButtonPush(KEYINFO::KEYINFO_RIGHT) == true)
+		{// 右上方向
+			g_player.move.x += cosf(camera.rot.y - D3DX_PI / 4) * PLAYER_MOVE;
+			g_player.move.z -= sinf(camera.rot.y - D3DX_PI / 4) * PLAYER_MOVE;
+			g_player.rotDest.y = camera.rot.y - (D3DX_PI * 3 / 4);
+		}
+		else
+		{// 上方向
+			g_player.move.x += sinf(camera.rot.y) * PLAYER_MOVE;
+			g_player.move.z += cosf(camera.rot.y) * PLAYER_MOVE;
+			g_player.rotDest.y = camera.rot.y + D3DX_PI;
+		}
+	}
+	else if (GetKeyboardPress(KEYINFO_DOWN) == true || IsButtonPush(KEYINFO::KEYINFO_DOWN) == true)
+	{
+		if (g_player.nMoveCnt < MOVECNT_MAX)
+		{
+			g_player.nMoveCnt++;
+		}
+
+		if (g_player.motionType != MOTIONTYPE_JUMP)
+		{
+			g_player.motionType = MOTIONTYPE_MOVE;
+		}
+
+		if (GetKeyboardPress(KEYINFO_LEFT) == true || IsButtonPush(KEYINFO::KEYINFO_LEFT) == true)
+		{// 左下方向
+			g_player.move.x += cosf(camera.rot.y + D3DX_PI * 3 / 4) * PLAYER_MOVE;
+			g_player.move.z -= sinf(camera.rot.y + D3DX_PI * 3 / 4) * PLAYER_MOVE;
+			g_player.rotDest.y = camera.rot.y + D3DX_PI / 4;
+		}
+		else if (GetKeyboardPress(KEYINFO_RIGHT) == true || IsButtonPush(KEYINFO::KEYINFO_RIGHT) == true)
+		{// 右下方向
+			g_player.move.x -= cosf(camera.rot.y - D3DX_PI * 3 / 4) * PLAYER_MOVE;
+			g_player.move.z += sinf(camera.rot.y - D3DX_PI * 3 / 4) * PLAYER_MOVE;
+			g_player.rotDest.y = camera.rot.y + D3DX_PI / -4;
+		}
+		else
+		{// 下方向
+			g_player.move.x += sinf(camera.rot.y - D3DX_PI) * PLAYER_MOVE;
+			g_player.move.z += cosf(camera.rot.y - D3DX_PI) * PLAYER_MOVE;
+			g_player.rotDest.y = camera.rot.y;
+		}
+	}
+	else if (GetKeyboardPress(KEYINFO_LEFT) == true || IsButtonPush(KEYINFO::KEYINFO_LEFT) == true)
+	{// 左方向
+		if (g_player.nMoveCnt < MOVECNT_MAX)
+		{
+			g_player.nMoveCnt++;
+		}
+
+		g_player.move.x -= cosf(camera.rot.y) * PLAYER_MOVE;
+		g_player.move.z += sinf(camera.rot.y) * PLAYER_MOVE;
+		g_player.rotDest.y = camera.rot.y + (D3DX_PI / 2);
+		if (g_player.motionType != MOTIONTYPE_JUMP)
+		{
+			g_player.motionType = MOTIONTYPE_MOVE;
+		}
+	}
+	else if (GetKeyboardPress(KEYINFO_RIGHT) == true || IsButtonPush(KEYINFO::KEYINFO_RIGHT) == true)
+	{// 右方向
+		if (g_player.nMoveCnt < MOVECNT_MAX)
+		{
+			g_player.nMoveCnt++;
+		}
+
+		g_player.move.x += cosf(camera.rot.y) * PLAYER_MOVE;
+		g_player.move.z -= sinf(camera.rot.y) * PLAYER_MOVE;
+		g_player.rotDest.y = camera.rot.y + (D3DX_PI / -2);
+		if (g_player.motionType != MOTIONTYPE_JUMP)
+		{
+			g_player.motionType = MOTIONTYPE_MOVE;
+		}
+	}
+	else
+	{
+		if (g_player.nMoveCnt > 0)
+		{
+			g_player.nMoveCnt--;
+		}
+	}
+
+	// 移動モーションから待機モーションへ
+	if (g_player.motionType == MOTIONTYPE_MOVE && g_player.nMoveCnt == 0)
+	{
+		g_player.nCounterMotion = 0;
+		g_player.nKey = 0;
+		g_player.motionType = MOTIONTYPE_NEUTRAL;
+	}
+
+	// 目的の回転角の上限
+	if (g_player.rotDest.y - g_player.rot.y < -D3DX_PI)
+	{
+		g_player.rotDest.y += D3DX_PI * 2.0f;
+	}
+	else if (g_player.rotDest.y - g_player.rot.y > D3DX_PI)
+	{
+		g_player.rotDest.y -= D3DX_PI * 2.0f;
+	}
+
+	// 向きの更新
+	g_player.rot.y += (g_player.rotDest.y - g_player.rot.y) * 0.1f;
+
+	// 現在の回転角の上限
+	if (g_player.rot.y < -D3DX_PI)
+	{
+		g_player.rot.y += D3DX_PI * 2.0f;
+	}
+	else if (g_player.rot.y > D3DX_PI)
+	{
+		g_player.rot.y -= D3DX_PI * 2.0f;
+	}
+
+	// 加速後の減速処理
+	g_player.move.x += (0.0f - g_player.move.x) * SPEEDDOWN;
+	g_player.move.z += (0.0f - g_player.move.z) * SPEEDDOWN;
+
+	// 移動限界X軸
+	if (g_player.pos.x >= 500.0f - g_vtxMaxPlayer.x)
+	{
+		g_player.pos.x = 500.0f - g_vtxMaxPlayer.x;
+	}
+	else if (g_player.pos.x <= -500.0f - g_vtxMinPlayer.x)
+	{
+		g_player.pos.x = -500.0f - g_vtxMinPlayer.x;
+	}
+
+	// 移動限界Z軸
+	if (g_player.pos.z >= 500.0f - g_vtxMaxPlayer.z)
+	{
+		g_player.pos.z = 500.0f - g_vtxMaxPlayer.z;
+	}
+	else if (g_player.pos.z <= -500.0f - g_vtxMinPlayer.z)
+	{
+		g_player.pos.z = -500.0f - g_vtxMinPlayer.z;
 	}
 }

@@ -29,8 +29,11 @@ typedef struct
 	D3DXVECTOR3 posPoint[FOUR_POINT];	// 4頂点の位置
 	D3DXVECTOR3 vecPoint[FOUR_POINT];	// 四辺のベクトル
 	int nIdx;
-	//float fAnim;		// テクスチャアニメーションカット数
-	//bool bHiScore;		// 高スコア状態のコイン
+	LPD3DXMESH pMesh = NULL;			// メッシュ(頂点情報)へのポインタ
+	LPD3DXBUFFER pBuffMat = NULL;		// マテリアル(材質情報)へのポインタ
+	DWORD nNumMat = 0;				// マテリアルの数
+	
+	bool bHiScore;	// 高スコア状態のコイン
 } ITEM;
 
 //==============================================================================

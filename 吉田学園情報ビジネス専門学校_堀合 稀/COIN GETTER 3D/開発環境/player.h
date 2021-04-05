@@ -15,6 +15,11 @@
 #define MODEL_PARTS		(14)	// モデルパーツの最大数
 #define MAX_KEY			(8)		// キー数の最大数
 #define FRAME_NUM		(50)	// フレームの最大数
+#define MBF_NEU_MOVE	(3)		// モーションブレンドフレーム：ニュートラルから移動
+#define MBF_MOVE_NEU	(15)	// モーションブレンドフレーム：移動からニュートラル
+#define MBF_NEU_ACT		(15)	// モーションブレンドフレーム：ニュートラルからアクション
+#define MBF_ACT_NEU		(40)	// モーションブレンドフレーム：アクションからニュートラル
+#define MBF_LND_NEU		(10)	// モーションブレンドフレーム：着地からニュートラル
 
 //==============================================================================
 // プレイヤーの状態
@@ -91,11 +96,14 @@ typedef struct
 	D3DXVECTOR3 rot;			// 向き
 	D3DXMATRIX mtxWorld;		// ワールドマトリックス
 	int nIdxModelParent;		// 親モデルのインデックス
-	char aFileName[128];		// 読み込むXデータ名
-	D3DXVECTOR3 rotMemo;		// 保存用角度
+	char aFileName[128];		// 読み込むXデータのパス名
+	D3DXVECTOR3 posMemo;		// 保存用位置情報
+	D3DXVECTOR3 rotMemo;		// 保存用角度情報
 }Model;
 
+//==============================================================================
 // 当たり判定の構造体
+//==============================================================================
 typedef struct
 {
 	float fFront;		// 正面
@@ -141,19 +149,20 @@ typedef struct
 	int nJumpCnt;								// ジャンプ力のカウント
 	int nMoveCnt;								// 移動モーションカウント
 	bool bMotionChange;							// モーション変化時の判定
-	int nBrendFrame;
+	int nBrendFrame;							// モーションブレンド時のフレーム数
 } Player;
 
 //==============================================================================
 // プロトタイプ宣言
 //==============================================================================
-HRESULT InitPlayer(void);	// プレイヤーの初期化処理
-void UninitPlayer(void);	// プレイヤーの終了処理
-void UpdatePlayer(void);	// プレイヤーの更新処理
-void DrawPlayer(void);		// プレイヤーの描画処理
-Player *GetPlayer(void);	// プレイヤーの取得
+HRESULT InitPlayer(void);					// プレイヤーの初期化処理
+void UninitPlayer(void);					// プレイヤーの終了処理
+void UpdatePlayer(void);					// プレイヤーの更新処理
+void DrawPlayer(void);						// プレイヤーの描画処理
+Player *GetPlayer(void);					// プレイヤーの取得
 void UpdateMotion(MOTIONTYPE motionType);	// モーションの更新
 void LoadMotion(void);						// .txtフォルダの読み込み
 void StateChange(void);						// 状態変化
+void MovePlayer(void);						// プレイヤーの操作
 
 #endif

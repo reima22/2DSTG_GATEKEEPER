@@ -33,10 +33,14 @@
 #define FOUR_POINT		(4)			// 当たり判定の4個点
 #define PLUS_GRAVITY	(0.6f)		// 加算される重力値
 #define MAX_LIFE		(5)			// 体力の最大値
-#define TITLE_BGM		(false)		// タイトルBGMのオン・オフ
-#define GAME_BGM		(false)		// ゲームBGMのオン・オフ
-#define RESULT_BGM		(false)		// リザルトBGMのオン・オフ
-#define RANKING_BGM		(false)		// ランキングBGMのオン・オフ
+#define TEXT_LENGTH		(128)		// テキスト読み込みの最大数
+#define DATA_LENGTH		(64)		// データ読み込みの最大数
+#define VTX_MIN			(D3DXVECTOR3(10000.0f, 10000.0f, 10000.0f))		// 仮頂点最小値
+#define	VTX_MAX			(D3DXVECTOR3(-10000.0f, -10000.0f, -10000.0f))	// 仮頂点最大値
+#define TITLE_BGM		(true)		// タイトルBGMのオン・オフ
+#define GAME_BGM		(true)		// ゲームBGMのオン・オフ
+#define RESULT_BGM		(true)		// リザルトBGMのオン・オフ
+#define RANKING_BGM		(true)		// ランキングBGMのオン・オフ
 
 //==============================================================================
 // 頂点フォーマットに合わせた構造体

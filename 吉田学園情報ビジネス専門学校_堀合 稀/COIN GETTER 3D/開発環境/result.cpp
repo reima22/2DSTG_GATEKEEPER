@@ -240,12 +240,12 @@ HRESULT InitResult(void)
 		if (Player->state == PLAYERSTATE_GAMEOVER)
 		{
 			// BGMÇÃçƒê∂
-			PlaySound(SOUND_LABEL_BGM003);
+			PlaySound(SOUND_LABEL_BGM_RESULT_FAILED);
 		}
 		else
 		{
 			// BGMÇÃçƒê∂
-			PlaySound(SOUND_LABEL_BGM002);
+			PlaySound(SOUND_LABEL_BGM_RESULT_CLEAR);
 		}
 	}
 

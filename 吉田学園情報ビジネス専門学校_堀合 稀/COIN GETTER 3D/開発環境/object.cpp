@@ -4,6 +4,7 @@
 // AUTHOR : MARE HORIAI
 //
 //==============================================================================
+#define _CRT_SECURE_NO_WARNINGS
 #include "object.h"
 #include "input.h"
 #include "gamepad.h"
@@ -12,26 +13,12 @@
 #include "shadow.h"
 #include "item.h"
 #include "math.h"
+#include <stdio.h>
 
 //==============================================================================
 // グローバル変数
 //==============================================================================
-LPDIRECT3DTEXTURE9 g_apTextureObject[MAX_TEX_OBJECT] = {};	// テクスチャへのポインタ
-LPD3DXMESH g_pMeshObject[OBJECTTYPE_MAX] = {};				// メッシュ(頂点情報)へのポインタ
-LPD3DXBUFFER g_pBuffMatObject[OBJECTTYPE_MAX] = {};			// マテリアル(材質情報)へのポインタ
-DWORD g_nNumMatObject[OBJECTTYPE_MAX] = {};					// マテリアルの数
-Object object[MAX_OBJECT];
-Type type[OBJECTTYPE_MAX];
-
-//D3DXVECTOR3 g_aPos[4];					// 当たり判定頂点情報
-//D3DXVECTOR3 vec;
-//D3DXVECTOR3 g_aVec[4];					// 当たり判定ベクト
-//D3DXVECTOR3 g_posModel;				// 位置
-//D3DXVECTOR3 g_rotModel;				// 向き
-//D3DXMATRIX g_mtxWorldModel;			// ワールドマトリックス
-//D3DXVECTOR3 g_moveModelX;				// X軸の移動量
-//D3DXVECTOR3 g_moveModelZ;				// Z軸の移動量
-//int g_nIdx;
+Object g_object;
 
 //==============================================================================
 // 初期化処理
@@ -40,125 +27,106 @@ HRESULT InitObject(void)
 {
 	// ローカル変数宣言
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();		// デバイスの取得
+	ObjectType *pObjectType = &g_object.objectType[0];
+	int nNumVtx[MAX_OBJECT_TYPE];	// 頂点数
+	DWORD sizeFVF[MAX_OBJECT_TYPE];	// 頂点フォーマットのサイズ
+
+	g_object.nSetObject = 0;
+
+	LoadObject();
 
 	// Xファイルの読み込み
-	D3DXLoadMeshFromX(
-		"data/MODEL/baloon01.x",
-		D3DXMESH_SYSTEMMEM,
-		pDevice,
-		NULL,
-		&g_pBuffMatObject[OBJECTTYPE_BALOON],
-		NULL,
-		&g_nNumMatObject[OBJECTTYPE_BALOON],
-		&g_pMeshObject[OBJECTTYPE_BALOON]);
-
-	D3DXLoadMeshFromX(
-		"data/MODEL/block.x",
-		D3DXMESH_SYSTEMMEM,
-		pDevice,
-		NULL,
-		&g_pBuffMatObject[OBJECTTYPE_BLOCK],
-		NULL,
-		&g_nNumMatObject[OBJECTTYPE_BLOCK],
-		&g_pMeshObject[OBJECTTYPE_BLOCK]);
-
-	// ローカル変数宣言
-	int nNumVtx[OBJECTTYPE_MAX];	// 頂点数
-	DWORD sizeFVF[OBJECTTYPE_MAX];	// 頂点フォーマットのサイズ
-	BYTE *pVtxBuff;	// 頂点バッファへのポインタ
-	D3DXMATERIAL *pMat;		// マテリアルへのポインタ
-
-	// マテリアル情報に対するポインタを取得
-	for (int nCnt = 0; nCnt < OBJECTTYPE_MAX; nCnt++,pMat++)
+	for (int nCntObject = 0; nCntObject < g_object.nNumObject; nCntObject++, pObjectType++)
 	{
-		pMat = (D3DXMATERIAL*)g_pBuffMatObject[nCnt]->GetBufferPointer();
+		D3DXLoadMeshFromX(
+			pObjectType->aFileName,
+			D3DXMESH_SYSTEMMEM,
+			pDevice,
+			NULL,
+			&pObjectType->pBuffMat,
+			NULL,
+			&pObjectType->nNumMat,
+			&pObjectType->pMesh);
 
-		for (int nCntMat = 0; nCntMat < (int)g_nNumMatObject[nCnt]; nCntMat++)
+		// ローカル変数宣言
+		BYTE *pVtxBuff;			// 頂点バッファへのポインタ
+		D3DXMATERIAL *pMat;		// マテリアルへのポインタ
+
+		// 変数初期化
+		pObjectType->vtxMinObject = VTX_MIN;
+		pObjectType->vtxMaxObject = VTX_MAX;
+
+		// マテリアル情報に対するポインタを取得
+		for (int nCnt = 0; nCnt < MAX_OBJECT_TYPE; nCnt++, pMat++)
 		{
-			if (pMat[nCntMat].pTextureFilename != NULL)
+			pMat = (D3DXMATERIAL*)pObjectType->pBuffMat->GetBufferPointer();
+
+			for (int nCntMat = 0; nCntMat < (int)pObjectType->nNumMat; nCntMat++)
 			{
-				// ファイル名を使用してテクスチャを読み込む
-				D3DXCreateTextureFromFile(
-					pDevice,
-					pMat[nCntMat].pTextureFilename,
-					&g_apTextureObject[nCntMat]);
+				if (pMat[nCntMat].pTextureFilename != NULL)
+				{
+					// ファイル名を使用してテクスチャを読み込む
+					D3DXCreateTextureFromFile(
+						pDevice,
+						pMat[nCntMat].pTextureFilename,
+						&pObjectType->pTexture[nCntMat]);
+				}
 			}
 		}
-	}
 
-	// 変数の初期化
-	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
-	{
-		object[nCnt].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		object[nCnt].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		object[nCnt].rotDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		object[nCnt].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		object[nCnt].bUse = false;
-		object[nCnt].nType = 0;
-	}
-
-	for (int nCnt = 0; nCnt < OBJECTTYPE_MAX; nCnt++)
-	{
 		// 頂点数を取得
-		nNumVtx[nCnt] = g_pMeshObject[nCnt]->GetNumVertices();
+		nNumVtx[nCntObject] = pObjectType->pMesh->GetNumVertices();
 
 		// 頂点フォーマットのサイズの取得
-		sizeFVF[nCnt] = D3DXGetFVFVertexSize(g_pMeshObject[nCnt]->GetFVF());
+		sizeFVF[nCntObject] = D3DXGetFVFVertexSize(pObjectType->pMesh->GetFVF());
 
 		// 頂点バッファをロック
-		g_pMeshObject[nCnt]->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
+		pObjectType->pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
 
 		// 頂点座標の比較
-		for (int nCntVtx = 0; nCntVtx < (int)nNumVtx[nCnt]; nCntVtx++)
+		for (int nCntVtx = 0; nCntVtx < (int)nNumVtx[nCntObject]; nCntVtx++)
 		{
 			D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;	// 頂点座標の代入
 
-														// 各座標の最大値の比較
-			if (type[nCnt].vtxMaxObject.x < vtx.x)
+			// 各座標の最大値の比較
+			if (pObjectType->vtxMaxObject.x < vtx.x)
 			{
-				type[nCnt].vtxMaxObject.x = vtx.x;
+				pObjectType->vtxMaxObject.x = vtx.x;
 			}
-			if (type[nCnt].vtxMaxObject.y < vtx.y)
+			if (pObjectType->vtxMaxObject.y < vtx.y)
 			{
-				type[nCnt].vtxMaxObject.y = vtx.y;
+				pObjectType->vtxMaxObject.y = vtx.y;
 			}
-			if (type[nCnt].vtxMaxObject.z < vtx.z)
+			if (pObjectType->vtxMaxObject.z < vtx.z)
 			{
-				type[nCnt].vtxMaxObject.z = vtx.z;
+				pObjectType->vtxMaxObject.z = vtx.z;
 			}
 
 			// 各座標の最小値の比較
-			if (type[nCnt].vtxMinObject.x > vtx.x)
+			if (pObjectType->vtxMinObject.x > vtx.x)
 			{
-				type[nCnt].vtxMinObject.x = vtx.x;
+				pObjectType->vtxMinObject.x = vtx.x;
 			}
-			if (type[nCnt].vtxMinObject.y > vtx.y)
+			if (pObjectType->vtxMinObject.y > vtx.y)
 			{
-				type[nCnt].vtxMinObject.y = vtx.y;
+				pObjectType->vtxMinObject.y = vtx.y;
 			}
-			if (type[nCnt].vtxMinObject.z > vtx.z)
+			if (pObjectType->vtxMinObject.z > vtx.z)
 			{
-				type[nCnt].vtxMinObject.z = vtx.z;
+				pObjectType->vtxMinObject.z = vtx.z;
 			}
 
-			pVtxBuff += sizeFVF[nCnt];	// 頂点フォーマットのサイズ分ポインタを進める
+			pVtxBuff += sizeFVF[nCntObject];	// 頂点フォーマットのサイズ分ポインタを進める
 		}
 
 		// 頂点バッファをアンロック
-		g_pMeshObject[nCnt]->UnlockVertexBuffer();
+		pObjectType->pMesh->UnlockVertexBuffer();
 	}
 
-	// 風船
-	SetObject(D3DXVECTOR3(300.0f, 0.0f, 0.0f), 0, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	SetObject(D3DXVECTOR3(-300.0f, 0.0f, 0.0f), 0, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	SetObject(D3DXVECTOR3(0.0f, 0.0f, 300.0f), 0, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	SetObject(D3DXVECTOR3(0.0f, 0.0f, -300.0f), 0, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	// ブロック
-	SetObject(D3DXVECTOR3(200.0f, 0.0f, 200.0f), 1, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	SetObject(D3DXVECTOR3(-200.0f, 0.0f, 200.0f), 1, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	SetObject(D3DXVECTOR3(200.0f, 0.0f, -200.0f), 1, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	SetObject(D3DXVECTOR3(-200.0f, 0.0f, -200.0f), 1, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	for (int nCnt = 0; nCnt < g_object.nSetObject; nCnt++)
+	{
+		SetObject(g_object.objectInfo[nCnt].pos, g_object.objectInfo[nCnt].nType, g_object.objectInfo[nCnt].rot);
+	}
 
 	return S_OK;
 }
@@ -168,20 +136,23 @@ HRESULT InitObject(void)
 //==============================================================================
 void UninitObject(void)
 {
-	for (int nCnt = 0; nCnt < OBJECTTYPE_MAX; nCnt++)
+	// ローカル変数宣言
+	ObjectType *pObjectType = &g_object.objectType[0];
+
+	for (int nCntObject = 0; nCntObject < g_object.nNumObject; nCntObject++,pObjectType++)
 	{
 		// メッシュの破棄
-		if (g_pMeshObject[nCnt] != NULL)
+		if (pObjectType->pMesh != NULL)
 		{				
-			g_pMeshObject[nCnt]->Release();
-			g_pMeshObject[nCnt] = NULL;
+			pObjectType->pMesh->Release();
+			pObjectType->pMesh = NULL;
 		}
 
 		// マテリアルの破棄
-		if (g_pBuffMatObject[nCnt] != NULL)
-		{
-			g_pBuffMatObject[nCnt]->Release();
-			g_pBuffMatObject[nCnt] = NULL;
+		if (pObjectType->pBuffMat != NULL)
+		{	
+			pObjectType->pBuffMat->Release();
+			pObjectType->pBuffMat = NULL;
 		}
 	}
 }
@@ -217,50 +188,49 @@ void DrawObject(void)
 	D3DXMATRIX mtxRot, mtxTrans;				// 計算用マトリックス
 	D3DMATERIAL9 matDef;						// 現在のマテリアル保存用
 	D3DXMATERIAL *pMat;							// マテリアルデータへのポインタ
-	Object *pObject = &object[0];
+	ObjectInfo *pInfo = &g_object.objectInfo[0];
 
-
-	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++,pObject++)
+	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++, pInfo++)
 	{
-		if (pObject->bUse == true)
+		if (pInfo->bUse == true)
 		{
 			// ワールドマトリックスの初期化
-			D3DXMatrixIdentity(&pObject->mtxWorld);
+			D3DXMatrixIdentity(&pInfo->mtxWorld);
 
 			// 向きの反映
-			D3DXMatrixRotationYawPitchRoll(&mtxRot, pObject->rot.y, pObject->rot.x, pObject->rot.z);
-			D3DXMatrixMultiply(&pObject->mtxWorld, &pObject->mtxWorld, &mtxRot);
+			D3DXMatrixRotationYawPitchRoll(&mtxRot, pInfo->rot.y, pInfo->rot.x, pInfo->rot.z);
+			D3DXMatrixMultiply(&pInfo->mtxWorld, &pInfo->mtxWorld, &mtxRot);
 
 			// 位置を反映
-			D3DXMatrixTranslation(&mtxTrans, pObject->pos.x, pObject->pos.y, pObject->pos.z);
-			D3DXMatrixMultiply(&pObject->mtxWorld, &pObject->mtxWorld, &mtxTrans);
+			D3DXMatrixTranslation(&mtxTrans, pInfo->pos.x, pInfo->pos.y, pInfo->pos.z);
+			D3DXMatrixMultiply(&pInfo->mtxWorld, &pInfo->mtxWorld, &mtxTrans);
 
 			// ワールドマトリックスの設定
-			pDevice->SetTransform(D3DTS_WORLD, &pObject->mtxWorld);
+			pDevice->SetTransform(D3DTS_WORLD, &pInfo->mtxWorld);
 
 			// 現在のマテリアルを取得
 			pDevice->GetMaterial(&matDef);
 
 			// マテリアルデータへのポインタを取得
-			pMat = (D3DXMATERIAL*)g_pBuffMatObject[pObject->nType]->GetBufferPointer();
+			pMat = (D3DXMATERIAL*)g_object.objectType[pInfo->nType].pBuffMat->GetBufferPointer();
 
-			for (int nCntMat = 0; nCntMat < (int)g_nNumMatObject[pObject->nType]; nCntMat++)
+			for (int nCntMat = 0; nCntMat < (int)g_object.objectType[pInfo->nType].nNumMat; nCntMat++)
 			{
 				// マテリアルの設定
 				pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
 				// テクスチャの設定
-				if (pObject->nType == 0)
+				if (pInfo->nType == 0)
 				{
 					pDevice->SetTexture(0, NULL);
 				}
 				else
 				{
-					pDevice->SetTexture(0, g_apTextureObject[nCntMat]);
+					pDevice->SetTexture(0, g_object.objectType[pInfo->nType].pTexture[nCntMat]);
 				}
 
 				// モデル(パーツ)の描画
-				g_pMeshObject[pObject->nType]->DrawSubset(nCntMat);
+				g_object.objectType[pInfo->nType].pMesh->DrawSubset(nCntMat);
 			}
 
 			// 保存していたマテリアルを戻す
@@ -308,7 +278,7 @@ void DrawObject(void)
 //==============================================================================
 Object *GetObject(void)
 {
-	return &object[0];
+	return &g_object;
 }
 
 //==============================================================================
@@ -317,51 +287,51 @@ Object *GetObject(void)
 void SetObject(D3DXVECTOR3 pos, int nType,D3DXVECTOR3 rot)
 {
 	// ローカル変数宣言
-	Object *pObject = &object[0];
+	ObjectInfo *pInfo = &g_object.objectInfo[0];
 
 	// オブジェクト情報の設定
-	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++, pObject++)
+	for (int nCntObject = 0; nCntObject < MAX_OBJECT; nCntObject++, pInfo++)
 	{
-		if (pObject->bUse == false)
+		if (pInfo->bUse == false)
 		{
-			pObject->pos = pos;		// 位置
-			pObject->rot = rot;
+			pInfo->pos = pos;		// 位置
+			pInfo->rot = rot;
 
 			SetItem(D3DXVECTOR3(pos.x, 100.0f, pos.z));
 
-			pObject->nType = nType;	// 種類
+			pInfo->nType = nType;	// 種類
 
-			pObject->vtxMinObject = type[nType].vtxMinObject;
-			pObject->vtxMaxObject = type[nType].vtxMaxObject;
+			pInfo->vtxMinObject = g_object.objectType[nType].vtxMinObject;
+			pInfo->vtxMaxObject = g_object.objectType[nType].vtxMaxObject;
 
 			// 頂点位置
-			pObject->aPos[0] = D3DXVECTOR3(pObject->pos.x + type[nType].vtxMinObject.x ,pObject->pos.y ,pObject->pos.z + type[nType].vtxMinObject.z);
-			pObject->aPos[1] = D3DXVECTOR3(pObject->pos.x + type[nType].vtxMinObject.x ,pObject->pos.y ,pObject->pos.z + type[nType].vtxMaxObject.z);
-			pObject->aPos[2] = D3DXVECTOR3(pObject->pos.x + type[nType].vtxMaxObject.x ,pObject->pos.y ,pObject->pos.z + type[nType].vtxMaxObject.z);
-			pObject->aPos[3] = D3DXVECTOR3(pObject->pos.x + type[nType].vtxMaxObject.x ,pObject->pos.y ,pObject->pos.z + type[nType].vtxMinObject.z);
+			pInfo->aPos[0] = D3DXVECTOR3(pInfo->pos.x + g_object.objectType[nType].vtxMinObject.x ,pInfo->pos.y ,pInfo->pos.z + g_object.objectType[nType].vtxMinObject.z);
+			pInfo->aPos[1] = D3DXVECTOR3(pInfo->pos.x + g_object.objectType[nType].vtxMinObject.x ,pInfo->pos.y ,pInfo->pos.z + g_object.objectType[nType].vtxMaxObject.z);
+			pInfo->aPos[2] = D3DXVECTOR3(pInfo->pos.x + g_object.objectType[nType].vtxMaxObject.x ,pInfo->pos.y ,pInfo->pos.z + g_object.objectType[nType].vtxMaxObject.z);
+			pInfo->aPos[3] = D3DXVECTOR3(pInfo->pos.x + g_object.objectType[nType].vtxMaxObject.x ,pInfo->pos.y ,pInfo->pos.z + g_object.objectType[nType].vtxMinObject.z);
 
 			// 四辺ベクトル
-			pObject->aVec[0] = pObject->aPos[1] - pObject->aPos[0];
-			pObject->aVec[1] = pObject->aPos[2] - pObject->aPos[1];
-			pObject->aVec[2] = pObject->aPos[3] - pObject->aPos[2];
-			pObject->aVec[3] = pObject->aPos[0] - pObject->aPos[3];
-
+			pInfo->aVec[0] = pInfo->aPos[1] - pInfo->aPos[0];
+			pInfo->aVec[1] = pInfo->aPos[2] - pInfo->aPos[1];
+			pInfo->aVec[2] = pInfo->aPos[3] - pInfo->aPos[2];
+			pInfo->aVec[3] = pInfo->aPos[0] - pInfo->aPos[3];
+			
 			// 影の設定
 			switch (nType)
 			{
 			case 0:
-				pObject->nIdx = SetShadow(D3DXVECTOR3(pObject->pos.x, 0.0f, pObject->pos.z), 10.0f, 10.0f);	// 影の設定
+				pInfo->nIdx = SetShadow(D3DXVECTOR3(pInfo->pos.x, 0.0f, pInfo->pos.z), 10.0f, 10.0f);	// 影の設定
 				break;
 
 			case 1:
-				pObject->nIdx = SetShadow(D3DXVECTOR3(pObject->pos.x, 0.0f, pObject->pos.z), 80.0f, 80.0f);	// 影の設定
+				pInfo->nIdx = SetShadow(D3DXVECTOR3(pInfo->pos.x, 0.0f, pInfo->pos.z), 80.0f, 80.0f);	// 影の設定
 				break;
 			
 			default:
 				break;
 			}
 
-			pObject->bUse = true;
+			pInfo->bUse = true;
 
 			break;
 		}
@@ -378,7 +348,7 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 	D3DXVECTOR3 aVec[COLLISION_PARTS];	// 矩形頂点から判定対象へのベクトル
 	D3DXVECTOR3 pos = *pPos;			// 判定対象の位置
 	Player *pPlayer = GetPlayer();
-	Object *pObject = &object[0];
+	ObjectInfo *pObject = &g_object.objectInfo[0];
 	
 
 	if (pPlayer->bOnBlock == false)
@@ -475,4 +445,106 @@ bool CollisionVec(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, f
 		}
 	}
 	return bLand;
+}
+
+//==============================================================================
+// オブジェクトテキストの読み込み
+//==============================================================================
+void LoadObject(void)
+{
+	// ローカル変数宣言
+	FILE *pFile;
+	char aEqual[2] = { NULL };					// 「=」読み取り用変数
+	int nCntFile = 0;							// Xファイルの数
+	int nObject = 0;
+	bool bComment = false;						// コメントアウトするか
+	char aText[TEXT_LENGTH] = { NULL };			// テキスト読み取り用変数
+	char aObjectSet[DATA_LENGTH] = { NULL };	// キャラデータ読み取り用変数
+
+	// strcmp読み取り用ポインタ
+	char *pText = &aText[0];
+	char *pObjectSet = &aObjectSet[0];
+
+
+	// データの読み込み
+	pFile = fopen("data/TEXT/object.txt", "r");
+	if (pFile != NULL)
+	{ //ファイル展開可能
+		while (strcmp("END_SCRIPT", pText) != 0)
+		{
+			aText[0] = { NULL };
+			if (bComment == false)
+			{// コメントアウトしていない
+				fscanf(pFile, "%s", &aText[0]);
+
+				if (aText[0] == '#')
+				{// 文字列の先頭が「#」ならばコメントアウトへ
+					bComment = true;
+				}
+				else
+				{// 通常時
+					if (strcmp("NUM_OBJECT", pText) == 0)
+					{// モデルの数
+						fscanf(pFile, "%s", &aEqual[0]);
+						fscanf(pFile, "%d", &g_object.nNumObject);
+					}
+					else if (strcmp("OBJECT_FILENAME", pText) == 0)
+					{// Xファイル名の読み込み
+						fscanf(pFile, "%s", &aEqual[0]);
+						fscanf(pFile, "%s", &g_object.objectType[nCntFile].aFileName[0]);
+						nCntFile++;
+					}
+					else if (strcmp("OBJECTSET", pText) == 0)
+					{// キャラの情報
+						aObjectSet[0] = {};
+						while (strcmp("END_OBJECTSET", pObjectSet) != 0)
+						{// キャラ情報の読み取り
+							fscanf(pFile, "%s", &aObjectSet[0]);
+							if (strcmp("NUM_PARTS", pObjectSet) == 0)
+							{
+
+							}
+							else if (strcmp("TYPE", pObjectSet) == 0)
+							{// 当たり判定
+								fscanf(pFile, "%s", &aEqual[0]);
+								fscanf(pFile, "%d", &g_object.objectInfo[g_object.nSetObject].nType);
+							}
+							else if (strcmp("POS", pObjectSet) == 0)
+							{// 当たり判定
+								fscanf(pFile, "%s", &aEqual[0]);
+								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].pos.x);
+								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].pos.y);
+								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].pos.z);
+							}
+							else if (strcmp("ROT", pObjectSet) == 0)
+							{// パーツ情報
+								fscanf(pFile, "%s", &aEqual[0]);
+								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].rot.x);
+								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].rot.y);
+								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].rot.z);
+							}
+						}
+						g_object.nSetObject++;
+					}
+				}
+			}
+			else if (bComment == true)
+			{// コメントアウト処理
+			 // ローカル変数宣言
+				char a = NULL;
+				char b = NULL;
+				fscanf(pFile, "%c", &a);
+				while (a != '\n' && b != '\n')
+				{
+					fscanf(pFile, "%s", &aText[0]);
+					fscanf(pFile, "%c", &b);
+				}
+				bComment = false;
+			}
+		}
+		fclose(pFile);
+	}
+	else
+	{ // ファイル展開不可
+	}
 }

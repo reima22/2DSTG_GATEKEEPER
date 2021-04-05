@@ -132,7 +132,7 @@ HRESULT InitRanking(void)
 	if (bRankingbgm == true)
 	{
 		// BGM‚ÌÄ¶
-		PlaySound(SOUND_LABEL_BGM004);
+		PlaySound(SOUND_LABEL_BGM_RANKING);
 	}
 
 	// ƒ‰ƒ“ƒLƒ“ƒO‚Ì“Ç‚İ‚İ
