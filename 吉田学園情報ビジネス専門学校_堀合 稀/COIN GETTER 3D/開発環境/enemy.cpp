@@ -19,7 +19,7 @@
 //==============================================================================
 #define COLLISION_PARTS	(4)			// 当たり判定の面の数
 #define MAX_ENEMY		(16)		// 敵の最大数
-#define GET_DAMAGE		(9)		// 被ダメージ時の状態カウント
+#define GET_DAMAGE		(9)			// 被ダメージ時の状態カウント
 #define STEP_JUMP		(8.0f)		// 踏みつけで浮く高さ
 #define MOVE_ENEMY0		(100.0f)	// 敵の移動範囲数値
 #define MOVE_ENEMY1		(150.0f)	// 敵の移動範囲数値
@@ -48,7 +48,7 @@ HRESULT InitEnemy(void)
 
 	// Xファイルの読み込み
 	D3DXLoadMeshFromX(
-		"data/MODEL/ufo.x",
+		"data/MODEL/ENEMY/ufo.x",
 		D3DXMESH_SYSTEMMEM,
 		pDevice,
 		NULL,
@@ -490,42 +490,49 @@ bool TouchEnemy(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove,floa
 						pShadow->bUse = false;				// 影の消滅
 						pEnemy->bUse = false;				// 敵の消滅
 					}
-					else if (pPos->x > pPosOld->x && pPosOld->x < pEnemy->pos.x + pEnemy->vtxMinObject.x && pPlayer->state != PLAYERSTATE_APPEAR && pPlayer->state != PLAYERSTATE_DAMAGE)
-					{// 左側
-					 // エフェクトの発生
+					else if(pPlayer->state != PLAYERSTATE_APPEAR && pPlayer->state != PLAYERSTATE_DAMAGE)
+					{
 						SetEffect(D3DXVECTOR3(pPlayer->pos.x, pPlayer->pos.y + 20.0f, pPlayer->pos.z), 0.01f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
-						pPos->x = pEnemy->pos.x + pEnemy->vtxMinObject.x - fWidthMax;
 						pPlayer->state = PLAYERSTATE_DAMAGE;
 						pPlayer->nCntState = GET_DAMAGE;
 						pPlayer->nLife--;
 					}
-					else if (pPos->x < pPosOld->x && pPosOld->x > pEnemy->pos.x + pEnemy->vtxMaxObject.x && pPlayer->state != PLAYERSTATE_APPEAR && pPlayer->state != PLAYERSTATE_DAMAGE)
-					{// 右側	
-					 // エフェクトの発生
-						SetEffect(D3DXVECTOR3(pPlayer->pos.x, pPlayer->pos.y + 20.0f, pPlayer->pos.z), 0.01f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
-						pPos->x = pEnemy->pos.x + pEnemy->vtxMaxObject.x - fWidthMin;
-						pPlayer->state = PLAYERSTATE_DAMAGE;
-						pPlayer->nCntState = GET_DAMAGE;
-						pPlayer->nLife--;
-					}
-					else if (pPos->z <= pPosOld->z && pPos->z > pEnemy->pos.z && pPlayer->state != PLAYERSTATE_APPEAR && pPlayer->state != PLAYERSTATE_DAMAGE)
-					{// 奥側
-					 // エフェクトの発生
-						SetEffect(D3DXVECTOR3(pPlayer->pos.x, pPlayer->pos.y + 20.0f, pPlayer->pos.z), 0.01f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
-						pPos->z = pEnemy->pos.z + pEnemy->vtxMaxObject.z - fDepthMin;
-						pPlayer->state = PLAYERSTATE_DAMAGE;
-						pPlayer->nCntState = GET_DAMAGE;
-						pPlayer->nLife--;
-					}
-					else if (pPos->z >= pPosOld->z && pPos->z < pEnemy->pos.z && pPlayer->state != PLAYERSTATE_APPEAR && pPlayer->state != PLAYERSTATE_DAMAGE)
-					{// 手前
-					 // エフェクトの発生
-						SetEffect(D3DXVECTOR3(pPlayer->pos.x, pPlayer->pos.y + 20.0f, pPlayer->pos.z), 0.01f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
-						pPos->z = pEnemy->pos.z + pEnemy->vtxMinObject.z - fDepthMax;
-						pPlayer->state = PLAYERSTATE_DAMAGE;
-						pPlayer->nCntState = GET_DAMAGE;
-						pPlayer->nLife--;
-					}
+					//else if (pPos->x > pPosOld->x && pPosOld->x < pEnemy->pos.x + pEnemy->vtxMinObject.x && pPlayer->state != PLAYERSTATE_APPEAR && pPlayer->state != PLAYERSTATE_DAMAGE)
+					//{// 左側
+					// // エフェクトの発生
+					//	SetEffect(D3DXVECTOR3(pPlayer->pos.x, pPlayer->pos.y + 20.0f, pPlayer->pos.z), 0.01f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
+					//	//pPos->x = pEnemy->pos.x + pEnemy->vtxMinObject.x - fWidthMax;
+					//	pPlayer->state = PLAYERSTATE_DAMAGE;
+					//	pPlayer->nCntState = GET_DAMAGE;
+					//	pPlayer->nLife--;
+					//}
+					//else if (pPos->x < pPosOld->x && pPosOld->x > pEnemy->pos.x + pEnemy->vtxMaxObject.x && pPlayer->state != PLAYERSTATE_APPEAR && pPlayer->state != PLAYERSTATE_DAMAGE)
+					//{// 右側	
+					// // エフェクトの発生
+					//	SetEffect(D3DXVECTOR3(pPlayer->pos.x, pPlayer->pos.y + 20.0f, pPlayer->pos.z), 0.01f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
+					//	//pPos->x = pEnemy->pos.x + pEnemy->vtxMaxObject.x - fWidthMin;
+					//	pPlayer->state = PLAYERSTATE_DAMAGE;
+					//	pPlayer->nCntState = GET_DAMAGE;
+					//	pPlayer->nLife--;
+					//}
+					//else if (pPos->z <= pPosOld->z && pPos->z > pEnemy->pos.z && pPlayer->state != PLAYERSTATE_APPEAR && pPlayer->state != PLAYERSTATE_DAMAGE)
+					//{// 奥側
+					// // エフェクトの発生
+					//	SetEffect(D3DXVECTOR3(pPlayer->pos.x, pPlayer->pos.y + 20.0f, pPlayer->pos.z), 0.01f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
+					//	//pPos->z = pEnemy->pos.z + pEnemy->vtxMaxObject.z - fDepthMin;
+					//	pPlayer->state = PLAYERSTATE_DAMAGE;
+					//	pPlayer->nCntState = GET_DAMAGE;
+					//	pPlayer->nLife--;
+					//}
+					//else if (pPos->z >= pPosOld->z && pPos->z < pEnemy->pos.z && pPlayer->state != PLAYERSTATE_APPEAR && pPlayer->state != PLAYERSTATE_DAMAGE)
+					//{// 手前
+					// // エフェクトの発生
+					//	SetEffect(D3DXVECTOR3(pPlayer->pos.x, pPlayer->pos.y + 20.0f, pPlayer->pos.z), 0.01f, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), 5.0f, 0.05f, 30);
+					//	//pPos->z = pEnemy->pos.z + pEnemy->vtxMinObject.z - fDepthMax;
+					//	pPlayer->state = PLAYERSTATE_DAMAGE;
+					//	pPlayer->nCntState = GET_DAMAGE;
+					//	pPlayer->nLife--;
+					//}
 				}
 			}
 		}

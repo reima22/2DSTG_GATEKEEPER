@@ -297,7 +297,7 @@ void SetObject(D3DXVECTOR3 pos, int nType,D3DXVECTOR3 rot)
 			pInfo->pos = pos;		// 位置
 			pInfo->rot = rot;
 
-			SetItem(D3DXVECTOR3(pos.x, 100.0f, pos.z));
+			SetItem(D3DXVECTOR3(pos.x, 100.0f, pos.z), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
 
 			pInfo->nType = nType;	// 種類
 
@@ -456,7 +456,6 @@ void LoadObject(void)
 	FILE *pFile;
 	char aEqual[2] = { NULL };					// 「=」読み取り用変数
 	int nCntFile = 0;							// Xファイルの数
-	int nObject = 0;
 	bool bComment = false;						// コメントアウトするか
 	char aText[TEXT_LENGTH] = { NULL };			// テキスト読み取り用変数
 	char aObjectSet[DATA_LENGTH] = { NULL };	// キャラデータ読み取り用変数
@@ -464,7 +463,6 @@ void LoadObject(void)
 	// strcmp読み取り用ポインタ
 	char *pText = &aText[0];
 	char *pObjectSet = &aObjectSet[0];
-
 
 	// データの読み込み
 	pFile = fopen("data/TEXT/object.txt", "r");
@@ -478,20 +476,18 @@ void LoadObject(void)
 				fscanf(pFile, "%s", &aText[0]);
 
 				if (aText[0] == '#')
-				{// 文字列の先頭が「#」ならばコメントアウトへ
+				{// 文字列の先頭が「#」ならばコメントアウト
 					bComment = true;
 				}
 				else
 				{// 通常時
 					if (strcmp("NUM_OBJECT", pText) == 0)
 					{// モデルの数
-						fscanf(pFile, "%s", &aEqual[0]);
-						fscanf(pFile, "%d", &g_object.nNumObject);
+						fscanf(pFile, "%s %d", &aEqual[0], &g_object.nNumObject);
 					}
 					else if (strcmp("OBJECT_FILENAME", pText) == 0)
 					{// Xファイル名の読み込み
-						fscanf(pFile, "%s", &aEqual[0]);
-						fscanf(pFile, "%s", &g_object.objectType[nCntFile].aFileName[0]);
+						fscanf(pFile, "%s %s", &aEqual[0], &g_object.objectType[nCntFile].aFileName[0]);
 						nCntFile++;
 					}
 					else if (strcmp("OBJECTSET", pText) == 0)
@@ -500,28 +496,24 @@ void LoadObject(void)
 						while (strcmp("END_OBJECTSET", pObjectSet) != 0)
 						{// キャラ情報の読み取り
 							fscanf(pFile, "%s", &aObjectSet[0]);
-							if (strcmp("NUM_PARTS", pObjectSet) == 0)
-							{
-
-							}
-							else if (strcmp("TYPE", pObjectSet) == 0)
+							if (strcmp("TYPE", pObjectSet) == 0)
 							{// 当たり判定
-								fscanf(pFile, "%s", &aEqual[0]);
-								fscanf(pFile, "%d", &g_object.objectInfo[g_object.nSetObject].nType);
+								fscanf(pFile, "%s %d", &aEqual[0], &g_object.objectInfo[g_object.nSetObject].nType);
 							}
 							else if (strcmp("POS", pObjectSet) == 0)
-							{// 当たり判定
-								fscanf(pFile, "%s", &aEqual[0]);
-								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].pos.x);
-								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].pos.y);
-								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].pos.z);
+							{// 位置
+								fscanf(pFile, "%s %f %f %f", &aEqual[0],
+									&g_object.objectInfo[g_object.nSetObject].pos.x,
+									&g_object.objectInfo[g_object.nSetObject].pos.y,
+									&g_object.objectInfo[g_object.nSetObject].pos.z);
+
 							}
 							else if (strcmp("ROT", pObjectSet) == 0)
-							{// パーツ情報
-								fscanf(pFile, "%s", &aEqual[0]);
-								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].rot.x);
-								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].rot.y);
-								fscanf(pFile, "%f", &g_object.objectInfo[g_object.nSetObject].rot.z);
+							{// 角度
+								fscanf(pFile, "%s %f %f %f", &aEqual[0], 
+									&g_object.objectInfo[g_object.nSetObject].rot.x,
+									&g_object.objectInfo[g_object.nSetObject].rot.y,
+									&g_object.objectInfo[g_object.nSetObject].rot.z);
 							}
 						}
 						g_object.nSetObject++;

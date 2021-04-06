@@ -12,8 +12,8 @@
 //==============================================================================
 #define WIDTHNUM	(10)		// 列数(幅)
 #define DEPTHNUM	(10)		// 行数(奥行)
-#define WIDTH		(100.0f)		// 幅の大きさ
-#define DEPTH		(100.0f)		// 奥行の大きさ
+#define WIDTH		(100.0f)	// 幅の大きさ
+#define DEPTH		(100.0f)	// 奥行の大きさ
 #define POINT_MAX	(65535)		// 頂点数の最大
 #define IDX_MAX		(65535)		// インデックスバッファの最大確保数
 #define FIELD_MAX	(32)		// フィールドの最大数
@@ -30,10 +30,10 @@ D3DXMATRIX g_mtxWorldMeshfield;						// ワールドマトリックス
 int g_nAllPoint;									// 総頂点数
 int g_nPolygon;										// ポリゴン数
 int g_nIdxPoint;									// インデックスバッファの必要な確保数
-float g_fWidth = WIDTH;				// 横幅の端
-float g_fDepth = DEPTH;				// 奥行の端
-int g_nWidth = WIDTHNUM + 1;		// 横幅の頂点数
-int g_nDepth = DEPTHNUM + 1;		// 奥行の頂点数
+float g_fWidth = WIDTH;								// 横幅の端
+float g_fDepth = DEPTH;								// 奥行の端
+int g_nWidth = WIDTHNUM + 1;						// 横幅の頂点数
+int g_nDepth = DEPTHNUM + 1;						// 奥行の頂点数
 
 //MeshField g_aField[FIELD_MAX];	// フィールドの構造体
 //D3DXVECTOR3 g_movePolygon;
@@ -226,33 +226,9 @@ HRESULT InitMeshfield(void)
 		}
 	}
 
-	////pIdx[0] = 3;
-	////pIdx[1] = 0;
-	////pIdx[2] = 4;
-	////pIdx[3] = 1;
-	////pIdx[4] = 5;
-	////pIdx[5] = 2;
-	////pIdx[6] = 2;
-	////pIdx[7] = 6;
-	////pIdx[8] = 6;
-	////pIdx[9] = 3;
-	////pIdx[10] = 7;
-	////pIdx[11] = 4;
-	////pIdx[12] = 8;
-	////pIdx[13] = 5;
-
 	// インデックスバッファをアンロックする
 	g_pIdxBuffMeshfield->Unlock();
 
-	//// インデックスバッファをロックし、番号データへのポインタを取得
-	//g_pIdxBuffMeshfield->Lock(0, 0, (void**)&pIdx, 0);
-	//int a[14];
-	//for (int nCnt = 0; nCnt < 14; nCnt++,pIdx++)
-	//{
-	//	a[nCnt] = pIdx[0];
-	//}
-	//// インデックスバッファをアンロックする
-	//g_pIdxBuffMeshfield->Unlock();
 	return S_OK;
 }
 

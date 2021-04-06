@@ -130,8 +130,11 @@ typedef struct
 	PLAYERSTATE state;							// プレイヤーの状態
 	int nLife;									// 体力
 	int nIdx;									// 影の割り当て番号
+	D3DXVECTOR3 vtxMinPlayer, vtxMaxPlayer;		// 当たり判定の最大最小値
+
 	Model aModel[MODEL_PARTS];					// モデル(パーツ)
 	int nNumModel;								// モデル(パーツ)数
+
 	MOTION_INFO aMotionInfo[MOTIONTYPE_MAX];	// モーション情報
 	int nNumMotion = MOTIONTYPE_MAX;			// モーション数
 	MOTIONTYPE motionType;						// モーションタイプ
@@ -140,12 +143,16 @@ typedef struct
 	int nNumKey;								// キー数
 	int nKey;									// キー№
 	int nCounterMotion;							// モーションのカウンター
+
 	bool bOnBlock;								// 何かに乗っているか
+
 	int nCntState;								// 状態変化のカウンター
 	float fInRadius;							// モデル参照の内半径
 	float fOutRadius;							// プレイヤーの外半径
 	float fHeight;								// プレイヤーの高さ
-	Collision collision;						// プレイヤーの当たり判定
+
+	//Collision collision;						// プレイヤーの当たり判定
+
 	int nJumpCnt;								// ジャンプ力のカウント
 	int nMoveCnt;								// 移動モーションカウント
 	bool bMotionChange;							// モーション変化時の判定

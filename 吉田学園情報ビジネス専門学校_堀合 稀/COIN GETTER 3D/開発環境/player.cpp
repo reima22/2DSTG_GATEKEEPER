@@ -21,16 +21,14 @@
 //==============================================================================
 // マクロ定義
 //==============================================================================
-#define PLAYER_MOVE		(1.0f)
-#define PLAYER_TURN		(0.1f)
-
-#define MOVE_MIN		(0.5f)	// 移動モーション時の最小移動力
-#define MOVECNT_MAX		(20)
+#define PLAYER_MOVE		(1.0f)	// 移動力
+#define MOVE_MIN		(0.5f)	// 移動モーション再生時の最小移動力
+#define MOVECNT_MAX		(20)	// 移動モーション再生時の最大カウント
 
 //==============================================================================
 // グローバル変数
 //==============================================================================
-D3DXVECTOR3 g_vtxMinPlayer, g_vtxMaxPlayer;	// モデルの各座標の最大値・最小値
+//D3DXVECTOR3 g_vtxMinPlayer, g_vtxMaxPlayer;	// モデルの各座標の最大値・最小値
 Player g_player;							// プレイヤーの構造体
 bool g_bJump;
 
@@ -85,8 +83,8 @@ HRESULT InitPlayer(void)
 	g_player.nCounterMotion = 0;
 	g_player.nCntState = 120;
 	g_player.fInRadius = 0.0f;
-	g_vtxMinPlayer = VTX_MIN;
-	g_vtxMaxPlayer = VTX_MAX;
+	g_player.vtxMinPlayer = VTX_MIN;
+	g_player.vtxMaxPlayer = VTX_MAX;
 	g_bJump = true;
 	g_player.nMoveCnt = 0;
 	g_player.nBrendFrame = 5;
@@ -104,31 +102,31 @@ HRESULT InitPlayer(void)
 		D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;	// 頂点座標の代入
 
 		// 各座標の最大値の比較
-		if (g_vtxMaxPlayer.x < vtx.x)
+		if (g_player.vtxMaxPlayer.x < vtx.x)
 		{			
-			g_vtxMaxPlayer.x = vtx.x;
+			g_player.vtxMaxPlayer.x = vtx.x;
 		}			
-		if (g_vtxMaxPlayer.y < vtx.y)
+		if (g_player.vtxMaxPlayer.y < vtx.y)
 		{			
-			g_vtxMaxPlayer.y = vtx.y;
+			g_player.vtxMaxPlayer.y = vtx.y;
 		}			
-		if (g_vtxMaxPlayer.z < vtx.z)
+		if (g_player.vtxMaxPlayer.z < vtx.z)
 		{			
-			g_vtxMaxPlayer.z = vtx.z;
+			g_player.vtxMaxPlayer.z = vtx.z;
 		}
 
 		// 各座標の最小値の比較
-		if (g_vtxMinPlayer.x > vtx.x)
+		if (g_player.vtxMinPlayer.x > vtx.x)
 		{			
-			g_vtxMinPlayer.x = vtx.x;
+			g_player.vtxMinPlayer.x = vtx.x;
 		}			
-		if (g_vtxMinPlayer.y > vtx.y)
+		if (g_player.vtxMinPlayer.y > vtx.y)
 		{			
-			g_vtxMinPlayer.y = vtx.y;
+			g_player.vtxMinPlayer.y = vtx.y;
 		}			
-		if (g_vtxMinPlayer.z > vtx.z)
+		if (g_player.vtxMinPlayer.z > vtx.z)
 		{			
-			g_vtxMinPlayer.z = vtx.z;
+			g_player.vtxMinPlayer.z = vtx.z;
 		}
 
 		pVtxBuff += sizeFVF;	// 頂点フォーマットのサイズ分ポインタを進める
@@ -138,25 +136,25 @@ HRESULT InitPlayer(void)
 	g_player.aModel[0].pMeshModel->UnlockVertexBuffer();
 
 	// 内半径の計算
-	if (g_player.fInRadius < g_vtxMaxPlayer.x)
+	if (g_player.fInRadius < g_player.vtxMaxPlayer.x)
 	{// X軸最大値
-		g_player.fInRadius = g_vtxMaxPlayer.x;
+		g_player.fInRadius = g_player.vtxMaxPlayer.x;
 	}
-	if (g_player.fInRadius < g_vtxMaxPlayer.z)
+	if (g_player.fInRadius < g_player.vtxMaxPlayer.z)
 	{// Z軸最大値
-		g_player.fInRadius = g_vtxMaxPlayer.z;
+		g_player.fInRadius = g_player.vtxMaxPlayer.z;
 	}
-	if (g_player.fInRadius < -g_vtxMinPlayer.x)
+	if (g_player.fInRadius < -g_player.vtxMinPlayer.x)
 	{// X軸最小値
-		g_player.fInRadius = -g_vtxMinPlayer.x;
+		g_player.fInRadius = -g_player.vtxMinPlayer.x;
 	}
-	if (g_player.fInRadius < -g_vtxMinPlayer.z)
+	if (g_player.fInRadius < -g_player.vtxMinPlayer.z)
 	{// Z軸最小値
-		g_player.fInRadius = -g_vtxMinPlayer.z;
+		g_player.fInRadius = -g_player.vtxMinPlayer.z;
 	}
 
 	// プレイヤーの高さの代入
-	g_vtxMaxPlayer.y = g_player.fHeight;
+	g_player.vtxMaxPlayer.y = g_player.fHeight;
 
 	return S_OK;
 }
@@ -199,7 +197,7 @@ void UpdatePlayer(void)
 	// 当たり判定
 	g_player.bOnBlock = CollisionVec(&g_player.pos, &g_player.posOld, &g_player.move, g_player.fInRadius,g_player.fHeight);
 	TouchItem(&g_player.pos, g_player.fInRadius,g_player.fHeight);
-	g_player.bOnBlock = TouchEnemy(&g_player.pos, &g_player.posOld ,&g_player.move,g_vtxMaxPlayer.x, g_vtxMinPlayer.x, g_vtxMaxPlayer.z, g_vtxMinPlayer.z, g_vtxMaxPlayer.y, g_vtxMinPlayer.y);
+	g_player.bOnBlock = TouchEnemy(&g_player.pos, &g_player.posOld ,&g_player.move,g_player.vtxMaxPlayer.x, g_player.vtxMinPlayer.x, g_player.vtxMaxPlayer.z, g_player.vtxMinPlayer.z, g_player.vtxMaxPlayer.y, g_player.vtxMinPlayer.y);
 }
 
 //==============================================================================
@@ -467,7 +465,7 @@ void LoadMotion(void)
 	char *pKey = &aKey[0];
 
 	// データの読み込み
-	pFile = fopen("data/TEXT/player_horiai.txt", "r");
+	pFile = fopen("data/TEXT/player.txt", "r");
 	if (pFile != NULL)
 	{ //ファイル展開可能
 		while (strcmp("END_SCRIPT",pText) != 0)
@@ -485,13 +483,11 @@ void LoadMotion(void)
 				{// 通常時
 					if (strcmp("NUM_MODEL", pText) == 0)
 					{// モデルの数
-						fscanf(pFile, "%s", &aEqual[0]);
-						fscanf(pFile, "%d", &g_player.nNumModel);
+						fscanf(pFile, "%s %d", &aEqual[0], &g_player.nNumModel);
 					}
 					else if (strcmp("MODEL_FILENAME", pText) == 0)
 					{// Xファイル名の読み込み
-						fscanf(pFile, "%s", &aEqual[0]);
-						fscanf(pFile, "%s", &g_player.aModel[nCntFile].aFileName[0]);
+						fscanf(pFile, "%s %s", &aEqual[0], &g_player.aModel[nCntFile].aFileName[0]);
 						nCntFile++;
 					}
 					else if (strcmp("CHARACTERSET", pText) == 0)
@@ -504,14 +500,12 @@ void LoadMotion(void)
 
 							}
 							else if (strcmp("RADIUS", pCharaSet) == 0)
-							{// 当たり判定
-								fscanf(pFile, "%s", &aEqual[0]);
-								fscanf(pFile, "%f", &g_player.fOutRadius);
+							{// 当たり判定(半径)
+								fscanf(pFile, "%s %f", &aEqual[0] , &g_player.fOutRadius);
 							}
 							else if (strcmp("HEIGHT", pCharaSet) == 0)
-							{// 当たり判定
-								fscanf(pFile, "%s", &aEqual[0]);
-								fscanf(pFile, "%f", &g_player.fHeight);
+							{// 当たり判定(高さ)
+								fscanf(pFile, "%s %f", &aEqual[0], &g_player.fHeight);
 							}
 							else if (strcmp("PARTSSET", pCharaSet) == 0)
 							{// パーツ情報
@@ -522,28 +516,26 @@ void LoadMotion(void)
 									fscanf(pFile, "%s", &aPartsSet[0]);
 									if (strcmp("INDEX", pPartsSet) == 0)
 									{// パーツ情報の読み取り
-										fscanf(pFile, "%s", &aEqual[0]);
-										fscanf(pFile, "%d", &nIdxParts);
+										fscanf(pFile, "%s %d", &aEqual[0], &nIdxParts);
 									}
 									else if (strcmp("PARENT", pPartsSet) == 0)
 									{// パーツの親情報
-										fscanf(pFile, "%s", &aEqual[0]);
-										fscanf(pFile, "%d", &g_player.aModel[nIdxParts].nIdxModelParent);
+										fscanf(pFile, "%s %d", &aEqual[0], &g_player.aModel[nIdxParts].nIdxModelParent);
 									}
 									else if (strcmp("POS", pPartsSet) == 0)
 									{// パーツの位置情報
-										fscanf(pFile, "%s", &aEqual[0]);
-										fscanf(pFile, "%f", &g_player.aModel[nIdxParts].pos.x);
-										fscanf(pFile, "%f", &g_player.aModel[nIdxParts].pos.y);
-										fscanf(pFile, "%f", &g_player.aModel[nIdxParts].pos.z);
+										fscanf(pFile, "%s %f %f %f", &aEqual[0], 
+											&g_player.aModel[nIdxParts].pos.x,
+											&g_player.aModel[nIdxParts].pos.y,
+											&g_player.aModel[nIdxParts].pos.z);
 										g_player.aModel[nIdxParts].posReset = g_player.aModel[nIdxParts].pos;
 									}
 									else if (strcmp("ROT", pPartsSet) == 0)
 									{// パーツの角度情報
-										fscanf(pFile, "%s", &aEqual[0]);
-										fscanf(pFile, "%f", &g_player.aModel[nIdxParts].rot.x);
-										fscanf(pFile, "%f", &g_player.aModel[nIdxParts].rot.y);
-										fscanf(pFile, "%f", &g_player.aModel[nIdxParts].rot.z);
+										fscanf(pFile, "%s %f %f %f", &aEqual[0], 
+											&g_player.aModel[nIdxParts].rot.x,
+											&g_player.aModel[nIdxParts].rot.y,
+											&g_player.aModel[nIdxParts].rot.z);
 									}
 								}
 							}
@@ -563,20 +555,17 @@ void LoadMotion(void)
 							fscanf(pFile, "%s", &aMotionSet[0]);
 							if (strcmp("LOOP", pMotionSet) == 0)
 							{// ループするか
-								fscanf(pFile, "%s", &aEqual[0]);
-								fscanf(pFile, "%d", &nLoop);
+								fscanf(pFile, "%s %d", &aEqual[0], &nLoop);
 								if (nLoop == 1)
 								{// １の場合ループする
-									g_player.bLoopMotion = true;
+									//g_player.bLoopMotion = true;
 									g_player.aMotionInfo[nMotion].bLoop = true;
 								}
 							}
 							else if (strcmp("NUM_KEY", pMotionSet) == 0)
 							{// キー数の読み込み
-								fscanf(pFile, "%s", &aEqual[0]);
-								fscanf(pFile, "%d", &g_player.nNumKey);
+								fscanf(pFile, "%s %d", &aEqual[0], &g_player.nNumKey);
 							}
-
 							else if (strcmp("KEYSET",pMotionSet) == 0)
 							{// キーの読み込み
 								// ローカル変数宣言
@@ -609,28 +598,27 @@ void LoadMotion(void)
 											fscanf(pFile, "%s", &aKey[0]);
 											if (strcmp("POS", pKey) == 0)
 											{// 位置情報の読み込み
-												fscanf(pFile, "%s", &aEqual[0]);
-												fscanf(pFile, "%f", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosX);
-												fscanf(pFile, "%f", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosY);
-												fscanf(pFile, "%f", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosZ);
+												fscanf(pFile, "%s %f %f %f", &aEqual[0],
+													&g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosX, 
+													&g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosY, 
+													&g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosZ);
 												g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosX += g_player.aModel[nKey].pos.x;
 												g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosY += g_player.aModel[nKey].pos.y;
 												g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fPosZ += g_player.aModel[nKey].pos.z;
 											}
 											else if (strcmp("ROT", pKey) == 0)
 											{// 角度情報の読み込み
-												fscanf(pFile, "%s", &aEqual[0]);
-												fscanf(pFile, "%f", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fRotX);
-												fscanf(pFile, "%f", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fRotY);
-												fscanf(pFile, "%f", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fRotZ);
+												fscanf(pFile, "%s %f %f %f", &aEqual[0],
+													&g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fRotX,
+													&g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fRotY,
+													&g_player.aMotionInfo[nMotion].aKeySet[nKeySet].aKey[nKey].fRotZ);
 											}	
 										}
 										nKey++;
 									}
 									else if (strcmp("FRAME", pKeySet) == 0)
 									{// キーフレーム数の読み込み
-										fscanf(pFile, "%s", &aEqual[0]);
-										fscanf(pFile, "%d", &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].nFrame);
+										fscanf(pFile, "%s %d", &aEqual[0], &g_player.aMotionInfo[nMotion].aKeySet[nKeySet].nFrame);
 									}
 								}
 								nKeySet++;
@@ -941,22 +929,22 @@ void MovePlayer(void)
 	g_player.move.z += (0.0f - g_player.move.z) * SPEEDDOWN;
 
 	// 移動限界X軸
-	if (g_player.pos.x >= 500.0f - g_vtxMaxPlayer.x)
+	if (g_player.pos.x >= 500.0f - g_player.vtxMaxPlayer.x)
 	{
-		g_player.pos.x = 500.0f - g_vtxMaxPlayer.x;
+		g_player.pos.x = 500.0f - g_player.vtxMaxPlayer.x;
 	}
-	else if (g_player.pos.x <= -500.0f - g_vtxMinPlayer.x)
+	else if (g_player.pos.x <= -500.0f - g_player.vtxMinPlayer.x)
 	{
-		g_player.pos.x = -500.0f - g_vtxMinPlayer.x;
+		g_player.pos.x = -500.0f - g_player.vtxMinPlayer.x;
 	}
 
 	// 移動限界Z軸
-	if (g_player.pos.z >= 500.0f - g_vtxMaxPlayer.z)
+	if (g_player.pos.z >= 500.0f - g_player.vtxMaxPlayer.z)
 	{
-		g_player.pos.z = 500.0f - g_vtxMaxPlayer.z;
+		g_player.pos.z = 500.0f - g_player.vtxMaxPlayer.z;
 	}
-	else if (g_player.pos.z <= -500.0f - g_vtxMinPlayer.z)
+	else if (g_player.pos.z <= -500.0f - g_player.vtxMinPlayer.z)
 	{
-		g_player.pos.z = -500.0f - g_vtxMinPlayer.z;
+		g_player.pos.z = -500.0f - g_player.vtxMinPlayer.z;
 	}
 }

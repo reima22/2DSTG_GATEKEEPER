@@ -6,17 +6,9 @@
 //==============================================================================
 #define _CRT_SECURE_NO_WARNINGS
 #include "main.h"
-#include "polygon.h"
 #include "camera.h"
 #include "light.h"
 #include "input.h"
-#include "shadow.h"
-#include "wall.h"
-#include "billboard.h"
-#include "meshfield.h"
-#include "meshwall.h"
-#include "bullet.h"
-#include "object.h"
 #include "player.h"
 #include "score.h"
 #include "fade.h"
@@ -27,23 +19,8 @@
 #include "result.h"
 #include "gamepad.h"
 #include "sound.h"
-#include "particle.h"
 #include <stdio.h>
 #include <string.h>
-
-//#include "bg.h"
-//#include "block.h"
-//#include "enemy.h"
-//#include "item.h"
-//#include "score.h"
-//#include "fade.h"
-//#include "title.h"
-//#include "tutorial.h"
-//#include "game.h"
-//#include "result.h"
-//#include "ranking.h"
-//#include "sound.h"
-//#include "gamepad.h"
 
 //==============================================================================
 // É}ÉNÉçíËã`
@@ -125,7 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		NULL);
 
 	// èâä˙âªèàóù
-	if (FAILED(Init(hInstance, hWnd, TRUE)))
+	if (FAILED(Init(hInstance, hWnd, FALSE)))
 	{
 		return -1;
 	}
