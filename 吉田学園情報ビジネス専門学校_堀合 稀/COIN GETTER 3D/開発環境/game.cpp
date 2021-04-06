@@ -228,6 +228,9 @@ void UpdateGame(void)
 	// ゲーム開始の更新処理
 	UpdateStart();
 
+	// メッシュ壁の更新処理
+	UpdateMeshwall();
+
 	// ゲーム開始の可否
 	if (start.bStart == true)
 	{
@@ -313,8 +316,8 @@ void UpdateGame(void)
 				// 壁の更新処理
 				UpdateWall();
 
-				// メッシュ壁の更新処理
-				UpdateMeshwall();
+				//// メッシュ壁の更新処理
+				//UpdateMeshwall();
 
 				UpdateObject();
 

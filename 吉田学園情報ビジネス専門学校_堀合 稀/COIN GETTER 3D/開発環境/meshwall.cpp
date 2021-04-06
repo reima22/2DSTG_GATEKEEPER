@@ -538,7 +538,7 @@ void LoadWall(void)
 									&g_Meshwall.wallInfo[g_Meshwall.nNumWall].rot.y,
 									&g_Meshwall.wallInfo[g_Meshwall.nNumWall].rot.z);
 							}
-						}D3DX_PI;
+						}
 						g_Meshwall.nNumWall++;
 					}
 				}
