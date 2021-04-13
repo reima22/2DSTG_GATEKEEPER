@@ -53,6 +53,7 @@ HRESULT InitItem(void)
 	g_Item.nSetItem = 0;
 	g_Item.nCntAnim = 0;
 	g_Item.nNumItem = 0;
+	g_Item.nCntItem = 0;
 	g_Item.matHigh.Diffuse = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);
 
 	// アイテム情報のテキスト読み込み

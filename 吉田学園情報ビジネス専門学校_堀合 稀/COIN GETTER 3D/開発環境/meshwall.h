@@ -9,11 +9,15 @@
 #define _MESHWALL_H_
 #include "main.h"
 
+//==============================================================================
 // マクロ定義
+//==============================================================================
 #define MAX_MWALL		(4)
 #define MAX_WALL_TYPE	(4)
 
+//==============================================================================
 // 壁の種類ごとの情報
+//==============================================================================
 typedef struct
 {
 	LPDIRECT3DTEXTURE9 pTextureMeshwall = {};	// テクスチャへのポインタ
@@ -23,38 +27,38 @@ typedef struct
 // 壁の詳細情報
 typedef struct
 {
-	D3DXMATRIX mtxWorld;	// ワールドマトリックス
-	D3DXVECTOR3 pos;		// 初期位置
-	D3DXVECTOR3	posMove;	// 初期位置からの移動した位置
-	D3DXVECTOR3 rot;		// 向き
-	float fWidth;			// 幅
-	float fHeight;			// 高さ
-	float fWidthMax;
-	float fHeightMax;
-	int nWidth;				// 列数
-	int nHeight;			// 行数
-	int nWidthPoint;		// 幅の頂点数
-	int nHeightPoint;		// 高さの頂点数
-	int nAllPoint;
-	int nPolygon;
-	int nIdxPoint;
-	bool bUse;				// 使用状態
-	D3DXVECTOR3 posPoint[FOUR_POINT];	// 4頂点の位置
-	D3DXVECTOR3 vecPoint[FOUR_POINT];	// 四辺のベクトル
-	int nType;
-
+	D3DXMATRIX mtxWorld;								// ワールドマトリックス
+	D3DXVECTOR3 pos;									// 初期位置
+	D3DXVECTOR3	posMove;								// 初期位置からの移動した位置
+	D3DXVECTOR3 rot;									// 向き
+	float fWidth;										// 1ポリゴンごとの幅
+	float fHeight;										// 1ポリゴンごとの高さ
+	float fWidthMax;									// 全体の幅
+	float fHeightMax;									// 全体の高さ
+	int nWidth;											// 列数
+	int nHeight;										// 行数
+	int nWidthPoint;									// 幅の頂点数
+	int nHeightPoint;									// 高さの頂点数
+	int nAllPoint;										// 全体の頂点数
+	int nPolygon;										// 使用するポリゴン数
+	int nIdxPoint;										// インデックスバッファの頂点数
+	bool bUse;											// 使用状態
+	D3DXVECTOR3 posPoint[FOUR_POINT];					// 4頂点の位置
+	D3DXVECTOR3 vecPoint[FOUR_POINT];					// 四辺のベクトル
+	int nType;											// 壁の種類
 	LPDIRECT3DVERTEXBUFFER9 pVtxBuffMeshwall = NULL;	// バッファへのポインタ
 	LPDIRECT3DINDEXBUFFER9 pIdxBuffMeshwall = NULL;		// インデックスバッファへのポインタ
 }WallInfo;
 
+//==============================================================================
 // 壁の構造体
+//==============================================================================
 typedef struct
 {
 	WallInfo wallInfo[MAX_MWALL];		// 壁の詳細情報
 	WallType wallType[MAX_WALL_TYPE];	// 壁の種類ごとの情報
 	int nNumTex;						// テクスチャの数
 	int nNumWall;						// 配置する壁の数
-
 } Meshwall;
 
 //==============================================================================

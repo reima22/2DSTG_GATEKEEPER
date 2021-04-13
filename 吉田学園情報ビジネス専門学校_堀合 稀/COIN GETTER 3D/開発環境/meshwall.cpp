@@ -23,17 +23,7 @@
 //==============================================================================
 // グローバル変数
 //==============================================================================
-//LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffMeshwall = NULL;	// バッファへのポインタ
-//LPDIRECT3DINDEXBUFFER9 g_pIdxBuffMeshwall = NULL;	// インデックスバッファへのポインタ
-//LPDIRECT3DTEXTURE9 g_pTextureMeshwall = NULL;		// テクスチャへのポインタ
 Meshwall g_Meshwall; 
-//Meshwall g_aMeshwall[MAX_MWALL];
-//int g_nAllPointWall;								// 総頂点数
-//int g_nPolygonWall;									// ポリゴン数
-//int g_nIdxPointWall;								// インデックスバッファの必要な確保数
-
-//int g_nWidthWall = WIDTH_WALL + 1;			// 横幅の頂点数
-//int g_nHeightWall = HEIGHT_WALL + 1;		// 高さの頂点数
 
 //==============================================================================
 // 初期化処理
@@ -94,97 +84,6 @@ HRESULT InitMeshwall(void)
 			&pInfo->pIdxBuffMeshwall,
 			NULL);
 	}
-
-
-
-
-	// 頂点バッファをロックし、頂点情報へのポインタを取得
-	//g_pVtxBuffMeshwall->Lock(0, 0, (void**)&pVtx, 0);
-
-	// 初期化処理
-	//for (int nCntWall = 0; nCntWall < MAX_MWALL; nCntWall++)
-	//{
-	//	for (int nCnt = 0; nCnt < g_aMeshwall[nCntWall].nHeight - 1; nCnt++)
-	//	{
-	//		for (int nCntA = 0; nCntA < g_aMeshwall[nCntWall].nWidth - 1; nCntA++,pVtx++)
-	//		{
-	//			// ポリゴンの各頂点座標
-	//			pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//			// 法線ベクトルの設定
-	//			pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	//			// 各頂点カラーの設定
-	//			pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	//			// テクスチャ頂点情報の設定
-	//			pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	//		}
-	//	}
-	//}
-
-	//for (int nCnt = 0; nCnt < MAX_MWALL; nCnt++, pVtx += 9)
-	//{
-	//	// ポリゴンの各頂点座標
-	//	pVtx[0].pos = D3DXVECTOR3(g_aMeshwall[nCnt].pos.x - 100.0f, g_aMeshwall[nCnt].pos.y + 200.0f, g_aMeshwall[nCnt].pos.z);
-	//	pVtx[1].pos = D3DXVECTOR3(g_aMeshwall[nCnt].pos.x, g_aMeshwall[nCnt].pos.y + 200.0f, g_aMeshwall[nCnt].pos.z);
-	//	pVtx[2].pos = D3DXVECTOR3(g_aMeshwall[nCnt].pos.x + 100.0f, g_aMeshwall[nCnt].pos.y + 200.0f, g_aMeshwall[nCnt].pos.z);
-	//	pVtx[3].pos = D3DXVECTOR3(g_aMeshwall[nCnt].pos.x -100.0f, g_aMeshwall[nCnt].pos.y + 100.0f, g_aMeshwall[nCnt].pos.z);
-	//	pVtx[4].pos = D3DXVECTOR3(g_aMeshwall[nCnt].pos.x, g_aMeshwall[nCnt].pos.y + 100.0f, g_aMeshwall[nCnt].pos.z);
-	//	pVtx[5].pos = D3DXVECTOR3(g_aMeshwall[nCnt].pos.x + 100.0f, g_aMeshwall[nCnt].pos.y + 100.0f, g_aMeshwall[nCnt].pos.z);
-	//	pVtx[6].pos = D3DXVECTOR3(g_aMeshwall[nCnt].pos.x - 100.0f, g_aMeshwall[nCnt].pos.y, g_aMeshwall[nCnt].pos.z);
-	//	pVtx[7].pos = D3DXVECTOR3(g_aMeshwall[nCnt].pos.x, g_aMeshwall[nCnt].pos.y,	g_aMeshwall[nCnt].pos.z);
-	//	pVtx[8].pos = D3DXVECTOR3(g_aMeshwall[nCnt].pos.x + 100.0f, g_aMeshwall[nCnt].pos.y, g_aMeshwall[nCnt].pos.z);
-
-	//	// 法線ベクトルの設定
-	//	pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	//	pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	//	pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	//	pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	//	pVtx[4].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	//	pVtx[5].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	//	pVtx[6].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	//	pVtx[7].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	//	pVtx[8].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-
-	//	// 各頂点カラーの設定
-	//	pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	//	pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	//	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	//	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	//	pVtx[4].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	//	pVtx[5].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	//	pVtx[6].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	//	pVtx[7].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	//	pVtx[8].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-
-	//	// テクスチャ頂点情報の設定
-	//	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	//	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-	//	pVtx[2].tex = D3DXVECTOR2(2.0f, 0.0f);
-	//	pVtx[3].tex = D3DXVECTOR2(0.0f, 1.0f);
-	//	pVtx[4].tex = D3DXVECTOR2(1.0f, 1.0f);
-	//	pVtx[5].tex = D3DXVECTOR2(2.0f, 1.0f);
-	//	pVtx[6].tex = D3DXVECTOR2(0.0f, 2.0f);
-	//	pVtx[7].tex = D3DXVECTOR2(1.0f, 2.0f);
-	//	pVtx[8].tex = D3DXVECTOR2(2.0f, 2.0f);
-	//}
-
-	// 頂点バッファをアンロックする
-	//g_pVtxBuffMeshwall->Unlock();
-
-	//// インデックスバッファの生成
-	//pDevice->CreateIndexBuffer(
-	//	sizeof(WORD) * WALL_POINT_MAX * MAX_MWALL,
-	//	D3DUSAGE_WRITEONLY,
-	//	D3DFMT_INDEX16,
-	//	D3DPOOL_MANAGED,
-	//	&g_pIdxBuffMeshwall,
-	//	NULL);
-
-	// 壁の設定
-	//SetMeshwall(D3DXVECTOR3(0.0f, 150.0f, 500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f, 20, 4);
-	////SetMeshwall(D3DXVECTOR3(0.0f, 50.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f, 8, 2);
-	//SetMeshwall(D3DXVECTOR3(500.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f, 0.0f), 50.0f, 50.0f, 20, 4);
-	//SetMeshwall(D3DXVECTOR3(0.0f, 100.0f, -500.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), 50.0f, 50.0f, 20, 4);
-	//SetMeshwall(D3DXVECTOR3(-500.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / -2.0f, 0.0f), 50.0f, 50.0f, 20, 4);
 
 	return S_OK;
 }
