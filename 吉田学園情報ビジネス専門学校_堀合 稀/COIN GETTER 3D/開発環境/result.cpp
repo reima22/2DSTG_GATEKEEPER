@@ -291,8 +291,6 @@ void UpdateResult(void)
 	int nScore = GetScore();	// スコアの取得
 	int aNumber[MAX_SCORE];
 	int nData = (int)pow(10, MAX_SCORE - 1);
-	//XINPUT_STATE state;
-	//XInputGetState(0, &state);
 
 	// フェードの取得
 	fade = GetFade();

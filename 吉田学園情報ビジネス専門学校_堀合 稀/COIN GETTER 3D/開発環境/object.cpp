@@ -28,10 +28,21 @@ HRESULT InitObject(void)
 	// ローカル変数宣言
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();		// デバイスの取得
 	ObjectType *pObjectType = &g_object.objectType[0];
+	ObjectInfo *pObjectInfo = &g_object.objectInfo[0];
 	int nNumVtx[MAX_OBJECT_TYPE];	// 頂点数
 	DWORD sizeFVF[MAX_OBJECT_TYPE];	// 頂点フォーマットのサイズ
 
 	g_object.nSetObject = 0;
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++, pObjectInfo++)
+	{
+		pObjectInfo->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		pObjectInfo->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		pObjectInfo->nIdx = 0;
+		pObjectInfo->vtxMinObject = VTX_MIN;
+		pObjectInfo->vtxMaxObject = VTX_MAX;
+		pObjectInfo->bUse = false;
+	}
 
 	LoadObject();
 

@@ -5,6 +5,7 @@
 //
 //==============================================================================
 #include "pause.h"
+#include "pause_logo.h"
 #include "input.h"
 #include "sound.h"
 #include "fade.h"
@@ -219,6 +220,9 @@ HRESULT InitPause(void)
 	// 頂点バッファをアンロックする
 	g_pVtxBuffPause->Unlock();
 
+	// ロゴの初期化処理
+	InitPauseLogo();
+
 	return S_OK;
 }
 
@@ -243,6 +247,9 @@ void UninitPause(void)
 			g_pTexturePause[nCnt] = NULL;
 		}
 	}
+
+	// ロゴの終了処理
+	UninitPauseLogo();
 }
 
 //==============================================================================
@@ -414,6 +421,9 @@ void UpdatePause(void)
 
 	// 頂点バッファをアンロックする
 	g_pVtxBuffPause->Unlock();
+
+	// ロゴの更新処理
+	UpdatePauseLogo();
 }
 
 //==============================================================================
@@ -455,6 +465,9 @@ void DrawPause(void)
 			nCnt * 4,				// 描画を開始する頂点インデックス
 			2);						// 描画するプリミティブ数
 	}
+
+	// ロゴの描画処理
+	DrawPauseLogo();
 }
 
 //==============================================================================

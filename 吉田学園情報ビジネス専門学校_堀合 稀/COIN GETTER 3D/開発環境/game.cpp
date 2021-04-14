@@ -7,12 +7,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "game.h"
 #include "player.h"
-#include "polygon.h"
 #include "camera.h"
 #include "light.h"
 #include "input.h"
 #include "shadow.h"
-#include "wall.h"
 #include "billboard.h"
 #include "meshfield.h"
 #include "meshwall.h"
@@ -86,15 +84,9 @@ HRESULT InitGame(void)
 	InitObject();
 
 	InitEnemy();
-	
-	// ポリゴンの初期化処理
-	InitPolygon();
 
 	// メッシュフィールドの初期化
 	InitMeshfield();
-
-	// 壁の初期化処理
-	InitWall();
 
 	// メッシュ壁の初期化処理
 	InitMeshwall();
@@ -146,8 +138,6 @@ void UninitGame(void)
 	UninitLight();
 
 	// ポリゴンの終了処理
-	UninitPolygon();
-
 	UninitObject();
 
 	UninitItem();
@@ -155,8 +145,6 @@ void UninitGame(void)
 	// メッシュフィールドの終了処理
 	UninitMeshfield();
 
-	// 壁の終了処理
-	UninitWall();
 
 	// メッシュ壁の終了処理
 	UninitMeshwall();
@@ -307,14 +295,8 @@ void UpdateGame(void)
 				// プレイヤーの更新処理
 				UpdatePlayer();
 
-				// ポリゴンの更新処理
-				UpdatePolygon();
-
 				// メッシュフィールドの更新処理
 				UpdateMeshfield();
-
-				// 壁の更新処理
-				UpdateWall();
 
 				//// メッシュ壁の更新処理
 				//UpdateMeshwall();
@@ -368,17 +350,12 @@ void DrawGame(void)
 {
 	//// 背景ポリゴンの描画処理
 	//DrawBg();
+
 	//// 敵の描画処理
 	DrawEnemy();
 
-	// ポリゴンの描画処理
-	DrawPolygon();
-
 	// メッシュフィールドの描画処理
 	DrawMeshfield();
-
-	// 壁の描画処理
-	DrawWall();
 
 	// メッシュ壁の描画処理
 	DrawMeshwall();
