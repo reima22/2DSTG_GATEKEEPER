@@ -1,0 +1,22 @@
+# コメント
+ # 1
+	いくつかの弾道パターンもあって一定の面白さを出せていると思います。
+
+ # 2
+	malloc/freeを覚えてENEMY g_aEnemy[MAX_ENEMY];を可変長で保持する。
+	実際のゲームでは担当者毎にグローバル変数を使っていることはなく
+	メモリ管理されたものから何にどれくらい使うかを決めたりすることが多いため。
+
+ # 3
+	if (g_pVtxBuffEffect != NULL)
+	{
+		g_pVtxBuffEffect->Release();
+		g_pVtxBuffEffect = NULL;
+	}
+		↓
+	#define SAFE_RELEASE(a)	{ if( a ){ a->Release(); a = NULL; } }
+
+ # 4
+	void UpdatePlayer(void)
+		switch (Player.state)
+	プレイヤの状態は基本増えてく一方なので関数にした方がベター
