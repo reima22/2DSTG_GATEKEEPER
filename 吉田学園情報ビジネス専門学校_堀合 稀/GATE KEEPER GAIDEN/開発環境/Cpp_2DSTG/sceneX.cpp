@@ -1,6 +1,6 @@
 //==============================================================================
 //
-// モデルX描画処理〔sceneX.cpp〕
+// 3DモデルX描画処理〔sceneX.cpp〕
 // Author : Mare Horiai
 //
 //==============================================================================
@@ -29,7 +29,7 @@ CSceneX::~CSceneX()
 }
 
 //==============================================================================
-// ポリゴン描画の初期化処理
+// 3Dモデル描画の初期化処理
 //==============================================================================
 HRESULT CSceneX::Init(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rotMove,int nType)
 {
@@ -53,20 +53,28 @@ HRESULT CSceneX::Init(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rotMove,int
 		&m_nNumMat,
 		&m_pMesh);
 
+	// テクスチャの動的確保(マテリアルの数)
+	m_pTexture = new LPDIRECT3DTEXTURE9[m_nNumMat];
+
 	D3DXMATERIAL *pMat;		// マテリアルへのポインタ
+
 	pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
 
 	for (int nCntMat = 0; nCntMat < (int)m_nNumMat; nCntMat++)
 	{
 		if (pMat[nCntMat].pTextureFilename != NULL)
-		{
-			m_pTexture = CTexture::BindTex3D(pMat[nCntMat].pTextureFilename);
+		{// テクスチャあり
+			m_pTexture[nCntMat] = CTexture::BindTex3D(pMat[nCntMat].pTextureFilename);
 
 			// ファイル名を使用してテクスチャを読み込む
 			D3DXCreateTextureFromFile(
 				pDevice,
 				pMat[nCntMat].pTextureFilename,
-				&m_pTexture);
+				&m_pTexture[nCntMat]);
+		}
+		else
+		{// テクスチャの割り当てがない
+			m_pTexture[nCntMat] = NULL;
 		}
 	}
 
@@ -74,27 +82,36 @@ HRESULT CSceneX::Init(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rotMove,int
 }
 
 //==============================================================================
-// ポリゴン描画の終了処理
+// 3Dモデル描画の終了処理
 //==============================================================================
 void CSceneX::Uninit(void)
 {
+	// メッシュポインタの破棄
 	if (m_pMesh != NULL)
 	{
 		m_pMesh->Release();
 		m_pMesh = NULL;
 	}
 
+	// マテリアルバッファの破棄
 	if (m_pBuffMat != NULL)
 	{
 		m_pBuffMat->Release();
 		m_pBuffMat = NULL;
 	}
 
+	// テクスチャの破棄
+	if (m_pTexture != NULL)
+	{
+		delete[] m_pTexture;
+		m_pTexture = NULL;
+	}
+
 	CScene3D::Uninit();
 }
 
 //==============================================================================
-// ポリゴン描画の更新処理
+// 3Dモデル描画の更新処理
 //==============================================================================
 void CSceneX::Update(void)
 {
@@ -146,23 +163,23 @@ void CSceneX::Update(void)
 }
 
 //==============================================================================
-// ポリゴン描画の描画処理
+// 3Dモデル描画の描画処理
 //==============================================================================
 void CSceneX::Draw(void)
 {
 	// ローカル変数宣言
 	LPDIRECT3DDEVICE9 pDevice =CManager::GetRenderer()->GetDevice();	// デバイスの取得
-	D3DXMATRIX mtxRot, mtxTrans;				// 計算用マトリックス
-	D3DMATERIAL9 matDef;						// 現在のマテリアル保存用
-	D3DXMATERIAL *pMat;							// マテリアルデータへのポインタ
+	D3DXMATRIX mtxRot, mtxTrans;										// 計算用マトリックス
+	D3DMATERIAL9 matDef;												// 現在のマテリアル保存用
+	D3DXMATERIAL *pMat;													// マテリアルデータへのポインタ
 
 	// 位置と向き
 	D3DXVECTOR3 pos = CScene3D::GetPosition();
 	D3DXVECTOR3 rot = CScene3D::GetRot();
 
 	// Zテストの更新
-	//pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
-	//pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -189,14 +206,13 @@ void CSceneX::Draw(void)
 		// マテリアルの設定
 		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
-		if (m_pTexture != NULL)
+		// テクスチャの設定
+		if (m_pTexture[nCntMat] != NULL)
 		{
-			// テクスチャの設定
-			pDevice->SetTexture(0, m_pTexture);
+			pDevice->SetTexture(0, m_pTexture[nCntMat]);
 		}
 		else
 		{
-			// テクスチャの設定
 			pDevice->SetTexture(0, NULL);
 		}
 
@@ -208,8 +224,8 @@ void CSceneX::Draw(void)
 	pDevice->SetMaterial(&matDef);
 
 	// 元に戻す
-	//pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-	//pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 }
 
 //==============================================================================
@@ -217,9 +233,11 @@ void CSceneX::Draw(void)
 //==============================================================================
 CSceneX *CSceneX::Create(D3DXVECTOR3 pos,D3DXVECTOR3 move, D3DXVECTOR3 rotMove,int nType)
 {
+	// ローカル変数宣言
 	CSceneX *pSceneX;
-	pSceneX = new CSceneX;
+	pSceneX = new CSceneX;	// シーンXのインスタンス
 
+	// 初期化
 	if (pSceneX != NULL)
 	{
 		pSceneX->Init(pos,move,rotMove,nType);

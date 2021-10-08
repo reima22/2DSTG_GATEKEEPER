@@ -500,7 +500,8 @@ void CEnemy::MoveMother(D3DXVECTOR3 pos)
 		if (pos.y >= MOTHER_POS_Y)
 		{
 			// ó‘Ô‚Ì•Ï‰»
-			m_Move = D3DXVECTOR3(MOTHER_MOVE_0, 0.0f, 0.0f);
+			m_Move = D3DXVECTOR3(MOTHER_MOVE_0, 0.0f, 0.0f);			
+			CEnemyFormation::SetParamReset();	// ‘à—ñî•ñ‚ÌƒŠƒZƒbƒg
 			CEnemyMother::SetMotherState(CEnemyMother::MOTHER_STATE_ACTIVE);
 		}
 		break;

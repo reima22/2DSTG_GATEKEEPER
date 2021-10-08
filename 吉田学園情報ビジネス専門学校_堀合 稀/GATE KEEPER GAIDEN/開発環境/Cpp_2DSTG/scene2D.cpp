@@ -95,12 +95,6 @@ HRESULT CScene2D::Init(D3DXVECTOR3 pos)
 	pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
-	// テクスチャ頂点情報の設定
-	//pVtx[0].tex = D3DXVECTOR2(0.0f, 1.0f);
-	//pVtx[1].tex = D3DXVECTOR2(0.0f, 0.0f);
-	//pVtx[2].tex = D3DXVECTOR2(1.0f, 1.0f);
-	//pVtx[3].tex = D3DXVECTOR2(1.0f, 0.0f);
-
 	// 頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
 
@@ -197,14 +191,6 @@ void CScene2D::SetPosition(D3DXVECTOR3 pos)
 		m_pos = pos;
 	}
 }
-
-////==============================================================================
-//// 位置情報の取得
-////==============================================================================
-//D3DXVECTOR3 CScene2D::GetPosition(void)
-//{
-//	return m_pos;
-//}
 
 //==============================================================================
 // テクスチャの割り当て

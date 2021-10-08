@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// モデルXの設定 [sceneX.h]
+// 3Dモデルの設定 [sceneX.h]
 // Author : Mare Horiai
 //
 //============================================================================= 
@@ -40,7 +40,8 @@ private:
 	LPD3DXBUFFER m_pBuffMat;		// マテリアルバッファ
 	DWORD m_nNumMat;				// マテリアル数
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス
-	LPDIRECT3DTEXTURE9 m_pTexture;	// テクスチャ情報
+	LPDIRECT3DTEXTURE9 *m_pTexture;	// テクスチャダブルポインタ
+	//LPDIRECT3DTEXTURE9 m_pTexture;	// テクスチャ情報
 	X_TYPE m_type;					// 種類
 };
 #endif

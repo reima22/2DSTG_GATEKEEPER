@@ -35,13 +35,6 @@ CScene3D::~CScene3D()
 //==============================================================================
 HRESULT CScene3D::Init(D3DXVECTOR3 pos)
 {
-	//// ローカル変数宣言
-	//VERTEX_3D *pVtx;
-
-	//// デバイスの取得
-	//LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-
 	return S_OK;
 }
 

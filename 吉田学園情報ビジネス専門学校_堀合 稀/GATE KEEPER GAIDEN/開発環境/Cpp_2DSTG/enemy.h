@@ -173,6 +173,8 @@ public:
 	// 一時中断の取得
 	static bool GetLock(void) { return m_bLock; }
 
+	static void SetParamReset(void) { m_bSetParam = false; }
+
 private:
 	static int m_nFormNumInterval;		// 編成隊内の個別敵毎の生成カウント
 	static int m_nFormSetInterval;		// 編隊生成のインターバル

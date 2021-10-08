@@ -1,76 +1,12 @@
-﻿  bg.cpp
-  bullet.cpp
-  bullet_UI.cpp
-bullet_UI.cpp(40): warning C4800: 'int': ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
-bullet_UI.cpp(41): warning C4800: 'int': ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
-bullet_UI.cpp(42): warning C4800: 'int': ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
-  camera.cpp
-  caution.cpp
-  character.cpp
-  debugproc.cpp
-  defeat.cpp
-  effect.cpp
-  effect_on.cpp
+﻿  character.cpp
   enemy.cpp
-  explosion.cpp
-  fade.cpp
   game.cpp
-  gamepad.cpp
-  input.cpp
-  invasion.cpp
-  item.cpp
-  life.cpp
-  light.cpp
-  コンパイル中...
-  line.cpp
-  main.cpp
   manager.cpp
-  message.cpp
-  message_text.cpp
-  message_window.cpp
-  model.cpp
-  number.cpp
-  pause.cpp
-  pause_base.cpp
-  pause_bg.cpp
-  pause_select.cpp
   player.cpp
-  polygon.cpp
-  ranking.cpp
-  ranking_logo.cpp
-  ranking_rank.cpp
-  ranking_score.cpp
-  renderer.cpp
-  result.cpp
-  コンパイル中...
-  result_logo.cpp
-  result_score.cpp
-  scene.cpp
-  scene2D.cpp
-  scene3D.cpp
-  sceneX.cpp
-  score.cpp
-  sound.cpp
-  stock.cpp
-  textdata.cpp
-  textdata_enemy.cpp
-  textdata_player.cpp
-  textdata_ranking.cpp
-  textdata_system.cpp
-  texture.cpp
-  title.cpp
-  title_difficulty.cpp
-  title_enter.cpp
-  title_logo.cpp
-  tutorial.cpp
-  コンパイル中...
-  tutorial_page.cpp
-  UI.cpp
-  window_effect.cpp
   コード生成しています。
-  690 of 693 functions (99.6%) were compiled, the rest were copied from previous compilation.
-    47 functions were new in current compilation
+  3 of 694 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   コード生成が終了しました。
-  Cpp_2DSTG.vcxproj -> C:\Users\student\Desktop\PC_047_user\2年生\C++制作\Cpp_2DSTG_16\Cpp_2DSTG.exe
-  Cpp_2DSTG.vcxproj -> C:\Users\student\Desktop\PC_047_user\2年生\C++制作\Cpp_2DSTG_16\Cpp_2DSTG.pdb (Full PDB)
+  Cpp_2DSTG.vcxproj -> C:\Users\student\Desktop\PC_047_user\2年生\C++制作\Cpp_2DSTG_17\Cpp_2DSTG.exe
+  Cpp_2DSTG.vcxproj -> C:\Users\student\Desktop\PC_047_user\2年生\C++制作\Cpp_2DSTG_17\Cpp_2DSTG.pdb (Full PDB)

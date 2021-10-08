@@ -50,7 +50,6 @@ private:
 	D3DXVECTOR3 m_pos;								// 位置
 	D3DXVECTOR3 m_rot;								// 向き
 	D3DXVECTOR3 m_size;								// 大きさ
-	LPDIRECT3DTEXTURE9 m_pTexture = NULL;			// テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff = NULL;		// バッファへのポインタ
 	D3DXMATRIX m_mtxWorld;							// ワールドマトリックス
 };
