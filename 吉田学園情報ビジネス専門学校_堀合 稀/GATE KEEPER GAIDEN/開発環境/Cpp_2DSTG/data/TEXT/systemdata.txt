@@ -1,0 +1,11 @@
+SYSTEMDATA_START
+	DEFEAT_EASY = 70			# 終了撃破数イージー
+	DEFEAT_NORMAL = 100			# 終了撃破数ノーマル
+	DEFEAT_HARD = 150			# 終了撃破数ハード
+	INVASION_EASY = 30			# 終了侵入数イージー
+	INVASION_NORMAL = 20		# 終了侵入数ノーマル
+	INVASION_HARD = 10			# 終了侵入数ハード
+	ITEMSET_COUNT_EASY = 10		# 回復アイテム設定カウントイージー
+	ITEMSET_COUNT_NORMAL = 15	# 回復アイテム設定カウントノーマル
+	ITEMSET_COUNT_HARD = 25		# 回復アイテム設定カウントハード
+SYSTEMDATA_END
