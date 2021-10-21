@@ -1,0 +1,142 @@
+#==============================================================================
+#
+# 『選択画面配置』スクリプトファイル [select.txt]
+# Author : Mare Horiai
+#
+#==============================================================================
+SCRIPT
+
+NUM_SELECT = 12		# 読み込むテクスチャ数
+
+#------------------------------------------------------------------------------
+# ファイル名
+#------------------------------------------------------------------------------
+SELECT_FILENAME = data/TEXTURE/select/select_bg.jpg			# [0]背景
+SELECT_FILENAME = data/TEXTURE/select/select_mode.png		# [1]モードセレクトタイトル
+SELECT_FILENAME = data/TEXTURE/select/select_chara.png		# [2]キャラセレクトタイトル
+SELECT_FILENAME = data/TEXTURE/select/select_stage.png		# [3]ステージセレクトタイトル
+SELECT_FILENAME = data/TEXTURE/select/select_mode0.png		# [4]モード選択タブ0
+SELECT_FILENAME = data/TEXTURE/select/select_mode1.png		# [5]モード選択タブ1
+SELECT_FILENAME = data/TEXTURE/select/select_barance.png	# [6]キャラ選択タブ0
+SELECT_FILENAME = data/TEXTURE/select/select_jump.png		# [7]キャラ選択タブ1
+SELECT_FILENAME = data/TEXTURE/select/select_speed.png		# [8]キャラ選択タブ2
+SELECT_FILENAME = data/TEXTURE/select/select_stage0.png		# [9]ステージ選択タブ0
+SELECT_FILENAME = data/TEXTURE/select/select_stage1.png		# [10]ステージ選択タブ1
+SELECT_FILENAME = data/TEXTURE/select/select_stage2.png		# [11]ステージ選択タブ2
+
+#------------------------------------------------------------------------------
+# 配置情報
+#------------------------------------------------------------------------------
+SELECT_SET
+
+	POLYGONSET				# 背景
+		TEXTYPE = 0
+		SELECTTYPE = 0
+		POS = 0.0 0.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 1280.0
+		HEIGHT = 720.0
+	END_POLYGONSET
+	
+	POLYGONSET				# モードセレクトタイトル
+		TEXTYPE = 1
+		SELECTTYPE = 1
+		POS = 160.0 10.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 960.0
+		HEIGHT = 120.0
+	END_POLYGONSET
+	
+	POLYGONSET				# モード1
+		TEXTYPE = 4
+		SELECTTYPE = 1
+		POS = 240.0 220.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 220.0
+		HEIGHT = 440.0
+	END_POLYGONSET
+	
+	POLYGONSET				# モード2
+		TEXTYPE = 5
+		SELECTTYPE = 1
+		POS = 820.0 220.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 220.0
+		HEIGHT = 440.0
+	END_POLYGONSET
+	
+	POLYGONSET				# キャラセレクトタイトル
+		TEXTYPE = 2
+		SELECTTYPE = 2
+		POS = 160.0 10.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 960.0
+		HEIGHT = 120.0
+	END_POLYGONSET
+	
+	POLYGONSET				# キャラ1
+		TEXTYPE = 6
+		SELECTTYPE = 2
+		POS = 240.0 220.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 220.0
+		HEIGHT = 440.0
+	END_POLYGONSET
+	
+	POLYGONSET				# キャラ2
+		TEXTYPE = 7
+		SELECTTYPE = 2
+		POS = 530.0 220.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 220.0
+		HEIGHT = 440.0
+	END_POLYGONSET
+	
+	POLYGONSET				# キャラ3
+		TEXTYPE = 8
+		SELECTTYPE = 2
+		POS = 820.0 220.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 220.0
+		HEIGHT = 440.0
+	END_POLYGONSET
+	
+	POLYGONSET				# ステージセレクトタイトル
+		TEXTYPE = 3
+		SELECTTYPE = 3
+		POS = 160.0 10.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 960.0
+		HEIGHT = 120.0
+	END_POLYGONSET
+	
+	POLYGONSET				# ステージ1
+		TEXTYPE = 9
+		SELECTTYPE = 3
+		POS = 240.0 220.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 220.0
+		HEIGHT = 440.0
+	END_POLYGONSET
+
+	POLYGONSET				# ステージ2
+		TEXTYPE = 10
+		SELECTTYPE = 3
+		POS = 530.0 220.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 220.0
+		HEIGHT = 440.0
+	END_POLYGONSET
+	
+	POLYGONSET				# ステージ3
+		TEXTYPE = 11
+		SELECTTYPE = 3
+		POS = 820.0 220.0
+		COL = 1.0 1.0 1.0 1.0
+		WIDTH = 220.0
+		HEIGHT = 440.0
+	END_POLYGONSET
+	
+END_SELECT_SET
+	
+END_SCRIPT

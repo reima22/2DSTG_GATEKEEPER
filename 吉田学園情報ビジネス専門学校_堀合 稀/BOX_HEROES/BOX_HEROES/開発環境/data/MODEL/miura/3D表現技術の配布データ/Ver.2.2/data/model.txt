@@ -1,0 +1,1286 @@
+#==============================================================================
+#
+# 『モデルビューワ』スクリプトファイル [model.txt]
+# Author : AKIRA TANAKA
+#
+#==============================================================================
+SCRIPT			# この行は絶対消さないこと！
+
+#------------------------------------------------------------------------------
+# 読み込むテクスチャ数
+#------------------------------------------------------------------------------
+NUM_TEXTURE = 9
+
+#------------------------------------------------------------------------------
+# 読み込むテクスチャファイル名
+#------------------------------------------------------------------------------
+TEXTURE_FILENAME = data/TEXTURE/field000.jpg		# [0]地面テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/field001.jpg		# [1]地面テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/field002.jpg		# [2]地面テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/field004.jpg		# [3]地面テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/sea000.jpg			# [4]海テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/sea000.png			# [5]海テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/nightsky.jpg		# [6]空テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/mountain002.png		# [7]山テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/rock000.png			# [8]岩テクスチャ
+
+#------------------------------------------------------------------------------
+# 読み込むモデル数
+#------------------------------------------------------------------------------
+NUM_MODEL = 21
+
+#------------------------------------------------------------------------------
+# 読み込むモデルファイル名
+#------------------------------------------------------------------------------
+MODEL_FILENAME = data/MODEL/土台(段差).x			# [0]段差
+MODEL_FILENAME = data/MODEL/教会2.x					# [1]教会
+MODEL_FILENAME = data/MODEL/house001.x				# [2]家(使いまわし) 髙岩
+MODEL_FILENAME = data/MODEL/house002.x				# [3]家(使いまわし) 三浦
+MODEL_FILENAME = data/MODEL/house003.x				# [4]家 高橋
+MODEL_FILENAME = data/MODEL/house004.x				# [5]家(使いまわし) 巴
+MODEL_FILENAME = data/MODEL/house011.x				# [6]家(大) 高橋
+MODEL_FILENAME = data/MODEL/house012.x				# [7]家(大) 三浦
+MODEL_FILENAME = data/MODEL/grass001.x				# [8]草 巴
+MODEL_FILENAME = data/MODEL/smallstone001.x			# [9]石、砂利 巴
+MODEL_FILENAME = data/MODEL/well001.x				# [10]井戸 巴
+MODEL_FILENAME = data/MODEL/fence001.x				# [11]フェンス 余
+MODEL_FILENAME = data/MODEL/fence002.x				# [12]フェンス 余
+MODEL_FILENAME = data/MODEL/fence003.x				# [13]フェンス 余
+MODEL_FILENAME = data/MODEL/tree001.x				# [14]木 余
+MODEL_FILENAME = data/MODEL/wall000.x				# [15]壁(崩れ) 髙橋
+MODEL_FILENAME = data/MODEL/wall001.x				# [16]壁(きれい) 髙橋
+MODEL_FILENAME = data/MODEL/grave.x				    # [17]墓 三浦
+MODEL_FILENAME = data/MODEL/grave2.x				# [18]墓 三浦
+MODEL_FILENAME = data/MODEL/haka_takahashi.x		# [19]墓 高橋
+MODEL_FILENAME = data/MODEL/Terrain.x		# [20]地形　余
+
+
+#------------------------------------------------------------------------------
+# カメラ情報
+#------------------------------------------------------------------------------
+CAMERASET
+	POS = 0.0 240.0 -280.0			# 視点
+	REF = 0.0 160.0 0.0				# 注視点
+END_CAMERASET
+
+#------------------------------------------------------------------------------
+# ライト情報
+#------------------------------------------------------------------------------
+LIGHTSET
+	DIRECTION = -0.63 -0.53 -0.57		# 方向
+	DIFFUSE = 0.80 0.90 1.00			# 拡散光
+END_LIGHTSET
+
+LIGHTSET
+	DIRECTION = -0.18 0.88 -0.44	# 方向
+	DIFFUSE = 0.30 0.40 1.00		# 拡散光
+END_LIGHTSET
+
+LIGHTSET
+	DIRECTION = 0.89 -0.11 0.44		# 方向
+	DIFFUSE = 0.15 0.15 0.15		# 拡散光
+END_LIGHTSET
+
+#------------------------------------------------------------------------------
+# 表示する空の配置情報
+#------------------------------------------------------------------------------
+SKYSET
+	TEXTYPE = 6
+	MOVE = 0.00002
+END_SKYSET
+
+#------------------------------------------------------------------------------
+# 表示する山の配置情報
+#------------------------------------------------------------------------------
+MOUNTAINSET
+	TEXTYPE = 7
+END_MOUNTAINSET
+
+#------------------------------------------------------------------------------
+# 表示する地面の配置情報
+#------------------------------------------------------------------------------
+# 地面 --------------------
+FIELDSET
+	TEXTYPE = 1
+	POS = 0 0 400
+	ROT = 0 0 0
+	BLOCK = 36 14
+	SIZE = 40 40
+END_FIELDSET
+
+FIELDSET
+	TEXTYPE = 1
+	POS = -900 0 -240
+	ROT = 0 0 0
+	BLOCK = 5 26
+	SIZE = 40 40
+END_FIELDSET
+
+FIELDSET
+	TEXTYPE = 1
+	POS = 900 0 -240
+	ROT = 0 0 0
+	BLOCK = 5 26
+	SIZE = 40 40
+END_FIELDSET
+
+FIELDSET
+	TEXTYPE = 1
+	POS = -400 0 -260
+	ROT = 0 0 0
+	BLOCK = 20 20
+	SIZE = 40 40
+END_FIELDSET
+
+FIELDSET
+	TEXTYPE = 1
+	POS = 400 0 -260
+	ROT = 0 0 0
+	BLOCK = 20 20
+	SIZE = 40 40
+END_FIELDSET
+
+# 道 --------------------
+FIELDSET
+	TEXTYPE = 3
+	POS = 0 0 0
+	ROT = 0 0 0
+	BLOCK = 40 2
+	SIZE = 40 40
+END_FIELDSET
+
+FIELDSET
+	TEXTYPE = 3
+	POS = 0 0 -260
+	ROT = 0 0 0
+	BLOCK = 40 2
+	SIZE = 40 40
+END_FIELDSET
+
+FIELDSET
+	TEXTYPE = 3
+	POS = 0 0 -520
+	ROT = 0 0 0
+	BLOCK = 40 2
+	SIZE = 40 40
+END_FIELDSET
+
+FIELDSET
+	TEXTYPE = 3
+	POS = 0 0 -320
+	ROT = 0 0 0
+	BLOCK = 2 16
+	SIZE = 40 40
+END_FIELDSET
+
+# 海 --------------------
+FIELDSET
+	TEXTYPE = 4
+	POS = 0 -20 0
+	ROT = 0 0 0
+	BLOCK = 32 32
+	SIZE = 240 240
+	MOVE = 0.0 -0.001
+END_FIELDSET
+
+FIELDSET
+	TEXTYPE = 5
+	POS = 0 -20 0
+	ROT = 0 0 0
+	BLOCK = 32 32
+	SIZE = 240 240
+	MOVE = 0.001 -0.0005
+END_FIELDSET
+#------------------------------------------------------------------------------
+# 表示するモデルの配置情報
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# 段差(0)
+#------------------------------------------------------------------------------
+MODELSET
+	TYPE = 0
+	POS = -350 0 450
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 0
+	POS = 200 0 450
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 0
+	POS = 750 0 450
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 0
+	POS = 760 0 -50
+	ROT = 0 -90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 0
+	POS = 760 0 -600
+	ROT = 0 -90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 0
+	POS = -760 0 150
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 0
+	POS = -760 0 -400
+	ROT = 0 90 0
+END_MODELSET
+
+#------------------------------------------------------------------------------
+# 井戸 (10)
+#------------------------------------------------------------------------------
+MODELSET
+	TYPE = 10
+	POS = 100 0 150
+	ROT = 0 90 0
+END_MODELSET
+
+#------------------------------------------------------------------------------
+# フェンス(11 - 13)
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+# 壁 (15.16)
+#------------------------------------------------------------------------------
+MODELSET
+	TYPE = 16
+	POS = -630 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = -580 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = -530 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = -480 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 16
+	POS = -430 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 16
+	POS = -380 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = -330 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = -280 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = -230 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = -180 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = -130 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = -80 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 620 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 570 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 520 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 470 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 16
+	POS = 420 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 16
+	POS = 370 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 320 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 270 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 220 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 170 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 120 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 16
+	POS = 70 0 -660
+	ROT = 0 180 0
+END_MODELSET
+
+
+#------------------------------------------------------------------------------
+# 教会(1)
+#------------------------------------------------------------------------------
+MODELSET
+	TYPE = 1
+	POS = 0 0 200
+	ROT = 0 0 0
+END_MODELSET
+
+#------------------------------------------------------------------------------
+# 家(2 - 6)
+#------------------------------------------------------------------------------
+MODELSET
+	TYPE = 2
+	POS = -200 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -280 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -360 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -440 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -200 0 -180
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -280 0 -180
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -360 0 -180
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -440 0 -180
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -200 0 -340
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -280 0 -340
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -360 0 -340
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -440 0 -340
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -200 0 -440
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -280 0 -440
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -360 0 -440
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -440 0 -440
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -200 0 -600
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -280 0 -600
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -360 0 -600
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -440 0 -600
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 200 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 280 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 360 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 440 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 200 0 -180
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 280 0 -180
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 360 0 -180
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 440 0 -180
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 200 0 -340
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 280 0 -340
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 360 0 -340
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 440 0 -340
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 200 0 -440
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 280 0 -440
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 360 0 -440
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 440 0 -440
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 200 0 -600
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 280 0 -600
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 360 0 -600
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 440 0 -600
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = -100 0 -80
+	ROT = 0 -90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = -100 0 -180
+	ROT = 0 -90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = -100 0 -340
+	ROT = 0 -90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = -100 0 -440
+	ROT = 0 -90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = -100 0 -600
+	ROT = 0 -90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = 100 0 -80
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = 100 0 -180
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = 100 0 -340
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = 100 0 -440
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 3
+	POS = 100 0 -600
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 520 0 -80
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 520 0 -180
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 520 0 -340
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 520 0 -440
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 520 0 -600
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = -520 0 -80
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = -520 0 -180
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = -520 0 -340
+	ROT = 0 180 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = -520 0 -440
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = -520 0 -600
+	ROT = 0 180 0
+END_MODELSET
+
+#------------------------------------------------------------------------------
+# 草と石(8.9)
+#------------------------------------------------------------------------------
+#左上----------------------------------------------------
+MODELSET
+	TYPE = 8
+	POS = -100 0 -135
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -190 0 -135
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -220 0 -135
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -280 0 -135
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -400 0 -135
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -550 0 -135
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -150 0 -95
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -240 0 -65
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -240 0 -95
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -320 0 -95
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -400 0 -95
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -480 0 -65
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -480 0 -95
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -150 0 -165
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -240 0 -195
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -320 0 -165
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -400 0 -165
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -480 0 -165
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -480 0 -195
+	ROT = 0 0 0
+END_MODELSET
+
+#右上--------------------------------------------------------
+MODELSET
+	TYPE = 8
+	POS = 100 0 -135
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 190 0 -135
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 220 0 -135
+	ROT = 0 90 0
+END_MODELSET
+MODELSET
+	TYPE = 8
+	POS = 340 0 -135
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 370 0 -135
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 460 0 -135
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 550 0 -135
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 150 0 -65
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 480 0 -65
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 480 0 -95
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 150 0 -165
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 240 0 -195
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 400 0 -165
+	ROT = 0 45 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 8
+	POS = 480 0 -195
+	ROT = 0 0 0
+END_MODELSET
+
+#左下-----------------------------------------------
+MODELSET
+	TYPE = 8
+	POS = -70 0 -390
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -160 0 -390
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -220 0 -390
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -280 0 -390
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -340 0 -390
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -460 0 -390
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -550 0 -390
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -150 0 -325
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -240 0 -325
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -320 0 -355
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -400 0 -355
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -480 0 -325
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -150 0 -455
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -320 0 -425
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = -480 0 -455
+	ROT = 0 0 0
+END_MODELSET
+
+
+#右下-----------------------------------------------------------------
+MODELSET
+	TYPE = 8
+	POS = 70 0 -390
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 190 0 -390
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 250 0 -390
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 370 0 -390
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 460 0 -390
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 520 0 -390
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 150 0 -325
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 150 0 -355
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 240 0 -355
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 400 0 -325
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 480 0 -355
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 150 0 -425
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 320 0 -425
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 400 0 -425
+	ROT = 0 45 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 480 0 -425
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 480 0 -455
+	ROT = 0 0 0
+END_MODELSET
+#-----------------------
+
+#------------------------------------------------------------------------------
+# 墓
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+# 墓
+#------------------------------------------------------------------------------
+
+MODELSET
+	TYPE = 17
+	POS = 10 10 525
+	ROT = 0 0 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 17
+	POS = 60 10 525
+	ROT = 0 0 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 18
+	POS = 110 15 460
+	ROT = 0 90 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 18
+	POS = 160 15 430
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 18
+	POS = 210 15 460
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 18
+	POS = 290 15 455
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 19
+	POS = 400 15 430
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 19
+	POS = 430 15 410
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 19
+	POS = 480 15 430
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 17
+	POS = 550 10 525
+	ROT = 0 0 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 17
+	POS = 600 10 525
+	ROT = 0 0 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 18
+	POS = 650 15 460
+	ROT = 0 90 0
+END_MODELSET
+
+
+MODELSET
+	TYPE = 18
+	POS = 700 15 430
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 18
+	POS = 750 15 460
+	ROT = 0 90 0
+END_MODELSET
+
+MODELSET
+	TYPE = 18
+	POS = 800 15 455
+	ROT = 0 90 0
+END_MODELSET
+
+#------------------------------------------------------------------------------
+# 地形
+#------------------------------------------------------------------------------
+
+MODELSET
+	TYPE = 20
+	POS = 0 0 0
+	ROT = 0 0 0
+END_MODELSET
+
+END_SCRIPT		# この行は絶対消さないこと！

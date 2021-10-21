@@ -1,0 +1,33 @@
+#==============================================================================
+#
+# 『オブジェクトファイル名』スクリプトファイル [select.txt]
+# Author : Mare Horiai
+#
+#==============================================================================
+SCRIPT
+
+NUM_OBJECT = 18		# 読み込むテクスチャ数
+
+#------------------------------------------------------------------------------
+# ファイル名
+#------------------------------------------------------------------------------
+OBJECT_FILENAME = data/MODEL/stage_object/building00.x			# [0]背景
+OBJECT_FILENAME = data/MODEL/stage_object/噴水.x				# [1]モードセレクトタイトル
+OBJECT_FILENAME = data/MODEL/stage_object/tower000.x			# [2]キャラセレクトタイトル
+OBJECT_FILENAME = data/MODEL/stage_object/building03.x			# [3]ステージセレクトタイトル
+OBJECT_FILENAME = data/MODEL/stage_object/building04.x			# [4]モード選択タブ0
+OBJECT_FILENAME = data/MODEL/stage_object/glass000.x			# [5]モード選択タブ1
+OBJECT_FILENAME = data/MODEL/stage_object/tree000.x				# [6]キャラ選択タブ0
+OBJECT_FILENAME = data/MODEL/stage_object/bench.x				# [7]キャラ選択タブ1
+OBJECT_FILENAME = data/MODEL/stage_object/fence101.x			# [8]キャラ選択タブ2
+OBJECT_FILENAME = data/MODEL/stage_object/stone.x				# [9]ステージ選択タブ0
+OBJECT_FILENAME = data/MODEL/stage_object/stone2.x				# [10]ステージ選択タブ1
+OBJECT_FILENAME = data/MODEL/stage_object/tree.x				# [11]ステージ選択タブ2
+OBJECT_FILENAME = data/MODEL/stage_object/container.x			# [12]ステージ選択タブ2
+OBJECT_FILENAME = data/MODEL/stage_object/wilderness_tree.x		# [13]ステージ選択タブ2
+OBJECT_FILENAME = data/MODEL/stage_object/wilderness_stone2.x	# [14]ステージ選択タブ2
+OBJECT_FILENAME = data/MODEL/stage_object/wilderness_stone.x	# [15]
+OBJECT_FILENAME = data/MODEL/stage_object/wilderness_grass.x	# [16]
+OBJECT_FILENAME = data/MODEL/stage_object/wilderness_cactus.x	# [17]
+
+END_SCRIPT

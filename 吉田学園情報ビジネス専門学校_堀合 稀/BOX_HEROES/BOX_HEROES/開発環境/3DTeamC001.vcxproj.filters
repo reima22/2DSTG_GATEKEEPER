@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\00_system">
+      <UniqueIdentifier>{99d6d4c2-b34d-425c-90a0-2e9132f346df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\01_game">
+      <UniqueIdentifier>{3ff558d0-c285-4a1e-a678-cc6e758d084c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\04_result">
+      <UniqueIdentifier>{f4d7db74-b372-42f0-bddc-2139b9bdb9cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\03_tutorial">
+      <UniqueIdentifier>{65de97ff-8aa6-4026-9889-e98b1bd1d791}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\02_title">
+      <UniqueIdentifier>{653e40e0-6c0d-4d91-8490-6d888516af1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\01_game\billboard">
+      <UniqueIdentifier>{d982c17a-e55c-4f89-b03f-546471b6bb9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\01_game\model">
+      <UniqueIdentifier>{167e5f5e-eb8c-4b8f-9104-65cea85d09df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\01_game\mesh">
+      <UniqueIdentifier>{faae5805-47b7-4d9f-be5f-3e805949ca8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\00_system">
+      <UniqueIdentifier>{6f53c1fe-315a-4220-ab25-0b1642418915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\01_game">
+      <UniqueIdentifier>{2a6bcf2a-7502-498d-84dc-0f6447d9882b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\02_title">
+      <UniqueIdentifier>{9932fa70-06d8-440b-8991-c2823ffc32c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\03_tutorial">
+      <UniqueIdentifier>{251fdcfa-3b99-45fc-bd00-879bbfc77c2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\04_result">
+      <UniqueIdentifier>{a6c68d96-4641-4908-9b62-f799d3e0ad26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\01_game\billboard">
+      <UniqueIdentifier>{825f2aee-24c6-4bc0-95ed-2ecae6092d09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\01_game\model">
+      <UniqueIdentifier>{6b210e1b-8720-4242-b5f1-16b5bd9e9a82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\01_game\mesh">
+      <UniqueIdentifier>{3900375f-4c52-477c-ab63-be34085e52a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\05_select">
+      <UniqueIdentifier>{72e17743-f851-495a-8152-751d81530f52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\05_select">
+      <UniqueIdentifier>{afd296d3-461c-4a65-b7d2-24d33ace440b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="billboard.cpp">
+      <Filter>ソース ファイル\01_game\billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet.cpp">
+      <Filter>ソース ファイル\01_game\billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>ソース ファイル\00_system</Filter>
+    </ClCompile>
+    <ClCompile Include="fade.cpp">
+      <Filter>ソース ファイル\00_system</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>ソース ファイル\01_game</Filter>
+    </ClCompile>
+    <ClCompile Include="gamepad.cpp">
+      <Filter>ソース ファイル\00_system</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>ソース ファイル\00_system</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>ソース ファイル\01_game\model</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>ソース ファイル\00_system</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\00_system</Filter>
+    </ClCompile>
+    <ClCompile Include="meshfield.cpp">
+      <Filter>ソース ファイル\01_game\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="meshwall.cpp">
+      <Filter>ソース ファイル\01_game\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>ソース ファイル\01_game\model</Filter>
+    </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>ソース ファイル\01_game\billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="pause.cpp">
+      <Filter>ソース ファイル\01_game</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\01_game\model</Filter>
+    </ClCompile>
+    <ClCompile Include="result.cpp">
+      <Filter>ソース ファイル\04_result</Filter>
+    </ClCompile>
+    <ClCompile Include="shadow.cpp">
+      <Filter>ソース ファイル\01_game</Filter>
+    </ClCompile>
+    <ClCompile Include="tutorial.cpp">
+      <Filter>ソース ファイル\03_tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="sound.cpp">
+      <Filter>ソース ファイル\00_system</Filter>
+    </ClCompile>
+    <ClCompile Include="title.cpp">
+      <Filter>ソース ファイル\02_title</Filter>
+    </ClCompile>
+    <ClCompile Include="select.cpp">
+      <Filter>ソース ファイル\05_select</Filter>
+    </ClCompile>
+    <ClCompile Include="select_cursor.cpp">
+      <Filter>ソース ファイル\05_select</Filter>
+    </ClCompile>
+    <ClCompile Include="meshorbit.cpp">
+      <Filter>ソース ファイル\01_game\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="hp.cpp">
+      <Filter>ソース ファイル\01_game</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet_ui.cpp">
+      <Filter>ソース ファイル\01_game</Filter>
+    </ClCompile>
+    <ClCompile Include="start.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="billboard.h">
+      <Filter>ヘッダー ファイル\01_game\billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet.h">
+      <Filter>ヘッダー ファイル\01_game\billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>ヘッダー ファイル\00_system</Filter>
+    </ClInclude>
+    <ClInclude Include="fade.h">
+      <Filter>ヘッダー ファイル\00_system</Filter>
+    </ClInclude>
+    <ClInclude Include="gamepad.h">
+      <Filter>ヘッダー ファイル\00_system</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>ヘッダー ファイル\00_system</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>ヘッダー ファイル\00_system</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>ヘッダー ファイル\00_system</Filter>
+    </ClInclude>
+    <ClInclude Include="sound.h">
+      <Filter>ヘッダー ファイル\00_system</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>ヘッダー ファイル\01_game\model</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>ヘッダー ファイル\01_game\model</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>ヘッダー ファイル\01_game\model</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>ヘッダー ファイル\01_game\billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="pause.h">
+      <Filter>ヘッダー ファイル\01_game</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>ヘッダー ファイル\01_game</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow.h">
+      <Filter>ヘッダー ファイル\01_game</Filter>
+    </ClInclude>
+    <ClInclude Include="meshfield.h">
+      <Filter>ヘッダー ファイル\01_game\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="meshwall.h">
+      <Filter>ヘッダー ファイル\01_game\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="result.h">
+      <Filter>ヘッダー ファイル\04_result</Filter>
+    </ClInclude>
+    <ClInclude Include="select.h">
+      <Filter>ヘッダー ファイル\05_select</Filter>
+    </ClInclude>
+    <ClInclude Include="title.h">
+      <Filter>ヘッダー ファイル\02_title</Filter>
+    </ClInclude>
+    <ClInclude Include="tutorial.h">
+      <Filter>ヘッダー ファイル\03_tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="select_cursor.h">
+      <Filter>ヘッダー ファイル\05_select</Filter>
+    </ClInclude>
+    <ClInclude Include="meshorbit.h">
+      <Filter>ヘッダー ファイル\01_game\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="hp.h">
+      <Filter>ヘッダー ファイル\01_game</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet_ui.h">
+      <Filter>ヘッダー ファイル\01_game</Filter>
+    </ClInclude>
+    <ClInclude Include="start.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
