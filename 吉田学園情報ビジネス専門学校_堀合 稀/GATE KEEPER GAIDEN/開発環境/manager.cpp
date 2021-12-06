@@ -40,8 +40,10 @@ CRanking *CManager::m_pRanking = NULL;				// ランキングモード
 CManager::MODE CManager::m_mode = MODE_TITLE;		// 現在のゲームモード
 CCamera *CManager::m_pCamera = NULL;				// カメラポインタ
 CLight *CManager::m_pLight;							// ライトのポインタ
-bool CManager::m_bBGM[CSound::BGMTYPE_MAX] = 
-	{true,		// タイトル
+CTexture *CManager::m_pTexture = NULL;				// テクスチャのポインタ
+
+bool CManager::m_bBGM[CSound::BGMTYPE_MAX] = {		// BGMのON/OFF
+	true,		// タイトル
 	true,		// チュートリアル
 	true,		// ゲーム
 	true,		// ボス戦
@@ -89,7 +91,11 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	CFade::Init();
 
 	// テクスチャの読み込み
-	CTexture::LoadAll();
+	m_pTexture = new CTexture;	// インスタンス生成
+	if (m_pTexture != NULL)
+	{
+		m_pTexture->LoadAll();
+	}
 
 	// テキストデータの読み込み
 	CTextData::LoadTextAll();
@@ -136,8 +142,15 @@ void CManager::Uninit(void)
 	CSound::Uninit();
 
 	// テクスチャの開放
-	CTexture::UnloadAll();
+	if (m_pTexture != NULL)
+	{
+		m_pTexture->UnloadAll();
+		m_pTexture = NULL;
+	}
 
+	// メッシュフィールド破棄
+	CTextData::UnloadTextAll();
+	
 	// 全破棄
 	CScene::ReleaseAll();
 

@@ -6,13 +6,11 @@
 //==============================================================================
 #define _CRT_SECURE_NO_WARNINGS
 #include "main.h"
-//#include "renderer.h"
-//#include "manager.h"
-//#include "scene2D.h"
 #include "textdata.h"
 #include "textdata_player.h"
 #include "textdata_enemy.h"
 #include "textdata_system.h"
+#include "textdata_meshfield.h"
 #include "stdio.h"
 
 // 静的メンバ変数宣言
@@ -22,7 +20,9 @@ char *CTextData::m_pFileName[TEXTDATA_MAX] =
 	{ "data/TEXT/systemdata.txt" },		// ルール管理
 	{ "data/TEXT/playerdata.txt" },		// プレイヤーデータ
 	{ "data/TEXT/enemydata.txt" },		// 敵データ
+	{ "data/TEXT/meshfielddata.txt" },		// メッシュデータ
 };
+CTextDataMeshfield *CTextData::m_pDataMeshfield = NULL;
 
 //==============================================================================
 // コンストラクタ
@@ -56,4 +56,16 @@ void CTextData::LoadTextAll(void)
 
 	// ルールのデータ読み込み
 	CTextDataSystem::LoadData();
+
+	// メッシュフィールド
+	m_pDataMeshfield = CTextDataMeshfield::Create();
+}
+
+//==============================================================================
+// テクスチャデータの全破棄
+//==============================================================================
+void CTextData::UnloadTextAll(void)
+{
+	// メッシュフィールド
+	m_pDataMeshfield->UnloadData();
 }

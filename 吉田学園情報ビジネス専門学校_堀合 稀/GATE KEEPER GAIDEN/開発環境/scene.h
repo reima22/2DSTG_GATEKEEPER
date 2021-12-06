@@ -14,6 +14,7 @@
 //=============================================================================
 #define FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)	// 頂点フォーマット
 #define FVF_VERTEX_3D	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)
+#define FVF_VERTEX_3D_1	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1 | D3DFVF_TEX2)
 
 //==============================================================================
 // 頂点フォーマットに合わせた構造体
@@ -34,8 +35,17 @@ typedef struct
 	D3DXVECTOR2 tex;	// テクスチャ座標
 } VERTEX_3D;
 
-// 前方
-class CScene2D;
+typedef struct
+{
+	D3DXVECTOR3 pos;	// 頂点座標
+	D3DXVECTOR3 nor;	// 法線ベクトル
+	D3DCOLOR col;		// 頂点カラー
+	D3DXVECTOR2 tex;	// テクスチャ座標0
+	D3DXVECTOR2 tex1;	// テクスチャ座標1
+} VERTEX_3D_1;
+
+//// 前方宣言
+//class CScene2D;
 
 // オブジェクトクラス
 class CScene

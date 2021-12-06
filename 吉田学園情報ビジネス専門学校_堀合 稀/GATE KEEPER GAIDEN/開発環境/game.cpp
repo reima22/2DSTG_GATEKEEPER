@@ -15,6 +15,8 @@
 #include "sound.h"
 #include "bg.h"
 #include "enemy.h"
+#include "enemy_formation.h"
+#include "enemy_mother.h"
 #include "score.h"
 #include "life.h"
 #include "UI.h"
@@ -35,6 +37,8 @@
 #include "result_logo.h"
 #include "title_difficulty.h"
 #include "sceneX.h"
+#include "meshfield.h"
+#include "chara3D.h"
 
 //==============================================================================
 // ê√ìIÉÅÉìÉoïœêîêÈåæ
@@ -48,6 +52,7 @@ int CGame::m_nSetType = 0;
 bool CGame::m_bSetEnemy = false;
 bool CGame::m_bMotherEnemy = false;
 int CGame::m_nCntDownEnd = 0;
+CMeshfield *CGame::m_pMeshfield = NULL;
 
 //CSceneX *CGame::m_pSceneX = NULL;
 
@@ -102,6 +107,9 @@ HRESULT CGame::Init(D3DXVECTOR3 pos)
 	CEnemyMother::SetMotherState(CEnemyMother::MOTHER_STATE_NONE);
 	CEnemyMother::SetPhase(CEnemyMother::MOTHER_PHASE_0);
 
+	// ÉÅÉbÉVÉÖÉ|ÉäÉSÉìÇÃê∂ê¨
+	m_pMeshfield = CMeshfield::Create();
+
 	// îwåiê∂ê¨
 	CBg::Create();
 
@@ -153,6 +161,8 @@ HRESULT CGame::Init(D3DXVECTOR3 pos)
 	CSceneX::Create(D3DXVECTOR3(150.0f, 50.0f, 240.0f), D3DXVECTOR3(-0.4f, -0.6f, 0.0f), D3DXVECTOR3(0.03f, 0.05f, 0.0f),0);
 	CSceneX::Create(D3DXVECTOR3(150.0f, 100.0f, 120.0f), D3DXVECTOR3(-0.7f, -0.6f, 0.0f), D3DXVECTOR3(0.06f, 0.04f, 0.0f),0);
 	CSceneX::Create(D3DXVECTOR3(150.0f, 100.0f, 0.0f), D3DXVECTOR3(-0.5f, -0.6f, 0.0f), D3DXVECTOR3(0.04f, 0.03f, 0.0f),0);
+
+	//CChara3D::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), VECTOR3_NULL, 0);
 
 	// BGMÇÃê∂ê¨
 	if (CManager::GetBGMPlay(CSound::BGMTYPE_GAME) == true)
@@ -277,7 +287,7 @@ void CGame::Update(void)
 		if (m_bSetSE == false)
 		{// ìoèÍââèo
 			CSound::Stop();	// BGMÇÃàÍéûí‚é~
-			CSound::Play(CSound::SOUND_LABEL_SE_WARNING);
+			//CSound::Play(CSound::SOUND_LABEL_SE_WARNING);
 			CEnemy::UninitAll();
 			CBullet::UninitAll();
 			m_bSetSE = true;

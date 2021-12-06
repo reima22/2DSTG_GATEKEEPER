@@ -34,6 +34,9 @@ public:
 		TEXTYPE_BG_0,				// 背景0
 		TEXTYPE_BG_1,				// 背景1
 		TEXTYPE_BG_2,				// 背景2
+		TEXTYPE_BG_3,				// 背景3
+		TEXTYPE_BG_4,				// 背景4
+		TEXTYPE_BG_5,				// 背景5
 		TEXTYPE_TITLE_BG,			// タイトル背景
 		TEXTYPE_TITLE_LOGO,			// タイトルロゴ
 		TEXTYPE_TITLE_ENTER,		// タイトルエンターサイン
@@ -73,22 +76,28 @@ public:
 		TEXTYPE_HARD,				// hard
 		TEXTYPE_METEOR,				// 隕石
 		TEXTYPE_PANEL,				// ソーラーパネル
+		TEXTYPE_LAVA,
+		TEXTYPE_O,
+		TEXTYPE_1,
+		TEXTYPE_2,
+		TEXTYPE_3,
+		TEXTYPE_4,
 		TEXTYPE_MAX					// 最大数
 	}TEXTYPE;
 
 	CTexture();
 	~CTexture();
 
-	static HRESULT LoadAll(void);
-	static void UnloadAll(void);
-	static LPDIRECT3DTEXTURE9 BindTexture(TEXTYPE texType) { return m_pTexture[texType]; }
+	HRESULT LoadAll(void);
+	void UnloadAll(void);
+	LPDIRECT3DTEXTURE9 GetAddress(TEXTYPE texType) { return *(LPDIRECT3DTEXTURE9*)&m_pTexture[texType]; }
 	
 	// 3Dモデルへのテクスチャ割り当て
-	static LPDIRECT3DTEXTURE9 BindTex3D(char *pTexFilename);
+	LPDIRECT3DTEXTURE9 GetAddress3D(char *pTexFilename);
 
 private:
 	static char *m_pFileName[TEXTYPE_MAX];				// 読み込むファイル名パス
-	static LPDIRECT3DTEXTURE9 m_pTexture[TEXTYPE_MAX];	// テクスチャへのポインタ
+	LPDIRECT3DTEXTURE9 m_pTexture;					// ポインタ配列格納アドレス
 };
 
 #endif

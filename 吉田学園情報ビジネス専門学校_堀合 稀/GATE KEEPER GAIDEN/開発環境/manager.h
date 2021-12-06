@@ -12,17 +12,17 @@
 //=============================================================================
 // 前方宣言
 //=============================================================================
-class CRenderer;
-class CInputKeyboard;
-class CGamepad;
-class CTitle;
-class CTutorial;
-class CGame;
-class CResult;
-class CRanking;
-class CManager;
-class CCamera;
-class CLight;
+class CRenderer;		// レンダラークラス
+class CInputKeyboard;	// キーボードクラス
+class CGamepad;			// ゲームパッドクラス
+class CTitle;			// タイトルクラス
+class CTutorial;		// チュートリアルクラス
+class CGame;			// ゲームクラス
+class CResult;			// リザルトクラス
+class CRanking;			// ランキングクラス
+class CCamera;			// カメラクラス
+class CLight;			// ライトクラス
+class CTexture;			// テクスチャクラス
 
 //=============================================================================
 // マネージャクラス
@@ -61,6 +61,9 @@ public:
 	// カメラポインタの取得
 	static CCamera *GetCamera(void) { return m_pCamera; }
 
+	// テクスチャポインタの取得
+	static CTexture *GetTexture(void) { return m_pTexture; }
+
 private:
 	static CRenderer* m_pRenderer;				// レンダリングクラス
 	static CInputKeyboard *m_pInputKeyboard;	// キーボードクラス
@@ -77,6 +80,8 @@ private:
 
 	static CCamera *m_pCamera;		// カメラのポインタ
 	static CLight *m_pLight;		// ライトのポインタ
+
+	static CTexture *m_pTexture;	// テクスチャのポインタ
 
 	static bool m_bBGM[CSound::BGMTYPE_MAX];
 };

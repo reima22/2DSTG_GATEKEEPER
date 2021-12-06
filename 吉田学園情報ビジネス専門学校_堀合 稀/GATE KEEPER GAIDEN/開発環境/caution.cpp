@@ -14,6 +14,7 @@
 #include "invasion.h"
 #include "effect.h"
 #include "game.h"
+#include "meshfield.h"
 
 // 静的メンバ変数宣言
 CCaution::CAUTION_STATE CCaution::m_cautionState = CAUTION_STATE_NONE;		// 警告の状態
@@ -122,6 +123,9 @@ CCaution *CCaution::Create(D3DXVECTOR3 pos)
 //==============================================================================
 void CCaution::SetCautionState(void)
 {
+	// メッシュの情報
+	CMeshfield *pMeshfield = CGame::GetMeshfield();
+
 	// ラインの状態ごとの処理
 	switch (m_cautionState)
 	{
@@ -129,9 +133,10 @@ void CCaution::SetCautionState(void)
 		m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);
 
 		// 母艦戦へ移行
-		if (CGame::GetMotherEnemy() == true && m_bStartAlert == false)
+		if (CGame::GetMotherEnemy() == true && m_bStartAlert == false && pMeshfield->GetCol().a <= 0.0f)
 		{
 			m_cautionState = CAUTION_STATE_ALERT;
+			CSound::Play(CSound::SOUND_LABEL_SE_WARNING);
 			m_bStartAlert = true;
 		}
 		

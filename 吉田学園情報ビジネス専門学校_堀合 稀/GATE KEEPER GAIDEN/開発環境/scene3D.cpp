@@ -68,3 +68,20 @@ void CScene3D::Draw(void)
 {
 
 }
+
+//==============================================================================
+// 3Dƒ|ƒŠƒSƒ“‚Ì¶¬
+//==============================================================================
+CScene3D *CScene3D::Create(D3DXVECTOR3 pos)
+{
+	// ƒ[ƒJƒ‹•Ï”éŒ¾
+	CScene3D *pScene3D;
+	pScene3D = new CScene3D;
+
+	if (pScene3D != NULL)
+	{
+		pScene3D->Init(pos);
+	}
+
+	return pScene3D;
+}

@@ -153,6 +153,10 @@ void CNumber::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	// テクスチャの取得
+	CTexture *pTexture;
+	pTexture = CManager::GetTexture();
+
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(
 		0,
@@ -164,7 +168,7 @@ void CNumber::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
 	// テクスチャの設定
-	pDevice->SetTexture(0, CTexture::BindTexture(CTexture::TEXTYPE_NUMBER));
+	pDevice->SetTexture(0, pTexture->GetAddress(CTexture::TEXTYPE_NUMBER));
 
 	// ポリゴンの描画
 	pDevice->DrawPrimitive(

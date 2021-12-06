@@ -20,6 +20,7 @@
 #include "item.h"
 #include "score.h"
 #include "enemy.h"
+#include "enemy_mother.h"
 #include "player.h"
 #include "life.h"
 #include "game.h"

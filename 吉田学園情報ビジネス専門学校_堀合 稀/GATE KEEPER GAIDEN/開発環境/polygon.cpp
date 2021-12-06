@@ -122,6 +122,10 @@ void CPolygon::Draw(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	// テクスチャの取得
+	CTexture *pTexture;
+	pTexture = CManager::GetTexture();
+
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(
 		0,
@@ -133,8 +137,8 @@ void CPolygon::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
 	// テクスチャの設定
-	pDevice->SetTexture(0, CTexture::BindTexture(m_Type));
-
+	pDevice->SetTexture(0, pTexture->GetAddress(m_Type));
+	
 	// ポリゴンの描画
 	pDevice->DrawPrimitive(
 		D3DPT_TRIANGLESTRIP,	// プリミティブの種類

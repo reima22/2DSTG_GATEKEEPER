@@ -352,7 +352,7 @@ Mesh {
    0.140000;0.140000;0.140000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data/TEXTURE/meteor.jpg";
+    "data\\TEXTURE\\meteor.jpg";
    }
   }
  }

@@ -197,7 +197,12 @@ void CScene2D::SetPosition(D3DXVECTOR3 pos)
 //==============================================================================
 void CScene2D::BindTexture(CTexture::TEXTYPE texType)
 {
-	m_pTexture = CTexture::BindTexture(texType);
+	// ローカル変数宣言
+	CTexture *pTexture;
+	pTexture = CManager::GetTexture();
+
+	// テクスチャの割り当て
+	m_pTexture = pTexture->GetAddress(texType);
 }
 
 //==============================================================================

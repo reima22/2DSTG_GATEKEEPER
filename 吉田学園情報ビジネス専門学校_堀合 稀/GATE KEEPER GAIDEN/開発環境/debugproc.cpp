@@ -13,6 +13,8 @@
 #include "renderer.h"
 #include "manager.h"
 #include "scene.h"
+#include "meshfield.h"
+#include "game.h"
 
 // 静的メンバ変数宣言
 LPD3DXFONT CDebugProc::m_pFont = NULL;
@@ -99,7 +101,7 @@ void CDebugProc::Print(const char *fmt,...)
 				break;
 
 			case 'f':	// 浮動小数
-				nCnt += sprintf(&aStr[nCnt], "%.1f", va_arg(args, double));
+				nCnt += sprintf(&aStr[nCnt], "%.3f", va_arg(args, double));
 				break;
 
 			case 'c':	// 文字
@@ -138,7 +140,16 @@ void CDebugProc::Draw(void)
 	int nCountFPS = GetFPSCnt();	// FPSカウントの取得
 	int nNumAll = CScene::GetNumAll();
 
-	Print("FPS:%d\nオブジェクト数:%d", nCountFPS, nNumAll);
+	CMeshfield *pMeshfield = CGame::GetMeshfield();
+
+	float fHeightWave = pMeshfield->GetHeightWave();
+	float fDistanceWave = pMeshfield->GetDistanceWave();
+	float fSpeedWave = pMeshfield->GetSpeedWave();
+
+	Print("FPS:%d\nオブジェクト数:%d\n", nCountFPS, nNumAll);
+	Print("波形の高さ:%f\n", fHeightWave);
+	Print("波形の間隔:%f\n", fDistanceWave);
+	Print("波形の早さ:%f\n", fSpeedWave);
 
 	// テキストの描画
 	m_pFont->DrawText(NULL, &m_aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));

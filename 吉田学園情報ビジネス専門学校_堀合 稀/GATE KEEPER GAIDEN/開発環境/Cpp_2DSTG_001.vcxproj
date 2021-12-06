@@ -159,12 +159,15 @@
     <ClCompile Include="bullet_UI.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="caution.cpp" />
+    <ClCompile Include="chara3D.cpp" />
     <ClCompile Include="character.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="defeat.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="effect_on.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="enemy_formation.cpp" />
+    <ClCompile Include="enemy_mother.cpp" />
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="game.cpp" />
@@ -177,6 +180,7 @@
     <ClCompile Include="line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
+    <ClCompile Include="meshfield.cpp" />
     <ClCompile Include="message.cpp" />
     <ClCompile Include="message_text.cpp" />
     <ClCompile Include="message_window.cpp" />
@@ -205,6 +209,7 @@
     <ClCompile Include="stock.cpp" />
     <ClCompile Include="textdata.cpp" />
     <ClCompile Include="textdata_enemy.cpp" />
+    <ClCompile Include="textdata_meshfield.cpp" />
     <ClCompile Include="textdata_player.cpp" />
     <ClCompile Include="textdata_ranking.cpp" />
     <ClCompile Include="textdata_system.cpp" />
@@ -224,12 +229,15 @@
     <ClInclude Include="bullet_UI.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="caution.h" />
+    <ClInclude Include="chara3D.h" />
     <ClInclude Include="character.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="defeat.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="effect_on.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="enemy_formation.h" />
+    <ClInclude Include="enemy_mother.h" />
     <ClInclude Include="explosion.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="game.h" />
@@ -242,6 +250,7 @@
     <ClInclude Include="line.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
+    <ClInclude Include="meshfield.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="message_text.h" />
     <ClInclude Include="message_window.h" />
@@ -270,6 +279,7 @@
     <ClInclude Include="stock.h" />
     <ClInclude Include="textdata.h" />
     <ClInclude Include="textdata_enemy.h" />
+    <ClInclude Include="textdata_meshfield.h" />
     <ClInclude Include="textdata_player.h" />
     <ClInclude Include="textdata_ranking.h" />
     <ClInclude Include="textdata_system.h" />

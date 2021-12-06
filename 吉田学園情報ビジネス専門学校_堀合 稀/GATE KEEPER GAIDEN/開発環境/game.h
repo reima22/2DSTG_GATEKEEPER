@@ -22,6 +22,7 @@
 // 前方宣言
 class CCharacter;
 class CSceneX;
+class CMeshfield;
 
 //==============================================================================
 // ゲームモードクラス
@@ -50,6 +51,8 @@ public:
 	void Ending(void);						// ゲーム終了演出
 	void CntDownEnd(void);					// ゲーム終了までのカウントダウン
 
+	static CMeshfield *GetMeshfield(void) { return m_pMeshfield; }
+
 private:
 	static int m_nClearDefeat;				// ゲームクリアの撃破数
 	static int m_nEndInvasion;				// ゲーム終了する侵入数
@@ -65,6 +68,8 @@ private:
 
 	static int m_nCntDownEnd;			// ゲーム終了までのカウント
 	bool m_bSetLogo;
+
+	static CMeshfield *m_pMeshfield;
 
 	//static CSceneX *m_pSceneX;			// モデルXのポインタ
 };

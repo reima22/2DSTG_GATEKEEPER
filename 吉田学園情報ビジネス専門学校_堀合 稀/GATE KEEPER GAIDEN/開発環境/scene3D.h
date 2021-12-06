@@ -24,6 +24,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	static CScene3D *Create(D3DXVECTOR3 pos);
+
 	D3DXVECTOR3 GetPosition(void) { return m_pos; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
@@ -36,6 +38,12 @@ private:
 	D3DXVECTOR3 m_rot;								// 向き
 	D3DXVECTOR3 m_size;								// 大きさ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff = NULL;		// バッファへのポインタ
-	D3DXMATRIX m_mtxWorld;							// ワールドマトリックス
+
+	LPD3DXMESH m_pMesh;				// メッシュポインタ
+	LPD3DXBUFFER m_pBuffMat;		// マテリアルバッファ
+	DWORD m_nNumMat;				// マテリアル数
+	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス
+
+	LPDIRECT3DTEXTURE9 *m_pTexture;	// テクスチャダブルポインタ
 };
 #endif

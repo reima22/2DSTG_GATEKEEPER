@@ -27,9 +27,13 @@
 //==============================================================================
 // マクロ定義
 //==============================================================================
-#define SCREEN_WIDTH	(1280)		// 画面の幅
-#define SCREEN_HEIGHT	(720)		// 画面の高さ
-#define SCREEN_CENTER	(D3DXVECTOR3(SCREEN_WIDTH / 2,SCREEN_HEIGHT / 2, 0.0f))
+#define SCREEN_WIDTH		(1280)		// 画面の幅
+#define SCREEN_HEIGHT		(720)		// 画面の高さ
+#define SCREEN_CENTER		(D3DXVECTOR3(SCREEN_WIDTH / 2,SCREEN_HEIGHT / 2, 0.0f))
+#define SCREEN_CENTER_SIZE	(D3DXVECTOR2(SCREEN_WIDTH / 2,SCREEN_HEIGHT / 2))
+#define VECTOR2_NULL		(D3DXVECTOR2(0.0f, 0.0f))
+#define VECTOR3_NULL		(D3DXVECTOR3(0.0f, 0.0f, 0.0f))
+#define PI_RESET			(D3DX_PI * 2.0f)	// 回転角の修正値
 
 //==============================================================================
 // プロトタイプ宣言

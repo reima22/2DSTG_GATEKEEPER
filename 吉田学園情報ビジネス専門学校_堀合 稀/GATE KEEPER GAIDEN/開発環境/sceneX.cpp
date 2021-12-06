@@ -36,6 +36,10 @@ HRESULT CSceneX::Init(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rotMove,int
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+	// テクスチャポインタの取得
+	CTexture *pTexture;
+	pTexture = CManager::GetTexture();
+
 	// 初期設定
 	CScene3D::SetPos(pos);
 	m_move = move;
@@ -66,13 +70,7 @@ HRESULT CSceneX::Init(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rotMove,int
 		if (pMat[nCntMat].pTextureFilename != NULL)
 		{// テクスチャあり
 			// テクスチャ情報の割り当て
-			m_pTexture[nCntMat] = CTexture::BindTex3D(pMat[nCntMat].pTextureFilename);
-
-			// ファイル名を使用してテクスチャを読み込む
-			D3DXCreateTextureFromFile(
-				pDevice,
-				pMat[nCntMat].pTextureFilename,
-				&m_pTexture[nCntMat]);
+			m_pTexture[nCntMat] = pTexture->GetAddress3D(pMat[nCntMat].pTextureFilename);
 		}
 		else
 		{// テクスチャの割り当てがない
