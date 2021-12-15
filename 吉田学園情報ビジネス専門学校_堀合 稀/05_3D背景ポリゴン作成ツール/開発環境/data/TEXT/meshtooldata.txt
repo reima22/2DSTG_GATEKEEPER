@@ -1,0 +1,55 @@
+#==============================================================================
+#
+# 『メッシュツールデータ』スクリプトファイル [meshtooldata.txt]
+# Author : Horiai Mare
+#
+#==============================================================================
+SCRIPT			# この行は絶対消さないこと！
+
+#----------------------------------------------------------------------------------------------------
+# テクスチャの数
+#----------------------------------------------------------------------------------------------------
+NUM_TEXTURE = 13
+
+#----------------------------------------------------------------------------------------------------
+# テクスチャファイル
+#----------------------------------------------------------------------------------------------------
+TEXTURE_FILENAME = data\TEXTURE\bg201.jpg 			# [0]背景0
+TEXTURE_FILENAME = data\TEXTURE\bg202.jpg 			# [1]背景1
+TEXTURE_FILENAME = data\TEXTURE\block.jpg			# [2]ブロック
+TEXTURE_FILENAME = data\TEXTURE\title_bg.png		# [3]タイトル背景
+TEXTURE_FILENAME = data\TEXTURE\ranking_bg.png		# [4]ランキング背景
+TEXTURE_FILENAME = data\TEXTURE\Lava.png			# [5]溶岩テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex000.jpg			# [6]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex001.jpg			# [7]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex002.jpg			# [8]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex003.jpg			# [9]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex004.jpg			# [10]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex005.jpg			# [11]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex006.jpg			# [12]テクスチャ
+
+#------------------------------------------------------------------------------
+# メッシュフィールドの情報
+#------------------------------------------------------------------------------
+FIELDSET
+TEXTYPE = 0
+TEXTYPE_SUB = 1
+POS = 0.0 50.0 -50.0
+ROT = -1.57 0.0 0.0
+SIZE = 3.0 3.0
+WIDTH = 64
+DEPTH = 36
+HEIGHT_WAVE = 0.2
+DISTANCE_WAVE = 0.025
+SPEED_WAVE = 0.05
+SYNTHETICTYPE = 3
+WAVETYPE = 3
+CUTTEX = 0
+TEXMOVEROT_0 = 0.000
+TEXMOVE_0 = -0.001
+TEXMOVEROT_1 = -0.380
+TEXMOVE_1 = -0.002
+	
+END_FIELDSET
+
+END_SCRIPT

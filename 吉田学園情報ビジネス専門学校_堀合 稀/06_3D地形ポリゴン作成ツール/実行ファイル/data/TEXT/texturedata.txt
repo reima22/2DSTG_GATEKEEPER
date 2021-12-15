@@ -1,0 +1,34 @@
+#----------------------------------------------------------------------------------------------------
+#
+# テクスチャファイル名パス一覧
+# Author : Mare Horiai
+#
+#----------------------------------------------------------------------------------------------------
+SCRIPT
+
+#----------------------------------------------------------------------------------------------------
+# テクスチャの数
+#----------------------------------------------------------------------------------------------------
+NUM_TEXTURE = 16
+
+#----------------------------------------------------------------------------------------------------
+# テクスチャファイル名
+#----------------------------------------------------------------------------------------------------
+TEXTURE_FILENAME = data\TEXTURE\player_cloth00.jpg 		# [0]プレイヤーテクスチャ
+TEXTURE_FILENAME = data\TEXTURE\player_cloth01.jpg 		# [1]プレイヤーテクスチャ
+TEXTURE_FILENAME = data\TEXTURE\block.jpg				# [2]ブロック
+TEXTURE_FILENAME = data\TEXTURE\meteor.jpg				# [3]隕石モデルのテクスチャ
+TEXTURE_FILENAME = data\TEXTURE\panel.jpg				# [4]パネルモデルのテクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex001.jpg				# [5]足場モデルのテクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex002.jpg				# [6]足場モデルのテクスチャ
+TEXTURE_FILENAME = data\TEXTURE\shadow000.jpg			# [7]丸影テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Lava.png				# [8]溶岩テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex000.jpg				# [9]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex001.jpg				# [10]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex002.jpg				# [11]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex003.jpg				# [12]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex004.jpg				# [13]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex005.jpg				# [14]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex006.jpg				# [15]テクスチャ
+
+END_SCRIPT
