@@ -8,9 +8,6 @@
 #include "manager.h"
 #include "renderer.h"
 #include "input.h"
-#include "gamepad.h"
-#include "player.h"
-#include "exe.h"
 
 //==============================================================================
 // コンストラクタ
@@ -52,55 +49,7 @@ void CCamera::Update(void)
 	// カメラ操作
 	ControlCamera();
 
-	// キーボードの取得
-	CInputKeyboard *keyboard = CManager::GetInputKeyboard();
 
-	// プレイヤーの取得
-	CPlayer *pPlayer;
-	pPlayer = CExe::GetPlayer();
-
-	D3DXVECTOR3 posPlayer = VECTOR3_NULL;
-	D3DXVECTOR3 rotDestPlayer = VECTOR3_NULL;
-	
-	if (pPlayer != NULL)
-	{
-		posPlayer = pPlayer->GetPosition();
-		rotDestPlayer = pPlayer->GetRotDest();
-	}
-
-	// 視点間同士ベクトル
-	m_vecInterval = m_posV - m_posR;
-
-	// 編集モード切替
-	if (CExe::GetEditMode() == CExe::EDITMODE_EDIT)
-	{
-		if (keyboard->GetTrigger(CInput::KEYINFO_MODECHANGE) == true)
-		{
-			SetInit();
-		}	
-	}
-	else if (CExe::GetEditMode() == CExe::EDITMODE_PREVIEW)
-	{
-		// 目的の注視点
-		m_posRDest.x = posPlayer.x - m_fFront * sinf(rotDestPlayer.y);
-		m_posRDest.z = posPlayer.z - m_fFront * cosf(rotDestPlayer.y);
-		m_posRDest.y = posPlayer.y + m_fHeightR;
-
-		// 目的の視点
-		m_posVDest.x = posPlayer.x - sinf(m_rot.y) * m_fLength;
-		m_posVDest.z = posPlayer.z - cosf(m_rot.y) * m_fLength;
-		m_posVDest.y = posPlayer.y + cosf(m_rot.x) * (m_fLength + m_fHeightV);
-
-		// 注視点の位置更新
-		m_posR.x += (m_posRDest.x - m_posR.x) * CAMERA_SPDOWN;
-		m_posR.z += (m_posRDest.z - m_posR.z) * CAMERA_SPDOWN;
-		m_posR.y += (m_posRDest.y - m_posR.y) * CAMERA_SPDOWN;
-
-		// 視点の位置更新
-		m_posV.x += (m_posVDest.x - m_posV.x) * CAMERA_SPDOWN;
-		m_posV.z += (m_posVDest.z - m_posV.z) * CAMERA_SPDOWN;
-		m_posV.y += (m_posVDest.y - m_posV.y) * CAMERA_SPDOWN;
-	}	
 }
 
 //==============================================================================
@@ -140,8 +89,8 @@ void CCamera::SetCamera(void)
 		&m_mtxProjection,
 		D3DXToRadian(45.0f),							// 画角の設定
 		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,		// 画面比率の設定
-		10.0f,											// 手前限界の描画距離
-		1500.0f);										// 奥限界の描画距離
+		CAMERA_LIMIT_MIN,								// 手前限界の描画距離
+		CAMERA_LIMIT_MAX);								// 奥限界の描画距離
 
 	// プロジェクションマトリックスの設定
 	pDevice->SetTransform(D3DTS_PROJECTION, &m_mtxProjection);
@@ -166,136 +115,95 @@ void CCamera::SetCamera(void)
 void CCamera::SetInit(void)
 {
 	// 変数設定
-	m_posV = D3DXVECTOR3(0.0f, 300.0f, -700.0f);	// カメラ視点の位置
-	m_posR = VECTOR3_NULL;							// 注視点位置
+	m_posV = D3DXVECTOR3(0.0f, 200.0f, -400.0f);						// カメラ視点の位置
+	m_posR = VECTOR3_NULL;						// 注視点位置
+	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);		// 上方向ベクトル
+	m_rot = VECTOR3_NULL;						// カメラの角度
+	m_fLength = CAMERA_LENGTH;					// 視点・注視点の距離
 
-	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);			// 上方向ベクトル
-
-	m_vecInterval = m_posV - m_posR;
-
-	m_fHeightR = m_posR.y;							// 注視点の高さ
-	m_fHeightV = m_vecInterval.y;					// 視点の高さ
+	m_fHeightR = CAMERA_HEIGHT_R;				// 注視点の高さ
+	m_fHeightV = CAMERA_HEIGHT_V;				// 視点の高さ
 
 	m_rot.x = D3DX_PI / 4.0f;
 	m_rot.y = 0.0f;
 	m_rot.z = 0.0f;
-
-	// 地上の距離
-	m_fGroundLength = sqrtf(m_vecInterval.x * m_vecInterval.x + m_vecInterval.z * m_vecInterval.z);
-
-	m_fLength = 700.0f;
-
-	m_fFront = 15.0f;								// プレイヤーの前方
 }
 
 //==============================================================================
-// カメラ操作
+// カメラの操作
 //==============================================================================
 void CCamera::ControlCamera(void)
 {
-	// キーボードの取得
-	CInputKeyboard *keyboard = CManager::GetInputKeyboard();
-
-	// ゲームパッドの取得
-	CGamepad *gamepad = CManager::GetInputGamepad();
-
 	// マウスの取得
 	CInputMouse *pMouse = CManager::GetInputMouse();
 
-	// 実行クラス
-	CExe *pExe = CManager::GetExe();
+	// キーボードの取得
+	CInputKeyboard *keyboard = CManager::GetInputKeyboard();
 
-	if (pExe->GetEditMode() == CExe::EDITMODE_EDIT)
+	// ズームインアウト
+	if (keyboard->GetPress(CInput::KEYINFO_CAMERA_ZOOMIN) == true)
 	{
-		if (pMouse->GetPress(pMouse->GetButton(CInputMouse::MOUSEINFO_LEFT)) == true)
-		{
-			// カメラの移動
-			if (pMouse->GetMouselY() < 0.0f)
-			{
-				m_posV.x += sinf(m_rot.y) * pMouse->GetMouselY();
-				m_posR.x += sinf(m_rot.y) * pMouse->GetMouselY();
-				m_posV.z += cosf(m_rot.y) * pMouse->GetMouselY();
-				m_posR.z += cosf(m_rot.y) * pMouse->GetMouselY();
-			}
-			if (pMouse->GetMouselY() > 0.0f)
-			{
-				m_posV.x += sinf(m_rot.y) * pMouse->GetMouselY();
-				m_posR.x += sinf(m_rot.y) * pMouse->GetMouselY();
-				m_posV.z += cosf(m_rot.y) * pMouse->GetMouselY();
-				m_posR.z += cosf(m_rot.y) * pMouse->GetMouselY();
-			}
-			if (pMouse->GetMouselX() < 0.0f)
-			{
-				m_posV.x -= cosf(m_rot.y) * pMouse->GetMouselX();
-				m_posR.x -= cosf(m_rot.y) * pMouse->GetMouselX();
-				m_posV.z += sinf(m_rot.y) * pMouse->GetMouselX();
-				m_posR.z += sinf(m_rot.y) * pMouse->GetMouselX();
-			}
-			if (pMouse->GetMouselX() > 0.0f)
-			{
-				m_posV.x -= cosf(m_rot.y) * pMouse->GetMouselX();
-				m_posR.x -= cosf(m_rot.y) * pMouse->GetMouselX();
-				m_posV.z += sinf(m_rot.y) * pMouse->GetMouselX();
-				m_posR.z += sinf(m_rot.y) * pMouse->GetMouselX();
-			}
-		}	
-			
+		m_fLength -= 1.0f;
+	}
+	if (keyboard->GetPress(CInput::KEYINFO_CAMERA_ZOOMOUT) == true)
+	{
+		m_fLength += 1.0f;
+	}
+
+	// 移動力の加算
+	m_posR += m_move;
+	m_posV += m_move;
+
+	//視点の移動(左右)(Z,Cキー)
+	if (keyboard->GetPress(CInput::KEYINFO_TURN_LEFT) == true)
+	{
+		m_rot.y += CAMERA_TURN;
+	}
+	if (keyboard->GetPress(CInput::KEYINFO_TURN_RIGHT) == true)
+	{
+		m_rot.y -= CAMERA_TURN;
+	}
+	//if (keyboard->GetPress(CInput::KEYINFO_TURN_UP) == true)
+	//{
+	//	m_rot.x -= CAMERA_TURN;
+	//	m_rot.z -= CAMERA_TURN;
+	//}
+	//if (keyboard->GetPress(CInput::KEYINFO_TURN_DOWN) == true)
+	//{
+	//	m_rot.y -= CAMERA_TURN;
+	//}
+
+	if (pMouse->GetPress(pMouse->GetButton(CInputMouse::MOUSEINFO_LEFT)) == true)
+	{
 		// カメラの移動
-		//if (keyboard->GetPress(CInput::KEYINFO_CAMERA_FRONT) == true)
-		//{
-		//	m_posV.x += sinf(m_rot.y) * CAMERA_MOVE;
-		//	m_posR.x += sinf(m_rot.y) * CAMERA_MOVE;
-		//	m_posV.z += cosf(m_rot.y) * CAMERA_MOVE;
-		//	m_posR.z += cosf(m_rot.y) * CAMERA_MOVE;
-		//}
-		//if (keyboard->GetPress(CInput::KEYINFO_CAMERA_BACK) == true)
-		//{
-		//	m_posV.x -= sinf(m_rot.y) * CAMERA_MOVE;
-		//	m_posR.x -= sinf(m_rot.y) * CAMERA_MOVE;
-		//	m_posV.z -= cosf(m_rot.y) * CAMERA_MOVE;
-		//	m_posR.z -= cosf(m_rot.y) * CAMERA_MOVE;
-		//}
-		//if (keyboard->GetPress(CInput::KEYINFO_CAMERA_LEFT) == true)
-		//{
-		//	m_posV.x -= cosf(m_rot.y) * CAMERA_MOVE;
-		//	m_posR.x -= cosf(m_rot.y) * CAMERA_MOVE;
-		//	m_posV.z += sinf(m_rot.y) * CAMERA_MOVE;
-		//	m_posR.z += sinf(m_rot.y) * CAMERA_MOVE;
-		//}
-		//if (keyboard->GetPress(CInput::KEYINFO_CAMERA_RIGHT) == true)
-		//{
-		//	m_posV.x += cosf(m_rot.y) * CAMERA_MOVE;
-		//	m_posR.x += cosf(m_rot.y) * CAMERA_MOVE;
-		//	m_posV.z -= sinf(m_rot.y) * CAMERA_MOVE;
-		//	m_posR.z -= sinf(m_rot.y) * CAMERA_MOVE;
-		//}
-
-		if (keyboard->GetPress(CInput::KEYINFO_CAMERA_UP) == true)
+		if (pMouse->GetMouselY() < 0.0f)
 		{
-			m_posV.y += 2.0f;
+			m_posV.x += sinf(m_rot.y) * pMouse->GetMouselY();
+			m_posR.x += sinf(m_rot.y) * pMouse->GetMouselY();
+			m_posV.z += cosf(m_rot.y) * pMouse->GetMouselY();
+			m_posR.z += cosf(m_rot.y) * pMouse->GetMouselY();
 		}
-
-		if (keyboard->GetPress(CInput::KEYINFO_CAMERA_DOWN) == true)
+		if (pMouse->GetMouselY() > 0.0f)
 		{
-			m_posV.y -= 2.0f;
+			m_posV.x += sinf(m_rot.y) * pMouse->GetMouselY();
+			m_posR.x += sinf(m_rot.y) * pMouse->GetMouselY();
+			m_posV.z += cosf(m_rot.y) * pMouse->GetMouselY();
+			m_posR.z += cosf(m_rot.y) * pMouse->GetMouselY();
 		}
-	}
-	else
-	{
-		if (keyboard->GetPress(CInput::KEYINFO_CAMERA_UP) == true)
+		if (pMouse->GetMouselX() < 0.0f)
 		{
-			m_fHeightV += 2.0f;
+			m_posV.x -= cosf(m_rot.y) * pMouse->GetMouselX();
+			m_posR.x -= cosf(m_rot.y) * pMouse->GetMouselX();
+			m_posV.z += sinf(m_rot.y) * pMouse->GetMouselX();
+			m_posR.z += sinf(m_rot.y) * pMouse->GetMouselX();
 		}
-
-		if (keyboard->GetPress(CInput::KEYINFO_CAMERA_DOWN) == true)
+		if (pMouse->GetMouselX() > 0.0f)
 		{
-			m_fHeightV -= 2.0f;
+			m_posV.x -= cosf(m_rot.y) * pMouse->GetMouselX();
+			m_posR.x -= cosf(m_rot.y) * pMouse->GetMouselX();
+			m_posV.z += sinf(m_rot.y) * pMouse->GetMouselX();
+			m_posR.z += sinf(m_rot.y) * pMouse->GetMouselX();
 		}
-	}
-
-	if (keyboard->GetTrigger(CInput::KEYINFO_CAMERA_RESET) == true)
-	{
-		SetInit();
 	}
 
 	// マウスでのカメラ操作
@@ -347,15 +255,15 @@ void CCamera::ControlCamera(void)
 	//	m_rot.z = 0.0f;
 	//}
 
-	// 視点間同士ベクトル
-	m_vecInterval = m_posV - m_posR;
+	//// 視点間同士ベクトル
+	//m_vecInterval = m_posV - m_posR;
 
-	// 注視点基準の視点の高さ
-	m_fHeightV = m_vecInterval.y;
+	//// 注視点基準の視点の高さ
+	//m_fHeightV = m_vecInterval.y;
 
-	// 注視点
-	m_fHeightR = m_posR.y;
-	
+	//// 注視点
+	//m_fHeightR = m_posR.y;
+
 	// 地上の距離
 	m_fGroundLength = cosf(m_rot.x) * m_fLength;
 
@@ -363,4 +271,55 @@ void CCamera::ControlCamera(void)
 	m_posV.y = m_posR.y + sinf(m_rot.x) * m_fLength;
 	m_posV.x = m_posR.x - sinf(m_rot.y) * m_fGroundLength;
 	m_posV.z = m_posR.z - cosf(m_rot.y) * m_fGroundLength;
+
+	//m_posV.x = m_posR.x - sinf(m_rot.y) * m_fLength;
+	//m_posV.y = m_posR.y + cosf(m_rot.x) * m_fLength;
+	//m_posV.z = m_posR.z - cosf(m_rot.y) * m_fLength;
+
+	// カメラの移動
+	if (keyboard->GetPress(CInput::KEYINFO_UP) == true)
+	{
+		m_move.x += sinf(m_rot.y) * SPEED_UP;
+		m_move.z += cosf(m_rot.y) * SPEED_UP;
+	}
+	if (keyboard->GetPress(CInput::KEYINFO_DOWN) == true)
+	{
+		m_move.x += sinf(m_rot.y - D3DX_PI) * SPEED_UP;
+		m_move.z += cosf(m_rot.y - D3DX_PI) * SPEED_UP;
+	}
+	if (keyboard->GetPress(CInput::KEYINFO_LEFT) == true)
+	{
+		m_move.x -= cosf(m_rot.y) * SPEED_UP;
+		m_move.z += sinf(m_rot.y) * SPEED_UP;
+	}
+	if (keyboard->GetPress(CInput::KEYINFO_RIGHT) == true)
+	{
+		m_move.x += cosf(m_rot.y) * SPEED_UP;
+		m_move.z -= sinf(m_rot.y) * SPEED_UP;
+	}
+
+	if (keyboard->GetPress(CInput::KEYINFO_CAMERA_UP) == true)
+	{
+		m_posV.y += CAMERA_MOVE;
+		m_posR.y += CAMERA_MOVE;
+	}
+	if (keyboard->GetPress(CInput::KEYINFO_CAMERA_DOWN) == true)
+	{
+		m_posV.y -= CAMERA_MOVE;
+		m_posR.y -= CAMERA_MOVE;
+	}
+
+	// 回転角の補正
+	if (m_rot.y > D3DX_PI)
+	{
+		m_rot.y -= D3DX_PI * 2.0f;
+	}
+	if (m_rot.y < -D3DX_PI)
+	{
+		m_rot.y += D3DX_PI * 2.0f;
+	}
+
+	// 加速後の減速処理
+	m_move.x += (0.0f - m_move.x) * SPEED_DOWN;
+	m_move.z += (0.0f - m_move.z) * SPEED_DOWN;
 }

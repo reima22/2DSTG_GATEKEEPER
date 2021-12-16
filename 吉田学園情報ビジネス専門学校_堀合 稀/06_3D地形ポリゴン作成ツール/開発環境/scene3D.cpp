@@ -9,13 +9,12 @@
 #include "renderer.h"
 #include "manager.h"
 #include "input.h"
-#include "player.h"
 #include "texture.h"
 
 //==============================================================================
 // コンストラクタ
 //==============================================================================
-CScene3D::CScene3D()
+CScene3D::CScene3D(int nPriority) : CScene(nPriority)
 {
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

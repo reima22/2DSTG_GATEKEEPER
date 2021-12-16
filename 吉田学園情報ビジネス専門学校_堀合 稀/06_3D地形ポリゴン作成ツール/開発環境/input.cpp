@@ -12,41 +12,35 @@
 LPDIRECTINPUT8 CInput::m_pInput = NULL;
 int CInput::m_aKeyInfo[] =
 {
-	DIK_RETURN,
-	DIK_W,			// プレイヤー移動
-	DIK_S,			// プレイヤー移動
-	DIK_A,			// プレイヤー移動
-	DIK_D,			// プレイヤー移動
-	DIK_Y,
-	DIK_H,
-	DIK_U,
-	DIK_J,
-	DIK_M,
-	DIK_UP,			// カメラ移動
-	DIK_DOWN,		// カメラ移動
-	DIK_LEFT,		// カメラ移動
-	DIK_RIGHT,		// カメラ移動
-	DIK_SPACE,
-	DIK_Z,			// カメラ旋回
-	DIK_C,			// カメラ旋回
-	DIK_X,			// カメラのリセット
+	DIK_F1,			// データの書き出し
+	DIK_W,			// 上
+	DIK_S,			// 下
+	DIK_A,			// 左
+	DIK_D,			// 右
+	DIK_1,			// 波形フラグ
+	DIK_2,			// 合成切り替え
+	DIK_3,			// テクスチャ分割の切り替え
+	DIK_4,			// 操作するテクスチャの切り替え
+	DIK_5,			// ワイヤーフレームとの切り替え
+	DIK_Z,			// カメラ旋回左
+	DIK_C,			// カメラ旋回右
 	DIK_R,			// カメラ上昇
 	DIK_F,			// カメラ下降
 	DIK_T,			// ズームイン
 	DIK_G,			// ズームアウト
-	DIK_B,			// テクスチャインデックス後退
-	DIK_V,			// テクスチャインデックス進行
-	DIK_1,			// テクスチャの分割
-	DIK_2,			// ワイヤーフレーム判定
-	DIK_F1,			// 保存コマンド
-	DIK_F2,			// 編集モードの切り替え
-	DIK_F3			// モード切替
+	DIK_Y,			// 波形の高さ上昇
+	DIK_H,			// 波形の高さ下降
+	DIK_U,			// 波形の間隔増加
+	DIK_J,			// 波形の間隔減少
+	DIK_I,			// サイン波大きさ増加
+	DIK_K,			// サイン波大きさ減少
+	DIK_Q,			// テクスチャの流れる方向回転角+
+	DIK_E,			// テクスチャの流れる方向回転角-
+	DIK_V,			// カメラ旋回上
+	DIK_B,			// カメラ旋回下
+	DIK_M,			// テクスチャインデックスの加算
+	DIK_N,			// テクスチャインデックスの減算
 };
-//DIMOUSESTATE2 CInputMouse::m_mouseState2;
-//BYTE CInputMouse::m_aButton[MOUSEINFO_MAX] =
-//{
-//
-//};
 
 //==============================================================================
 // コンストラクタ
@@ -111,6 +105,7 @@ CInputKeyboard::CInputKeyboard()
 	memset(m_aKeyState,NULL,sizeof(m_aKeyState));
 	memset(m_aKeyStateTrigger, NULL, sizeof(m_aKeyStateTrigger));
 	memset(m_aKeyStateRelease, NULL, sizeof(m_aKeyStateRelease));
+	memset(m_aKeyStateRepeat, NULL, sizeof(m_aKeyStateRepeat));	
 }
 
 // キーボードのデストラクタ
@@ -241,21 +236,20 @@ bool CInputKeyboard::GetRelease(int nKey)
 //==============================================================================
 bool CInputKeyboard::GetRepeat(int nKey)
 {
-	if ((m_aKeyState[m_aKeyInfo[nKey]] & 0x80) ? true : false == true)
+	// カウント加算
+	m_nCountRepeat++;
+
+	if (m_aKeyState[m_aKeyInfo[nKey]] == false)
 	{
-		m_nCountRepeat[nKey]++;
-	}
-	else
-	{
-		m_nCountRepeat[nKey] = 0;
+		m_nCountRepeat = 0;
 	}
 
 	// キーボード情報の取得
-	if (m_nCountRepeat[nKey] == 1)
+	if (m_nCountRepeat == 1)
 	{
 		return (m_aKeyStateTrigger[m_aKeyInfo[nKey]] & 0x80) ? true : false;
 	}
-	else if (m_nCountRepeat[nKey] > REPEAT_CNT)
+	else if (m_nCountRepeat > 60)
 	{
 		return (m_aKeyState[m_aKeyInfo[nKey]] & 0x80) ? true : false;
 	}
@@ -343,7 +337,7 @@ void CInputMouse::Update(void)
 		sizeof(mouseState),
 		&mouseState)))
 	{
-		
+
 		//DIMOUSESTATE m_mouseState;
 		//DIMOUSESTATE m_mouseStateTrigger;
 		//DIMOUSESTATE m_mouseStateRelease;

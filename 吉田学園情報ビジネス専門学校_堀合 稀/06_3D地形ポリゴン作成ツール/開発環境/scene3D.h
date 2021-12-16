@@ -16,7 +16,7 @@
 class CScene3D : public CScene
 {
 public:
-	CScene3D();
+	CScene3D(int nPriority = PRIORITY_DEFAULT);
 	~CScene3D();
 	HRESULT Init(void);
 	void Uninit(void);

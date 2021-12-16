@@ -179,11 +179,8 @@ void CRenderer::Draw(void)
 		CScene::DrawAll();
 		
 		// デバッグモードの時
-//#ifdef _DEBUG
-
 		CDebugProc::Draw();
 
-//#endif
 		// 描画の終了
 		m_pD3DDevice->EndScene();
 	}

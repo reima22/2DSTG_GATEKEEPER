@@ -28,7 +28,7 @@ CScene::CScene(int nPriority)
 
 		// 先頭ポインタへ代入
 		m_pTop[nPriority] = this;
-	}	
+	}
 	else
 	{// 次以降が空白
 		// 最後尾を次のポインタへ移行

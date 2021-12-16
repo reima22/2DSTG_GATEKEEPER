@@ -17,6 +17,7 @@ class CLight;			// ライトクラス
 class CTextData;		// テキストデータクラス
 class CTexture;			// テクスチャクラス
 class CExe;				// 実行クラス
+class CInputMouse;		// マウス
 
 //=============================================================================
 // マネージャクラス
@@ -37,6 +38,7 @@ public:
 	static CCamera *GetCamera(void) { return m_pCamera; }						// カメラポインタの取得	
 	static CTexture *GetTexture(void) { return m_pTexture; }					// テクスチャポインタの取得
 	static CTextData *GetTextData(void) { return m_pTextData; }
+	static CInputMouse *GetInputMouse(void) { return m_pInputMouse; }			// マウスの取得
 
 private:
 	static CRenderer* m_pRenderer;				// レンダリングクラス
@@ -47,6 +49,7 @@ private:
 	static CTexture *m_pTexture;				// テクスチャクラスのポインタ
 
 	static CExe *m_pExe;						// 実行クラス
+	static CInputMouse *m_pInputMouse;			// マウス入力
 };
 
 #endif

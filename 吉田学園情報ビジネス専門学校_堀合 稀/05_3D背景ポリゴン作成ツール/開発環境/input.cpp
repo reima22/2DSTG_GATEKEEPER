@@ -258,3 +258,147 @@ bool CInputKeyboard::GetRepeat(int nKey)
 		return false;
 	}
 }
+
+//==============================================================================
+// マウスのコンストラクタ
+//==============================================================================
+CInputMouse::CInputMouse()
+{
+	//// キー情報の初期化
+	//memset(m_aKeyState, NULL, sizeof(m_aKeyState));
+	//memset(m_aKeyStateTrigger, NULL, sizeof(m_aKeyStateTrigger));
+	//memset(m_aKeyStateRelease, NULL, sizeof(m_aKeyStateRelease));
+}
+
+// マウスのデストラクタ
+CInputMouse::~CInputMouse()
+{
+
+}
+
+//==============================================================================
+// マウス初期化
+//==============================================================================
+HRESULT CInputMouse::Init(HINSTANCE hInstance, HWND hWnd)
+{
+	// 初期化処理
+	CInput::Init(hInstance, hWnd);
+
+	// 入力デバイスの生成
+	if (FAILED(m_pInput->CreateDevice(
+		GUID_SysMouse,
+		&m_pDevice,
+		NULL)))
+	{
+		return E_FAIL;
+	}
+
+	// データフォーマットの設定
+	if (FAILED(m_pDevice->SetDataFormat(
+		&c_dfDIMouse2)))
+	{
+		return E_FAIL;
+	}
+
+	// 協調モードの設定
+	if (FAILED(m_pDevice->SetCooperativeLevel(
+		hWnd,
+		(DISCL_FOREGROUND | DISCL_NONEXCLUSIVE))))
+	{
+		return E_FAIL;
+	}
+
+	// アクセス権の取得
+	m_pDevice->Acquire();
+
+	return S_OK;
+}
+
+//==============================================================================
+// マウス終了
+//==============================================================================
+void CInputMouse::Uninit(void)
+{
+	// 終了処理
+	CInput::Uninit();
+}
+
+//==============================================================================
+// マウス更新
+//==============================================================================
+void CInputMouse::Update(void)
+{
+	// ローカル変数宣言
+	//BYTE aMouseState[MOUSE_BOTTON_NUM];
+	DIMOUSESTATE2 mouseState;
+
+	// デバイスからデータを取得
+	if (SUCCEEDED(m_pDevice->GetDeviceState(
+		sizeof(mouseState),
+		&mouseState)))
+	{
+
+		//DIMOUSESTATE m_mouseState;
+		//DIMOUSESTATE m_mouseStateTrigger;
+		//DIMOUSESTATE m_mouseStateRelease;
+		//m_mouseStateTrigger = (m_mouseState & mouseState) ^ mouseState;
+		//m_mouseStateRelease = (m_mouseState | mouseState) ^ mouseState;
+
+		m_mouseState = mouseState;
+
+		for (int nCntButton = 0; nCntButton < MOUSEINFO_MAX; nCntButton++)
+		{
+			m_aButton[nCntButton] = m_mouseState.rgbButtons[nCntButton];
+		}
+	}
+	else
+	{
+		// アクセス権の取得
+		m_pDevice->Acquire();
+	}
+}
+
+//==============================================================================
+// マウスの生成
+//==============================================================================
+CInputMouse *CInputMouse::Create(HINSTANCE hInstance, HWND hWnd)
+{
+	// ローカル変数宣言
+	CInputMouse *pInputMouse;
+	pInputMouse = new CInputMouse;
+
+	// 初期化
+	if (pInputMouse != NULL)
+	{
+		pInputMouse->Init(hInstance, hWnd);
+	}
+
+	return pInputMouse;
+}
+
+//==============================================================================
+// プレス処理
+//==============================================================================
+bool CInputMouse::GetPress(int nKey)
+{
+	// キーボード情報の取得
+	return (nKey & 0x80) ? true : false;
+}
+
+////==============================================================================
+//// トリガー処理
+////==============================================================================
+//bool CInputMouse::GetTrigger(int nKey)
+//{
+//	// キーボード情報の取得
+//	return (nKey & 0x80) ? true : false;
+//}
+//
+////==============================================================================
+//// リリース処理
+////==============================================================================
+//bool CInputMouse::GetRelease(int nKey)
+//{
+//	// キーボード情報の取得
+//	return (nKey & 0x80) ? true : false;
+//}

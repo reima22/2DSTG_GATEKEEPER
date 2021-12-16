@@ -26,6 +26,7 @@ CLight *CManager::m_pLight = NULL;					// ライトのポインタ
 CTextData *CManager::m_pTextData = NULL;			// テキストデータのポインタ
 CTexture *CManager::m_pTexture = NULL;				// テクスチャポインタ
 CExe *CManager::m_pExe = NULL;						// 実行クラス
+CInputMouse *CManager::m_pInputMouse = NULL;		// マウス
 
 //==============================================================================
 // コンストラクタ
@@ -90,6 +91,12 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	{
 		m_pExe = CExe::Create();
 	}
+	
+	// マウス生成
+	if (m_pInputMouse == NULL)
+	{
+		m_pInputMouse = CInputMouse::Create(hInstance, hWnd);
+	}
 
 	return S_OK;
 }
@@ -104,6 +111,13 @@ void CManager::Uninit(void)
 	{
 		m_pInputKeyboard->Uninit();
 		m_pInputKeyboard = NULL;
+	}
+
+	// マウスの破棄
+	if (m_pInputMouse != NULL)
+	{
+		m_pInputMouse->Uninit();
+		m_pInputMouse = NULL;
 	}
 	
 	// テキストデータの破棄
@@ -161,6 +175,12 @@ void CManager::Update(void)
 	if (m_pInputKeyboard != NULL)
 	{
 		m_pInputKeyboard->Update();
+	}
+
+	// マウスの更新
+	if (m_pInputMouse != NULL)
+	{
+		m_pInputMouse->Update();
 	}
 
 	// レンダラーの更新

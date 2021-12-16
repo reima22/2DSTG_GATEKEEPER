@@ -8,16 +8,10 @@
 #define _TEXTDATA_H_
 
 #include "main.h"
+#include "meshfield.h"
 
 // マクロ定義
 #define TEXT_NUM	(128)	// テキストデータバイト数
-
-// 前方宣言
-class CTextDataPlayer;		// プレイヤーデータクラス
-class CTextDataObject;		// オブジェクトデータクラス
-class CTextDataTexture;		// テクスチャデータクラス
-class CTextDataPause;		// ポーズデータクラス
-class CTextDataMeshfield;	// メッシュフィールドデータ
 
 //==============================================================================
 // テキスト管理クラス
@@ -28,13 +22,8 @@ public:
 	// テキストデータの種類
 	typedef enum
 	{
-		TEXTDATA_RANKING = 0,	// ランキングのデータ
-		TEXTDATA_SYSTEM,		// ゲームルールデータ
-		TEXTDATA_PLAYER,		// プレイヤーのデータ
-		TEXTDATA_OBJECT,		// 3Dオブジェクトデータ
-		TEXTDATA_TEXTURE,		// テクスチャデータ
-		TEXTDATA_PAUSE,			// ポーズデータ
-		TEXTDATA_MESHFIELD,		// メッシュフィールド
+		TEXTDATA_TEXTURE = 0,		// テクスチャデータ
+		TEXTDATA_MESHFIELD,		// メッシュフィールドデータ
 		TEXTDATA_MAX
 	}TEXTDATA;
 
@@ -43,22 +32,57 @@ public:
 
 	static CTextData *Create(void);	// 生成
 
-	static void LoadTextAll(void);
-	static void UninitAll(void);
+	void LoadText(void);
+	void UnloadText(void);
 
-	static CTextDataPlayer *GetDataPlayer(void) { return m_pDataPlayer; }
-	static CTextDataObject *GetDataObject(void) { return m_pDataObject; }
-	static CTextDataTexture *GetDataTexture(void) { return m_pDataTexture; }
-	static CTextDataPause *GetDataPause(void) { return m_pDataPause; }
-	static CTextDataMeshfield *GetDataMeshfield(void) { return m_pDataMeshfield; }
+	void SaveText(void);
 
-protected:
-	static char *m_pFileName[TEXTDATA_MAX];		// 読み込むファイル名パス
-	static CTextDataPlayer *m_pDataPlayer;		// プレイヤーデータ
-	static CTextDataObject *m_pDataObject;		// オブジェクトデータ
-	static CTextDataTexture *m_pDataTexture;	// テクスチャデータ
-	static CTextDataPause *m_pDataPause;		// ポーズデータ
-	static CTextDataMeshfield *m_pDataMeshfield;// メッシュフィールドデータ
+	// データの取得
+	D3DXVECTOR3 GetPosition(void) { return m_pos; }			// 位置
+	D3DXVECTOR3 GetRotation(void) { return m_rot; }			// 角度
+	D3DXVECTOR2 GetSize(void) { return m_size; }			// サイズ
+	int GetWidthNum(void) { return m_nWidth; }				// 面の横幅枚数
+	int GetDepthNum(void) { return m_nDepth; }				// 面の奥行枚数
+	int GetType(void) { return m_nType; }					// テクスチャ種類
+	int GetTypeSub(void) { return m_nTypeSub; }				// テクスチャ2枚目
+	float GetHeightWave(void) { return m_fHeightWave; }		// 波の高さ
+	float GetDistanceWave(void) { return m_fDistanceWave; }	// 波の間隔
+	float GetSpeedWave(void) { return m_fSpeedWave; }			// 波の早さ
+
+	int GetSyntheticType(void) { return m_nSyntheticType; }	// 合成方法
+	int GetWaveType(void) { return m_nWaveType; }			// 波の方向
+	bool GetCutTex(void) { return m_bCutTex; }				// テクスチャの分割
+	float GetTexMoveRot(int nIdx) { return m_fTexMoveRot[nIdx]; }	// テクスチャの流れる方向
+	float GetTexMove(int nIdx) { return m_fTexMove[nIdx]; }			// テクスチャの移動力
+	int GetNumTexture(void) { return m_nNumTexture; }
+	char *GetFileName(int nIdx) { return m_pFileTextureName[nIdx]; }
+
+private:
+	int m_nNumTexture;			// テクスチャの数
+	char **m_pFileTextureName;	// ファイル名を格納するポインタ
+	int *m_pIdx;				// テクスチャのインデックス
+
+	int m_nType;				// テクスチャ種類
+	int m_nTypeSub;				// テクスチャ2枚目
+
+	D3DXVECTOR3 m_pos;			// 位置
+	D3DXVECTOR3 m_rot;			// 角度
+	D3DXVECTOR2 m_size;			// 1面当たりのサイズ
+	int m_nWidth;				// 横幅のポリゴン枚数
+	int m_nDepth;				// 奥行のポリゴン枚数
+
+	int m_nIdxPoint;			// 総頂点数
+	float m_fHeightWave;		// 波の高さ
+	float m_fDistanceWave;		// 波の間隔
+	float m_fSpeedWave;			// 波の早さ
+
+	int m_nSyntheticType;		// 描画合成方法
+	int m_nWaveType;			// 波の向き
+	bool m_bCutTex;				// テクスチャの分割
+
+	float m_fTexMoveRot[CMeshfield::TEXTUREINFO_MAX];		// テクスチャの流れる方向
+	float m_fTexMove[CMeshfield::TEXTUREINFO_MAX];		// テクスチャの移動力
+
+
 };
-
 #endif

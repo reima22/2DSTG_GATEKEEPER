@@ -15,6 +15,7 @@
 #include "scene.h"
 #include "meshfield.h"
 #include "exe.h"
+#include "input.h"
 
 // 静的メンバ変数宣言
 LPD3DXFONT CDebugProc::m_pFont = NULL;
@@ -139,6 +140,10 @@ void CDebugProc::Draw(void)
 
 	CMeshfield *pMeshfield = CExe::GetMeshField();
 
+	// マウス取得
+	CInputMouse *pMouse = CManager::GetInputMouse();
+
+
 	int nCountFPS = GetFPSCnt();	// FPSカウントの取得
 
 	char *pWaveType = pMeshfield->GetWaveTypeChar();
@@ -179,6 +184,33 @@ void CDebugProc::Draw(void)
 	Print("現在のテクスチャインデックス:%d\n", nTexIdx);
 	Print("テクスチャの流れる方向:%f\n", fTexMoveRot);
 	Print("テクスチャの流れる速さ:%f\n", fTexMove);
+	Print("\nマウス　lX:%d lY:%d lZ:%d \n",pMouse->GetMouseState());
+
+	if (pMouse->GetPress(pMouse->GetButton(CInputMouse::MOUSEINFO_LEFT)) == true)
+	{
+		Print("\n「左クリック」\n");
+	}
+
+	if (pMouse->GetPress(pMouse->GetButton(CInputMouse::MOUSEINFO_RIGHT)) == true)
+	{
+		Print("\n「右クリック」\n");
+	}
+
+	if (pMouse->GetPress(pMouse->GetButton(CInputMouse::MOUSEINFO_WHEEL)) == true)
+	{
+		Print("\n「ホイ－ル」\n");
+	}
+
+	if (pMouse->GetPress(pMouse->GetButton(CInputMouse::MOUSEINFO_BBACK)) == true)
+	{
+		Print("\n「ブラウザバック」\n");
+	}
+
+	if (pMouse->GetPress(pMouse->GetButton(CInputMouse::MOUSEINFO_MOVEON)) == true)
+	{
+		Print("\n「進む」\n");
+	}
+	
 
 	// テキストの描画
 	m_pFont->DrawText(NULL, &m_aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));

@@ -8,11 +8,6 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
-// マクロ定義
-#define REPEAT_CNT	(30)	// リピートカウントの上限
-#define MOUSE_BOTTON_NUM	(4)	// マウスボタン数
-
-
 #include "main.h"
 
 //==============================================================================
@@ -24,37 +19,36 @@
 class CInput
 {
 public:
-	typedef enum
+	typedef enum 
 	{
-		KEYINFO_OK = 0,			// 決定
-		KEYINFO_UP,				// 上
-		KEYINFO_DOWN,			// 下
-		KEYINFO_LEFT,			// 左
-		KEYINFO_RIGHT,			// 右
-		KEYINFO_AREA_PLUS,		// 編集エリアの拡大
-		KEYINFO_AREA_MINUS,		// 編集エリアの縮小
-		KEYINFO_MESH_UP,		// メッシュ上昇
-		KEYINFO_MESH_DOWN,		// メッシュ下降
-		KEYINFO_MESH_RESET,		// 頂点の高さのリセット
-		KEYINFO_CAMERA_FRONT,	// カメラ移動前進
-		KEYINFO_CAMERA_BACK,	// カメラ移動後退
-		KEYINFO_CAMERA_LEFT,	// カメラ移動左
-		KEYINFO_CAMERA_RIGHT,	// カメラ移動右
-		KEYINFO_JUMP,			// ジャンプ
-		KEYINFO_TURN_LEFT,		// カメラ旋回左
-		KEYINFO_TURN_RIGHT,		// カメラ旋回右
-		KEYINFO_CAMERA_RESET,	// カメラのリセット
-		KEYINFO_CAMERA_UP,		// カメラ上昇
-		KEYINFO_CAMERA_DOWN,	// カメラ下降
-		KEYINFO_ZOOMIN,			// カメラのズームイン
-		KEYINFO_ZOOMOUT,		// カメラのズームアウト
-		KEYINFO_TEXIDX_PLUS,	// テクスチャのインデックス前進
-		KEYINFO_TEXIDX_MINUS,	// テクスチャのインデックス後退
-		KEYINFO_TEXCUT,			// テクスチャの分割
-		KEYINFO_WIRE,			// ワイヤーフレームの判定
-		KEYINFO_SAVE_MESHINFO,	// メッシュ情報保存
-		KEYINFO_LOAD_MESHINFO,	// メッシュ読み込み
-		KEYINFO_MODECHANGE,		// 編集モードの切り替え
+		KEYINFO_SAVE = 0,				// データの書き出し
+		KEYINFO_UP,						// 上
+		KEYINFO_DOWN,					// 下
+		KEYINFO_LEFT,					// 左
+		KEYINFO_RIGHT,					// 右
+		KEYINFO_WAVE_FLUG,				// 波形フラグ
+		KEYINFO_WAVE_SYNTHETIC,			// 合成切り替え
+		KEYINFO_WAVE_CUTTEX,			// テクスチャ分割の切り替え
+		KEYINFO_WAVE_TEX_CHANGE,		// 操作するテクスチャの切り替え
+		KEYINFO_WIREFRAME,				// ワイヤーフレームとの切り替え
+		KEYINFO_TURN_LEFT,				// カメラ旋回左
+		KEYINFO_TURN_RIGHT,				// カメラ旋回右
+		KEYINFO_CAMERA_UP,				// カメラ上昇
+		KEYINFO_CAMERA_DOWN,			// カメラ下降
+		KEYINFO_CAMERA_ZOOMIN,			// ズームイン
+		KEYINFO_CAMERA_ZOOMOUT,			// ズームアウト
+		KEYINFO_WAVE_HEIGHTUP,			// 波形の高さ上昇
+		KEYINFO_WAVE_HEIGHTDOWN,		// 波形の高さ下降
+		KEYINFO_WAVE_DISTANCEUP,		// 波形の間隔増加
+		KEYINFO_WAVE_DISTANCEDOWN,		// 波形の間隔減少
+		KEYINFO_WAVE_SPEEDUP,			// サイン波の大きさの増加
+		KEYINFO_WAVE_SPEEDDOWN,			// サイン波の大きさの減少
+		KEYINFO_WAVE_TEXMOVEROT_PLUS,	// テクスチャの流れる方向回転角+
+		KEYINFO_WAVE_TEXMOVEROT_MINUS,	// テクスチャの流れる方向回転角-
+		KEYINFO_WAVE_TEXMOVE_PLUS,		// テクスチャの流れる速さ+
+		KEYINFO_WAVE_TEXMOVE_MINUS,		// テクスチャの流れる速さ-
+		KEYINFO_WAVE_TEXTURE_IDX_PLUS,	// テクスチャインデックスの加算
+		KEYINFO_WAVE_TEXTURE_IDX_MINUS,	// テクスチャインデックスの減算
 		KEYINFO_MAX
 	}KEYINFO;
 
@@ -70,7 +64,6 @@ protected:
 	static int m_aKeyInfo[KEYINFO_MAX];	// 入力キー情報
 };
 
-// キーボードクラス
 class CInputKeyboard : public CInput
 {
 public:
@@ -82,19 +75,18 @@ public:
 
 	static CInputKeyboard *Create(HINSTANCE hInstance, HWND hWnd);
 
-
 	bool GetPress(int nKey);
 	bool GetTrigger(int nKey);
 	bool GetRelease(int nKey);
 	bool GetRepeat(int nKey);
 
-	int GetCntRepeat(int nKey) { return m_nCountRepeat[nKey]; }
-
 private:
 	BYTE m_aKeyState[KEY_STATE];			// キープレス情報
 	BYTE m_aKeyStateTrigger[KEY_STATE];		// キートリガー情報
 	BYTE m_aKeyStateRelease[KEY_STATE];		// キーリリース情報
-	int m_nCountRepeat[KEY_STATE];			// リピートカウント
+	BYTE m_aKeyStateRepeat[KEY_STATE];		// キーリピート情報
+
+	int m_nCountRepeat;						// リピートカウント
 };
 
 // マウスクラス
@@ -120,7 +112,7 @@ public:
 	static CInputMouse *Create(HINSTANCE hInstance, HWND hWnd);
 
 	bool GetPress(int nKey);
-	
+
 	//bool GetTrigger(int nKey);
 	//bool GetRelease(int nKey);
 
@@ -134,7 +126,7 @@ public:
 	//DIMOUSESTATE2 GetMouseRelease(void) { return m_mouseStateRelease; }
 
 	BYTE GetButton(int nKey) { return m_aButton[nKey]; }
-	
+
 	// カーソルの移動量
 	int GetMouselX(void) { return m_mouseState.lX; }
 	int GetMouselY(void) { return m_mouseState.lY; }

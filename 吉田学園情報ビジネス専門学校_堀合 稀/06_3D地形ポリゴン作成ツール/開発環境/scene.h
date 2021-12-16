@@ -11,13 +11,14 @@
 
 // 前方
 class CScene2D;
-
+class CSound;
 
 //=============================================================================
 // マクロ定義
 //=============================================================================
 #define FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)	// 頂点フォーマット
 #define FVF_VERTEX_3D	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)
+#define FVF_VERTEX_3D_1	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1 | D3DFVF_TEX2)
 
 //==============================================================================
 // 頂点フォーマットに合わせた構造体
@@ -38,6 +39,15 @@ typedef struct
 	D3DXVECTOR2 tex;	// テクスチャ座標
 } VERTEX_3D;
 
+typedef struct
+{
+	D3DXVECTOR3 pos;	// 頂点座標
+	D3DXVECTOR3 nor;	// 法線ベクトル
+	D3DCOLOR col;		// 頂点カラー
+	D3DXVECTOR2 tex;	// テクスチャ座標0
+	D3DXVECTOR2 tex1;	// テクスチャ座標1
+} VERTEX_3D_1;
+
 //==============================================================================
 // オブジェクトクラス
 //==============================================================================
@@ -50,7 +60,7 @@ public:
 		OBJTYPE_NONE = 0,
 		OBJTYPE_BG,			// 背景
 		OBJTYPE_PLAYER,		// プレイヤー
-		OBJTYPE_OBJECT,		// 敵
+		OBJTYPE_OBJECT,		// オブジェクト
 		OBJTYPE_BULLET,		// 弾
 		OBJTYPE_ITEM,		// アイテム
 		OBJTYPE_EXPLOSION,	// 爆発
@@ -108,6 +118,7 @@ public:
 protected:
 	// 死亡フラグの成立
 	void Release(void) { this->m_bDeath = true; }
+	CSound *m_pSound;
 
 private:
 	static CScene *m_pTop[PRIORITY_MAX];	// 先頭のオブジェクトへのポインタ

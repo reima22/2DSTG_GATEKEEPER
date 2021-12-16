@@ -167,7 +167,7 @@ void CRenderer::Draw(void)
 	m_pD3DDevice->Clear(
 		0,
 		NULL,
-		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL),
+		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 		D3DCOLOR_RGBA(0, 0, 0, 0),
 		1.0f,
 		0);
@@ -179,14 +179,7 @@ void CRenderer::Draw(void)
 		CScene::DrawAll();
 		
 		// デバッグモードの時
-//#ifdef _DEBUG
-
-		// FPSの描画処理
-		//DrawFPS();
-
 		CDebugProc::Draw();
-
-//#endif
 
 		// 描画の終了
 		m_pD3DDevice->EndScene();
@@ -194,6 +187,24 @@ void CRenderer::Draw(void)
 
 	// バックバッファとフロントバッファの入れ替え
 	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
+}
+
+//==============================================================================
+// レンダラークラスの生成
+//==============================================================================
+CRenderer *CRenderer::Create(HWND hWnd, BOOL bWindow)
+{
+	// ローカル変数宣言
+	CRenderer *pRenderer;
+	pRenderer = new CRenderer;
+
+	// 初期化
+	if (pRenderer != NULL)
+	{
+		pRenderer->Init(hWnd, bWindow);
+	}
+
+	return pRenderer;
 }
 
 //==============================================================================

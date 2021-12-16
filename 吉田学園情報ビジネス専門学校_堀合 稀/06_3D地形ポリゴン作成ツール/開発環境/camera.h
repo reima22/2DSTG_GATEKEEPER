@@ -9,9 +9,15 @@
 
 #include "main.h"
 
-#define CAMERA_TURN	(D3DX_PI / 100.0f)	// カメラ旋回速度
-#define CAMERA_SPDOWN	(0.1f)			// カメラの減衰係数
-#define CAMERA_MOVE		(5.0f)
+#define CAMERA_TURN			(D3DX_PI / 100.0f)	// カメラ旋回速度
+#define CAMERA_SPDOWN		(0.1f)				// カメラの減衰係数
+#define CAMERA_LENGTH		(400.0f)			// 視点・注視点間の距離
+#define CAMERA_FORNT		(15.0f)				// キャラ正面に注視点を置くキャラとの距離
+#define CAMERA_HEIGHT_R		(0.0f)				// 注視点の高さ
+#define CAMERA_HEIGHT_V		(-100.0f)			// 視点の高さ
+#define CAMERA_LIMIT_MIN	(10.0f)				// カメラの描画する手前限界
+#define CAMERA_LIMIT_MAX	(3000.0f)			// カメラの描画する奥限界
+#define CAMERA_MOVE			(1.5f)
 
 //==============================================================================
 // カメラクラス
@@ -19,14 +25,6 @@
 class CCamera
 {
 public:
-	//typedef enum
-	//{
-	//	CAMERATYPE_EDIT = 0,	// 編集モード
-	//	CAMERATYPE_PREVIEW,		// プレビュー
-	//	//CAMERATYPE_FPS,		// キャラクターの1人称視点
-	//	CAMERATYPE_MAX
-	//}CAMERATYPE;
-
 	CCamera();
 	~CCamera();
 	void Init(void);
@@ -38,12 +36,6 @@ public:
 	void SetCamera(void);
 	D3DXVECTOR3 GetRotation(void) { return m_rot; }	// 向きの取得
 
-	D3DXVECTOR3 GetPositionR(void) { return m_posR; }	// 注視点
-	D3DXVECTOR3 GetPositionV(void) { return m_posV; }	// 視点
-
-	float GetLength(void) { return m_fLength; }
-	float GetGroundLength(void) { return m_fGroundLength; }
-
 	void SetInit(void);
 
 	void ControlCamera(void);
@@ -51,25 +43,18 @@ public:
 private:
 	D3DXMATRIX m_mtxView;		// ビューマトリックス
 	D3DXMATRIX m_mtxProjection;	// プロジェクションマトリックス
-
-	D3DXVECTOR3 m_posV;			// 視点位置
-	D3DXVECTOR3 m_posR;			// 注視点位置
+	D3DXVECTOR3 m_posV;			// 視点
+	D3DXVECTOR3 m_posR;			// 注視点
 	D3DXVECTOR3 m_vecU;			// 上方向ベクトル
-	
 	D3DXVECTOR3 m_rot;			// 向き
+	float m_fLength;			// 距離
+	float m_fHeightR;			// 注視点位置
+	float m_fHeightV;			// 視点位置
+	float m_fGroundLength;		// 地上の距離
 
-	float m_fLength;			// 視点間の距離
-	float m_fGroundLength;		// 視点(高さ0)と注視点間の距離
-
-	float m_fFront;				// キャラの前方距離
-
-	float m_fHeightR;			// 注視点高さ
-	float m_fHeightV;			// 視点高さ
+	D3DXVECTOR3 m_move;			// 移動力
 
 	D3DXVECTOR3 m_posVDest;		// 目的の視点
 	D3DXVECTOR3 m_posRDest;		// 目的の注視点
-
-	D3DXVECTOR3 m_vecInterval;	// 視点、注視点のベクトル
 };
-
 #endif

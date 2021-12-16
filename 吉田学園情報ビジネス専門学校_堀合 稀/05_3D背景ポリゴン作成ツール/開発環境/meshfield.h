@@ -126,7 +126,7 @@ public:
 	bool GetWireFrame(void) { return m_bWireFrame; }					// ワイヤーフレームの有効
 
 	float GetTexMoveRot(int nIdx) { return m_aTexMoveRot[nIdx]; }		// テクスチャの流れる方向
-	float GetTexMove(int nIdx) { return m_aTexMoveSpeed[nIdx]; }				// テクスチャの流れる速さ倍率
+	float GetTexMove(int nIdx) { return m_aTexMoveSpeed[nIdx]; }		// テクスチャの流れる速さ倍率
 	int GetTexIdx(int nIdx) { return m_aTextureIdx[nIdx]; }				// テクスチャのインデックス
 
 	// 総頂点数
@@ -161,6 +161,8 @@ private:
 	D3DXVECTOR3 *m_pNor;						// 法線の値
 	int m_nIdxNor;								// 操作するインデックス
 
+	/**/
+
 	int m_nCntWave;								// 波形アニメーションのカウント
 
 	float m_fHeightWave;						// 波の高さ
@@ -176,9 +178,9 @@ private:
 	TEXTUREINFO m_texInfo;						// 操作中のテクスチャ情報
 
 	// テクスチャの情報
-	D3DXVECTOR2 m_aTexMove[TEXTUREINFO_MAX];		// 流れる移動力
+	D3DXVECTOR2 m_aTexMove[TEXTUREINFO_MAX];	// 流れる移動力
 	float m_aTexMoveRot[TEXTUREINFO_MAX];		// テクスチャ座標の流れる向き(Y軸)
-	float m_aTexMoveSpeed[TEXTUREINFO_MAX];			// 流れる速さの倍率
+	float m_aTexMoveSpeed[TEXTUREINFO_MAX];		// 流れる速さの倍率
 	int m_nTextureNum;							// テクスチャの総数
 	int m_aTextureIdx[TEXTUREINFO_MAX];			// テクスチャインデックス
 

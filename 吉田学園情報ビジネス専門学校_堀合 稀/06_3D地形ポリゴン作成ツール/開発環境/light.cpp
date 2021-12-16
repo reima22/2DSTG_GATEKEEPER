@@ -50,16 +50,20 @@ void CLight::Init(void)
 		// ÉâÉCÉgÇÃï˚å¸Çê›íË
 		if (nCnt == 0)
 		{
-			vecDir = D3DXVECTOR3(-0.5f, -1.0f, 0.0f);
+			vecDir = D3DXVECTOR3(1.0f, -0.0f, -0.0f);
+			//vecDir = D3DXVECTOR3(0.2f, -0.8f, -0.4f);
 		}
 		else if (nCnt == 1)
 		{
-			vecDir = D3DXVECTOR3(-0.0f, 1.0f, 0.0f);
+			vecDir = D3DXVECTOR3(0.5f, -1.0f, 0.8f);
+			//vecDir = D3DXVECTOR3(-0.2f, -0.8f, 0.4f);
 		}
 		else if (nCnt == 2)
 		{
-			vecDir = D3DXVECTOR3(-1.0f, 0.5f, 0.0f);
+			vecDir = D3DXVECTOR3(0.5f, -0.0f, 0.0f);
+			//vecDir = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
 		}
+
 		D3DXVec3Normalize(&vecDir, &vecDir);		// ê≥ãKâªÇ∑ÇÈ
 		m_aLight[nCnt].Direction = vecDir;
 

@@ -31,7 +31,6 @@ public:
 private:
 	static LPD3DXFONT m_pFont;		// フォントのポインタ
 	static char m_aStr[DEBUG_TEXT_NUM];	// 文字列を格納するバッファ
-	static char *m_apOnOff[2];			// オンオフの表示
 };
 
 #endif

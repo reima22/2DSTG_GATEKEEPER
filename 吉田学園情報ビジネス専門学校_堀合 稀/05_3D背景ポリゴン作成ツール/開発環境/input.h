@@ -89,4 +89,60 @@ private:
 	int m_nCountRepeat;						// リピートカウント
 };
 
+// マウスクラス
+class CInputMouse : public CInput
+{
+public:
+	typedef enum
+	{
+		MOUSEINFO_LEFT = 0,		// 左クリック
+		MOUSEINFO_RIGHT,		// 右クリック
+		MOUSEINFO_WHEEL,		// マウスホイール押し込み
+		MOUSEINFO_BBACK,		// ブラウザバックボタン
+		MOUSEINFO_MOVEON,		// 「進む」ボタン
+		MOUSEINFO_MAX
+	}MOUSEINFO;
+
+	CInputMouse();
+	~CInputMouse();
+	HRESULT Init(HINSTANCE hInstance, HWND hWnd);
+	void Uninit(void);
+	void Update(void);
+
+	static CInputMouse *Create(HINSTANCE hInstance, HWND hWnd);
+
+	bool GetPress(int nKey);
+
+	//bool GetTrigger(int nKey);
+	//bool GetRelease(int nKey);
+
+	//bool GetRepeat(int nKey);
+
+	//int GetCntRepeat(int nKey) { return m_nCountRepeat[nKey]; }
+
+	DIMOUSESTATE2 GetMouseState(void) { return m_mouseState; }
+
+	//DIMOUSESTATE2 GetMouseTrigger(void) { return m_mouseStateTrigger; }
+	//DIMOUSESTATE2 GetMouseRelease(void) { return m_mouseStateRelease; }
+
+	BYTE GetButton(int nKey) { return m_aButton[nKey]; }
+
+	// カーソルの移動量
+	int GetMouselX(void) { return m_mouseState.lX; }
+	int GetMouselY(void) { return m_mouseState.lY; }
+	int GetMouselZ(void) { return m_mouseState.lZ; }	// ホイールの回転量
+
+private:
+	DIMOUSESTATE2 m_mouseState;
+
+	// ボタンの種類
+	BYTE m_aButton[MOUSEINFO_MAX] = {};
+
+	//DIMOUSESTATE2 m_mouseStateTrigger;
+	//DIMOUSESTATE2 m_mouseStateRelease;
+	//BYTE m_aMouseState[MOUSE_BOTTON_NUM];			// マウスプレス情報
+	//BYTE m_aMouseStateTrigger[MOUSE_BOTTON_NUM];	// マウストリガー情報
+	//BYTE m_aMouseStateRelease[MOUSE_BOTTON_NUM];	// マウスリリース情報
+};
+
 #endif

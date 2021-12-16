@@ -20,6 +20,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	static CRenderer *Create(HWND hWnd, BOOL bWindow);	// ê∂ê¨èàóù
 	LPDIRECT3DDEVICE9 GetDevice(void) { return m_pD3DDevice; }
 
 private:

@@ -13,20 +13,13 @@
 #include "renderer.h"
 #include "manager.h"
 #include "scene.h"
-#include "player.h"
-#include "gamepad.h"
 #include "meshfield.h"
 #include "exe.h"
-#include "camera.h"
+#include "input.h"
 
 // 静的メンバ変数宣言
 LPD3DXFONT CDebugProc::m_pFont = NULL;
 char CDebugProc::m_aStr[DEBUG_TEXT_NUM];
-char *CDebugProc::m_apOnOff[2] =
-{
-	"OFF",
-	"ON"
-};
 
 //==============================================================================
 // コンストラクタ
@@ -144,76 +137,60 @@ void CDebugProc::Draw(void)
 {
 	// ローカル変数宣言
 	RECT rect = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
-	CPlayer *pPlayer = CExe::GetPlayer();
 
-	// キーボード
-	CInputKeyboard *keyboard = CManager::GetInputKeyboard();
-
-	// ゲームパッドの取得
-	CGamepad *gamepad = CManager::GetInputGamepad();
+	CMeshfield *pMeshfield = CExe::GetMeshField();
 
 	// マウス取得
 	CInputMouse *pMouse = CManager::GetInputMouse();
 
-	// カメラ
-	CCamera *pCamera = CManager::GetCamera();
 
-	CMeshfield *pMeshfield = CExe::GetMeshField();
+	int nCountFPS = GetFPSCnt();	// FPSカウントの取得
 
-	CExe *pExe = CManager::GetExe();
-	CExe::EDITMODE mode = CExe::GetEditMode();
+	char *pWaveType = pMeshfield->GetWaveTypeChar();
+	char *pSyntheticType = pMeshfield->GetSyntheticTypeChar();
+	char *pTex = pMeshfield->GetTexChar();
+	char *pWireONOFF = pMeshfield->GetWireONOFF();
 
-	char *pMode = pExe->GetModeChar();
-
-	int nCountFPS = GetFPSCnt();			// FPSカウントの取得
-	int nNumAll = CScene::GetNumAll();
-
-	bool bTexCut = pMeshfield->GetTexCut();
+	float fHeightWave = pMeshfield->GetHeightWave();
+	float fDistanceWave = pMeshfield->GetDistanceWave();
+	float fSpeedWave = pMeshfield->GetSpeedWave();
+	bool bCutTex = pMeshfield->GetCutTex();
 	bool bWireFrame = pMeshfield->GetWireFrame();
-	int nTexIdx = pMeshfield->GetTexIdx();
-	float fEditRadius = pMeshfield->GetEditArea();
-	int nCntRepeat = keyboard->GetCntRepeat(CInput::KEYINFO_MESH_UP);
+	int nTexInfo = pMeshfield->GetTex();
+	float fTexMoveRot = pMeshfield->GetTexMoveRot(nTexInfo);
+	float fTexMove = pMeshfield->GetTexMove(nTexInfo);
+	int nTexIdx = pMeshfield->GetTexIdx(nTexInfo);
 
-	D3DXVECTOR3 movePlayer;
-	D3DXVECTOR3 posPlayer;
-
-	D3DXVECTOR3 posCameraR = pCamera->GetPositionR();
-	D3DXVECTOR3 posCameraV = pCamera->GetPositionV();
-	D3DXVECTOR3 rotCamera = pCamera->GetRotation();
-	float fLength =  pCamera->GetLength();
-	float fGroundLength = pCamera->GetGroundLength();
-
-
-	// NULLチェック
-	if (pPlayer != NULL)
-	{
-		posPlayer = pPlayer->GetPosition();
-		movePlayer = pPlayer->GetMove();
-	}
-
-	// 汎用
-	Print("FPS:%d\nオブジェクト数:%d\n", nCountFPS, nNumAll);
-	Print("データの保存　　  :[F1]\n");
-	Print("データの読み込み　:[F2]\n");
-	Print("編集モード切り替え:[F3] %s\n", pMode);
-	Print("プレイヤーの操作:[WASD]\n");
-	Print("プレイヤーの位置　：X %f, Y %f, Z %f\n", posPlayer.x, posPlayer.y, posPlayer.z);
-	Print("カメラの注視点位置：X %f, Y %f, Z %f\n", posCameraR.x, posCameraR.y, posCameraR.z);
-	Print("カメラの視点位置　：X %f, Y %f, Z %f\n", posCameraV.x, posCameraV.y, posCameraV.z);
-	Print("カメラの角度    　：X %f, Y %f, Z %f\n", rotCamera.x, rotCamera.y, rotCamera.z);
-	Print("視点間の距離　　　：%f\n", fLength);
-	Print("地上の距離　　　　：%f\n", fGroundLength);
-	Print("カメラの上昇:[R] 下降:[F]\n");
-	Print("カメラのリセット:[X]\n");
-
-	Print("\nマウス　lX:%d lY:%d lZ:%d \n", 
-		pMouse->GetMouseState());
+	Print("FPS:%d\n", nCountFPS);
+	Print("カメラの移動：[WASD]\n");
+	Print("視点の回転　左:[Z] 右:[C]\n");
+	Print("ズームイン:[T] ズームアウト:[G]\n");
+	Print("メッシュ情報の書き出し: [F1]\n");
+	Print("波の切り替え:              [1] 波の種類:%s\n", pWaveType);
+	Print("合成切り替え:              [2] 合成種類:%s\n", pSyntheticType);
+	Print("分割切り替え:              [3] 分割有無:%d\n", (int)bCutTex);
+	Print("操作テクスチャ切り替え:    [4]\n");
+	Print("ワイヤーフレームの切り替え:[5] %s\n", pWireONOFF);
+	Print("波の高さ +:[Y] -:[H]\n");
+	Print("波形間隔 +:[U] -:[J]\n");
+	Print("波の早さ +:[I] -:[K]\n");
+	Print("テクスチャインデックスの操作: -:[N] +:[M]\n");
+	Print("テクスチャの流れる方向: +:[Q] -:[E]\n");
+	Print("テクスチャの流れる速さ: +:[V] -:[B]\n");
+	Print("波形の高さ:%f\n", fHeightWave);
+	Print("波形の間隔:%f\n", fDistanceWave);
+	Print("波形の早さ:%f\n", fSpeedWave);
+	Print("操作中のテクスチャ:%s\n", pTex);
+	Print("現在のテクスチャインデックス:%d\n", nTexIdx);
+	Print("テクスチャの流れる方向:%f\n", fTexMoveRot);
+	Print("テクスチャの流れる速さ:%f\n", fTexMove);
+	Print("\nマウス　lX:%d lY:%d lZ:%d \n",pMouse->GetMouseState());
 
 	if (pMouse->GetPress(pMouse->GetButton(CInputMouse::MOUSEINFO_LEFT)) == true)
 	{
 		Print("\n「左クリック」\n");
 	}
-	
+
 	if (pMouse->GetPress(pMouse->GetButton(CInputMouse::MOUSEINFO_RIGHT)) == true)
 	{
 		Print("\n「右クリック」\n");
@@ -233,26 +210,7 @@ void CDebugProc::Draw(void)
 	{
 		Print("\n「進む」\n");
 	}
-
-	// モード別
-	switch (mode)
-	{
-	case CExe::EDITMODE_EDIT:
-		Print("\nカメラの移動:[↑←↓→]\n");
-		Print("編集エリア 拡大:[Y] 縮小:[H]\n");
-		Print("編集エリアの半径:%f\n", fEditRadius);
-		Print("\n頂点座標操作\n上昇:[U] 下降:[J]\n");
-		Print("リセット:[M]\n");
-		Print("\nテクスチャインデックス:%d\n後退:[V] 前進:[B]\n", nTexIdx);
-		Print("テクスチャの分割:      [1] %s\n", m_apOnOff[(int)bTexCut]);
-		Print("ワイヤーフレームの表示:[2] %s\n", m_apOnOff[(int)bWireFrame]);
-		break;
-
-	case CExe::EDITMODE_PREVIEW:
-
 	
-		break;
-	}
 
 	// テキストの描画
 	m_pFont->DrawText(NULL, &m_aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));

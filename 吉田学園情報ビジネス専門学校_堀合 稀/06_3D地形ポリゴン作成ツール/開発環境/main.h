@@ -37,8 +37,13 @@ using namespace std;
 #define SCREEN_HEIGHT	(720)		// 画面の高さ
 #define SCREEN_CENTER	(D3DXVECTOR3(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, 0.0f))	// 画面の中央
 #define SCREEN_SIZE		(D3DXVECTOR2(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f))		// 中央座標からの画面サイズ
+#define COLOR_DEFAULT	(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f))								// D3DXCOLOR型変数の初期値
 #define VECTOR2_NULL	(D3DXVECTOR2(0.0f, 0.0f))										// D3DXVECTOR2型変数のNULL値
 #define VECTOR3_NULL	(D3DXVECTOR3(0.0f, 0.0f, 0.0f))									// D3DXVECTOR3型変数のNULL値
+#define PI_RESET		(D3DX_PI * 2.0f)		// 回転角の補正数値
+#define CNT_ONE_SECOND	(60)
+#define SPEED_DOWN		(0.2f)		// 減衰係数
+#define SPEED_UP		(1.0f)		// 加算係数
 	
 //==============================================================================
 // プロトタイプ宣言

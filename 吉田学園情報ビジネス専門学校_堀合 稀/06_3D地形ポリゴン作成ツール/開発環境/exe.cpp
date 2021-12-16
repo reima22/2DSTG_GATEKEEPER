@@ -1,7 +1,7 @@
 
 //==============================================================================
 //
-// ゲームモード処理〔exe.cpp〕
+// ゲームモード処理〔game.cpp〕
 // Author : Mare Horiai
 //
 //==============================================================================
@@ -11,17 +11,11 @@
 #include "exe.h"
 #include "camera.h"
 #include "meshfield.h"
-#include "player.h"
-#include "sphere.h"
-#include "input.h"
 
 //==============================================================================
 // 静的メンバ変数宣言
 //==============================================================================
 CMeshfield *CExe::m_pMeshField = NULL;		// メッシュフィールドクラス
-CPlayer *CExe::m_pPlayer = NULL;
-CSphere *CExe::m_pSphere = NULL;			// 球体クラス
-CExe::EDITMODE CExe::m_editMode = EDITMODE_EDIT;
 
 //==============================================================================
 // コンストラクタ
@@ -50,12 +44,6 @@ HRESULT CExe::Init(void)
 	// メッシュフィールドの生成
 	m_pMeshField = CMeshfield::Create();
 
-	// プレイヤーの生成
-	m_pPlayer = CPlayer::Create();
-
-	// 球体生成
-	//m_pSphere = CSphere::Create();
-
 	return S_OK;
 }
 
@@ -74,13 +62,7 @@ void CExe::Uninit(void)
 //==============================================================================
 void CExe::Update(void)
 {
-	// キーボードの取得
-	CInputKeyboard *keyboard = CManager::GetInputKeyboard();
 
-	if (keyboard->GetTrigger(CInput::KEYINFO_MODECHANGE) == true)
-	{
-		ChangeEditMode();
-	}
 }
 
 //==============================================================================
@@ -107,17 +89,4 @@ CExe *CExe::Create()
 	}
 
 	return pExe;
-}
-
-//==============================================================================
-// 編集モードの切り替え
-//==============================================================================
-void CExe::ChangeEditMode(void)
-{
-	m_editMode = (EDITMODE)(m_editMode + 1);
-
-	if (m_editMode >= EDITMODE_MAX)
-	{
-		m_editMode = (EDITMODE)0;
-	}
 }

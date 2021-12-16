@@ -64,14 +64,14 @@ HRESULT CMeshfield::Init(void)
 	m_syntheticType = (SYNTHETICTYPE)pData->GetSyntheticType();	// 合成方法
 	m_waveType = (WAVETYPE)pData->GetWaveType();				// 波の方向
 	m_bCutTex = pData->GetCutTex();								// テクスチャ分割
-	m_bWireFrame = false;											// ワイヤーフレームの有効化
+	m_bWireFrame = false;										// ワイヤーフレームの有効化
 
 	// テクスチャ機能の初期化
-	m_aTexMoveRot[TEXTUREINFO_0] = pData->GetTexMoveRot(TEXTUREINFO_0);
-	m_aTexMoveRot[TEXTUREINFO_1] = pData->GetTexMoveRot(TEXTUREINFO_1);
+	m_aTexMoveRot[TEXTUREINFO_0] = 0.0f;
+	m_aTexMove[TEXTUREINFO_0] = D3DXVECTOR2(sinf(m_aTexMoveRot[TEXTUREINFO_0]) / 100.0f, cosf(m_aTexMoveRot[TEXTUREINFO_0]) / 100.0f);
 
-	m_aTexMoveSpeed[TEXTUREINFO_0] = pData->GetTexMove(TEXTUREINFO_0);
-	m_aTexMoveSpeed[TEXTUREINFO_1] = pData->GetTexMove(TEXTUREINFO_1);
+	m_aTexMoveRot[TEXTUREINFO_1] = 0.0f;
+	m_aTexMove[TEXTUREINFO_1] = D3DXVECTOR2(sinf(m_aTexMoveRot[TEXTUREINFO_1]) / 100.0f, cosf(m_aTexMoveRot[TEXTUREINFO_1]) / 100.0f);
 
 	// テクスチャの設定
 	m_pTexture[TEXTUREINFO_0] = pTexture->GetAddress(pData->GetType());
@@ -405,7 +405,7 @@ void CMeshfield::CalcuNormal(void)
 
 	int nCntNormal = 0;	// 法線カウント
 
-						// 頂点バッファをロックし、頂点情報へのポインタを取得
+	// 頂点バッファをロックし、頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 各面の法線算出
