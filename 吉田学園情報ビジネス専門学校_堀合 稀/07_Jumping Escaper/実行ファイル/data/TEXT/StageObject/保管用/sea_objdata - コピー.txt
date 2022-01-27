@@ -1,0 +1,627 @@
+#==============================================================================
+#
+# 『3Dオブジェクトデータ』スクリプトファイル [objectdata.txt]
+# Author : Horiai Mare
+#
+#==============================================================================
+SCRIPT			# この行は絶対消さないこと！
+
+#------------------------------------------------------------------------------
+# モデル数
+#------------------------------------------------------------------------------
+NUM_MODEL = 14
+
+#------------------------------------------------------------------------------
+# モデルファイル名
+#------------------------------------------------------------------------------
+MODEL_FILENAME = data/MODEL/OBJECT/00_scaffold00.x		# [0]足場0
+MODEL_FILENAME = data/MODEL/OBJECT/01_scaffold01.x		# [1]足場1
+MODEL_FILENAME = data/MODEL/OBJECT/02_scaffold02.x		# [2]足場2
+MODEL_FILENAME = data/MODEL/OBJECT/03_rock_wall.x		# [3]岩壁
+MODEL_FILENAME = data/MODEL/OBJECT/04_pole.x			# [4]柱
+MODEL_FILENAME = data/MODEL/OBJECT/05_start_signboard.x	# [5]スタート看板
+MODEL_FILENAME = data/MODEL/OBJECT/06_start_scafford.x	# [6]スタート地点足場
+MODEL_FILENAME = data/MODEL/OBJECT/07_start_fence00.x	# [7]スタートフェンス
+MODEL_FILENAME = data/MODEL/OBJECT/08_start_fence01.x	# [8]スタートフェンス
+MODEL_FILENAME = data/MODEL/OBJECT/09_goal_signboard.x	# [9]ゴール看板
+MODEL_FILENAME = data/MODEL/OBJECT/10_tile_scafford.x	# [10]タイルの足場
+MODEL_FILENAME = data/MODEL/OBJECT/11_safe_area.x		# [11]中間地点
+MODEL_FILENAME = data/MODEL/OBJECT/12_signboard.x		# [12]チュートリアル立札
+MODEL_FILENAME = data/MODEL/OBJECT/13_scafford03.x		# [13]足場・平
+
+# オブジェクトの属性(OBJATTRIBUTE)
+# 0 指定なし		(背景オブジェクト、未記入で自動選択)
+# 1 足場			(乗ると1秒後落下)
+# 2 中間地点		(リスポーン更新)
+# 3 スタート地点	(スタートカウントダウン開始)
+# 4 ゴール地点		(ゲームの終了)
+# 5 半透明			(半透明オブジェクト)
+# 6 落下しない足場	(落下しないが足場である判定(落下演出、ボーナス加算あり))
+
+# 移動パターンの種類(MOVETYPE)
+# 0 移動無し		(未記入で自動選択)
+# 1 横移動
+# 2 前後移動
+# 3 上下移動
+
+#------------------------------------------------------------------------------
+# オブジェクトの配置
+#------------------------------------------------------------------------------
+#===============================
+# スタート地点
+#===============================
+OBJECTSET
+	TYPE = 6
+	SHADOW = 0.0 0.0
+	POS = 0.0 0.0 -1500.0
+	ROT = 0.0 3.14 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+# 看板
+OBJECTSET
+	TYPE = 5
+	SHADOW = 0.0 0.0
+	POS = 0.0 300.0 -1550.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+# 柱
+OBJECTSET
+	TYPE = 4
+	SHADOW = 0.0 0.0
+	POS = 120.0 0.0 -1550.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 4
+	SHADOW = 0.0 0.0
+	POS = 120.0 150.0 -1550.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 4
+	SHADOW = 0.0 0.0
+	POS = -120.0 0.0 -1550.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 4
+	SHADOW = 0.0 0.0
+	POS = -120.0 150.0 -1550.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+# フェンス
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = -170.0 50.0 -1900.0
+	ROT = 0.0 2.0 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = -310.0 50.0 -1840.0
+	ROT = 0.0 2.4 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = -418.0 50.0 -1720.0
+	ROT = 0.0 2.7 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = 170.0 50.0 -1900.0
+	ROT = 0.0 -2.0 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = 310.0 50.0 -1840.0
+	ROT = 0.0 -2.4 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = 418.0 50.0 -1720.0
+	ROT = 0.0 -2.7 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = -150.0 50.0 -1550.0
+	ROT = 0.0 1.57 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = -300.0 50.0 -1550.0
+	ROT = 0.0 1.57 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = 150.0 50.0 -1550.0
+	ROT = 0.0 -1.57 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 7
+	SHADOW = 0.0 0.0
+	POS = 300.0 50.0 -1550.0
+	ROT = 0.0 -1.57 0.0
+	OBJATTRIBUTE = 3
+END_OBJECTSET
+
+#===============================
+# ゴール地点
+#===============================
+# 看板
+OBJECTSET
+	TYPE = 9
+	SHADOW = 0.0 0.0
+	POS = 0.0 300.0 1500.0
+	ROT = 0.0 1.57 0.0
+END_OBJECTSET
+
+# 柱
+OBJECTSET
+	TYPE = 4
+	SHADOW = 0.0 0.0
+	POS = 200.0 0.0 1500.0
+	ROT = 0.0 1.57 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 4
+	SHADOW = 0.0 0.0
+	POS = -200.0 0.0 1500.0
+	ROT = 0.0 1.57 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 4
+	SHADOW = 0.0 0.0
+	POS = 200.0 150.0 1500.0
+	ROT = 0.0 1.57 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 4
+	SHADOW = 0.0 0.0
+	POS = -200.0 150.0 1500.0
+	ROT = 0.0 1.57 0.0
+END_OBJECTSET
+
+# 足場
+OBJECTSET
+	TYPE = 10
+	SHADOW = 0.0 0.0
+	POS = 0.0 50.0 1550.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 4
+END_OBJECTSET
+
+#===============================
+# 足場
+#===============================
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 50.0 0.0 -1400.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -75.0 0.0 -1300.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -250.0 0.0 -1200.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 210.0 0.0 -1143.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 698.0 0.0 -954.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 801.0 0.0 -603.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -365.0 0.0 -1068.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -158.0 0.0 -1038.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 325.0 0.0 -754.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -324.0 0.0 -920.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -154.0 0.0 -817.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -363.0 0.0 -698.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -240.0 0.0 -553.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -149.0 0.0 -384.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -150.0 0.0 -168.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -314.0 0.0 -340.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 762.0 0.0 -256.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 437.0 0.0 -42.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 227.0 0.0 215.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 417.0 0.0 480.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 398.0 0.0 889.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = 217.0 0.0 1238.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -303.0 0.0 -73.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -230.0 0.0 87.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -114.0 0.0 263.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -333.0 0.0 302.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -298.0 0.0 527.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -70.0 0.0 494.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -114.0 0.0 683.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -280.0 0.0 813.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -334.0 0.0 1014.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -150.0 0.0 882.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -156.0 0.0 1175.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -286.0 0.0 1301.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 0
+	SHADOW = 80.0 80.0
+	POS = -109.0 0.0 1354.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 1
+END_OBJECTSET
+
+#===============================
+# 中間地点
+#===============================
+OBJECTSET
+	TYPE = 11
+	SHADOW = 0.0 0.0
+	POS = 0.0 0.0 0.0
+	ROT = 0.0 0.0 0.0
+	OBJATTRIBUTE = 2
+END_OBJECTSET
+
+#===============================
+# チュートリアルエリア
+#===============================
+# 足場
+OBJECTSET
+	TYPE = 1
+	SHADOW = 0.0 0.0
+	POS = 0.0 100.0 -2250.0
+	ROT = 0.0 0.0 0.0
+	MOVETYPE = 1
+	MOVEPOWER = 200.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 1
+	SHADOW = 0.0 0.0
+	POS = 0.0 100.0 -2400.0
+	ROT = 0.0 0.0 0.0
+	MOVETYPE = 2
+	MOVEPOWER = 200.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 1
+	SHADOW = 0.0 0.0
+	POS = -150.0 200.0 -2400.0
+	ROT = 0.0 0.0 0.0
+	MOVETYPE = 3
+	MOVEPOWER = 100.0
+END_OBJECTSET
+
+# 岩壁
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = -320.0 45.0 -2150.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = -320.0 45.0 -2450.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = -320.0 45.0 -2750.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = 320.0 45.0 -2150.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = 320.0 45.0 -2450.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = 320.0 45.0 -2750.0
+	ROT = 0.0 0.0 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = -160.0 45.0 -2950.0
+	ROT = 0.0 1.57 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = 160.0 45.0 -2950.0
+	ROT = 0.0 1.57 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = -220.0 45.0 -2000.0
+	ROT = 0.0 1.57 0.0
+END_OBJECTSET
+
+OBJECTSET
+	TYPE = 3
+	SHADOW = 0.0 0.0
+	POS = 220.0 45.0 -2000.0
+	ROT = 0.0 1.57 0.0
+END_OBJECTSET
+
+END_SCRIPT

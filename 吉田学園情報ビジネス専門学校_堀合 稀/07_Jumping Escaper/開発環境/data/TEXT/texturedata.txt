@@ -1,0 +1,85 @@
+#----------------------------------------------------------------------------------------------------
+#
+# テクスチャファイル名パス一覧
+# Author : Mare Horiai
+#
+#----------------------------------------------------------------------------------------------------
+SCRIPT
+
+#----------------------------------------------------------------------------------------------------
+# テクスチャの数
+#----------------------------------------------------------------------------------------------------
+NUM_TEXTURE = 67
+
+#----------------------------------------------------------------------------------------------------
+# テクスチャファイル名 + 識別用文字列
+#----------------------------------------------------------------------------------------------------
+TEXTURE_FILENAME = data\TEXTURE\player_cloth00.jpg 			PLAYER_TEX0			# [0]プレイヤーテクスチャ
+TEXTURE_FILENAME = data\TEXTURE\player_cloth01.jpg 			PLAYER_TEX1			# [1]プレイヤーテクスチャ
+TEXTURE_FILENAME = data\TEXTURE\block.jpg					BLOCK_TEX			# [2]ブロック
+TEXTURE_FILENAME = data\TEXTURE\title_bg.png				TITLE_BG			# [3]タイトル背景
+TEXTURE_FILENAME = data\TEXTURE\title000.png				TITLE_LOGO			# [4]タイトルロゴ
+TEXTURE_FILENAME = data\TEXTURE\press_enter.png				TITLE_ENTER			# [5]タイトルエンターサイン
+TEXTURE_FILENAME = data\TEXTURE\result_bg.jpg				RESULT_BG			# [6]リザルト背景
+TEXTURE_FILENAME = data\TEXTURE\GameClear.png				RESULT_LOGO_CLEAR	# [7]リザルトロゴクリア
+TEXTURE_FILENAME = data\TEXTURE\GameOver.png				RESULT_LOGO_OVER	# [8]リザルトロゴゲームオーバー
+TEXTURE_FILENAME = data\TEXTURE\ranking_bg.png				RANKING_BG			# [9]ランキング背景
+TEXTURE_FILENAME = data\TEXTURE\ranking_logo_easy.png		RANKING_LOGO_EASY	# [10]ランキングロゴ(イージー)
+TEXTURE_FILENAME = data\TEXTURE\ranking_logo_normal.png		RANKING_LOGO_NORMAL	# [11]ランキングロゴ(ノーマル)
+TEXTURE_FILENAME = data\TEXTURE\ranking_logo_hard.png		RANKING_LOGO_HARD	# [12]ランキングロゴ(ハード)
+TEXTURE_FILENAME = data\TEXTURE\ranking_rank.png			RANKING_RANK		# [13]ランキング順位
+TEXTURE_FILENAME = data\TEXTURE\yourscore.png				RANKING_YOURSCORE	# [14]ランキング画面リザルトスコアロゴ
+TEXTURE_FILENAME = data\TEXTURE\number000.png				NUMBER				# [15]ナンバー
+TEXTURE_FILENAME = data\TEXTURE\explosion000.png			EXPLOSION			# [16]爆発
+TEXTURE_FILENAME = data\TEXTURE\effect000.jpg				EFFECT				# [17]エフェクト
+TEXTURE_FILENAME = data\TEXTURE\pause_BS.png				PAUSE_BS			# [18]ポーズベース
+TEXTURE_FILENAME = data\TEXTURE\pause_continue.png			PAUSE_CONTINUE		# [19]ポーズコンテニュー
+TEXTURE_FILENAME = data\TEXTURE\pause_retry.png				PAUSE_RETRY			# [20]ポーズリトライ
+TEXTURE_FILENAME = data\TEXTURE\pause_quit.png				PAUSE_QUIT			# [21]ポーズ終了
+TEXTURE_FILENAME = data\TEXTURE\window_effect.png			WINDOW_EFFECT		# [22]画面エフェクト
+TEXTURE_FILENAME = data\TEXTURE\shadow000.jpg				SHADOW				# [23]丸影テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Lava.png					LAVA				# [24]溶岩テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex000.jpg					TEX0				# [25]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex001.jpg					TEX1				# [26]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex002.jpg					TEX2				# [27]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex003.jpg					TEX3				# [28]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex004.jpg					TEX4				# [29]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex005.jpg					TEX5				# [30]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\Tex006.jpg					TEX6				# [31]テクスチャ
+TEXTURE_FILENAME = data\TEXTURE\ui_time.png					TIMER_LOGO			# [32]タイマーロゴ
+TEXTURE_FILENAME = data\TEXTURE\ui_fall.png					FALL_LOGO			# [33]落下数ロゴ
+TEXTURE_FILENAME = data\TEXTURE\go.png						GO					# [34]スタートカウントGO
+TEXTURE_FILENAME = data\TEXTURE\one.png						ONE					# [35]スタートカウント1
+TEXTURE_FILENAME = data\TEXTURE\two.png						TWO					# [36]スタートカウント2
+TEXTURE_FILENAME = data\TEXTURE\three.png					THREE				# [37]スタートカウント3
+TEXTURE_FILENAME = data\TEXTURE\stage_select.png			SELECT_LOGO			# [38]ステージ選択ロゴ
+TEXTURE_FILENAME = data\TEXTURE\1.png						SELECT_EASY			# [39]イージー渓谷
+TEXTURE_FILENAME = data\TEXTURE\2.png						SELECT_NORMAL		# [40]ノーマル海洋
+TEXTURE_FILENAME = data\TEXTURE\3.png						SELECT_HARD			# [41]ハード溶岩
+TEXTURE_FILENAME = data\TEXTURE\arrow.png					SELECT_ARROW		# [42]選択矢印
+TEXTURE_FILENAME = data\TEXTURE\plus.png					PLUS				# [43]＋マーク
+TEXTURE_FILENAME = data\TEXTURE\minus.png					MINUS				# [44]―マーク
+TEXTURE_FILENAME = data\TEXTURE\multi.png					MULTI				# [45]×マーク
+TEXTURE_FILENAME = data\TEXTURE\equal.png					EQUAL				# [46]＝マーク
+TEXTURE_FILENAME = data\TEXTURE\Ranking_Valley.png			RANKING_VALLEY		# [47]ランキング背景(渓谷)
+TEXTURE_FILENAME = data\TEXTURE\Ranking_Sea.png				RANKING_SEA			# [48]ランキング背景(海洋)
+TEXTURE_FILENAME = data\TEXTURE\Ranking_Lava.png			RANKING_LAVA		# [49]ランキング背景(溶岩)
+TEXTURE_FILENAME = data\TEXTURE\ranking_logo_retry.png		RANKING_RETRY		# [50]ランキングリトライ
+TEXTURE_FILENAME = data\TEXTURE\ranking_logo_stage.png		RANKING_STAGE		# [51]ランキングステージ
+TEXTURE_FILENAME = data\TEXTURE\ranking_logo_title.png		RANKING_QUIT		# [52]ランキング終了
+TEXTURE_FILENAME = data\TEXTURE\game_result_clear.png		G_RESULT_CLEAR		# [53]ゲーム画面結果ロゴクリア
+TEXTURE_FILENAME = data\TEXTURE\game_result_gameover.png	G_RESULT_GAMEOVER	# [54]ゲーム画面結果ロゴゲームオーバー
+TEXTURE_FILENAME = data\TEXTURE\signboard_tuto.png			SIGN_TUTO			# [55]立札表面
+TEXTURE_FILENAME = data\TEXTURE\signboard.png				SIGN				# [56]立札他面
+TEXTURE_FILENAME = data\TEXTURE\wood.jpg					WOOD				# [57]木皮
+TEXTURE_FILENAME = data\TEXTURE\bonuslogo.png				BONUS_LOGO			# [58]ボーナスロゴ
+TEXTURE_FILENAME = data\TEXTURE\runningman002.png			TITLE_RUNNINGMAN	# [59]タイトルランニングマン
+TEXTURE_FILENAME = data\TEXTURE\tutoboard00.png				TUTOTEX0			# [60]チュートリアルテクスチャ0
+TEXTURE_FILENAME = data\TEXTURE\tutoboard01.png				TUTOTEX1			# [61]チュートリアルテクスチャ1
+TEXTURE_FILENAME = data\TEXTURE\tutoboard02.png				TUTOTEX2			# [62]チュートリアルテクスチャ2
+TEXTURE_FILENAME = data\TEXTURE\tutoboard03.png				TUTOTEX3			# [63]チュートリアルテクスチャ3
+TEXTURE_FILENAME = data\TEXTURE\checkpoint_logo.png			CHECKPOINT_LOGO		# [64]チェックポイントロゴ
+TEXTURE_FILENAME = data\TEXTURE\timer_alert.png				TIMERALERT_LOGO		# [65]タイマーアラートロゴ
+TEXTURE_FILENAME = data\TEXTURE\smoke.jpg					SMOKE				# [66]煙エフェクト
+
+END_SCRIPT
