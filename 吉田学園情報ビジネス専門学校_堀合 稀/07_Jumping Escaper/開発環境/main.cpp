@@ -84,7 +84,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CManager *pManager = new CManager;	// マネージャクラス
 
 	// 初期化処理
-	if (FAILED(pManager->Init(hInstance, hWnd, TRUE)))
+	if (FAILED(pManager->Init(hInstance, hWnd, FALSE)))
 	{
 		return -1;
 	}
